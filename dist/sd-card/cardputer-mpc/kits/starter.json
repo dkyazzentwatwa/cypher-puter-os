@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "name": "starter",
+  "pads": [
+    {"key": "q", "label": "KICK", "sample": "samples/drums/kick01.wav", "volume": 230},
+    {"key": "w", "label": "SN", "sample": "samples/drums/snare01.wav", "volume": 220},
+    {"key": "e", "label": "CHH", "sample": "samples/drums/hat_closed.wav", "volume": 190},
+    {"key": "r", "label": "OHH", "sample": "samples/drums/hat_open.wav", "volume": 185},
+    {"key": "a", "label": "CLAP", "sample": "samples/drums/clap.wav", "volume": 210},
+    {"key": "s", "label": "TOM", "sample": "samples/drums/tom.wav", "volume": 210},
+    {"key": "d", "label": "RIM", "sample": "samples/drums/rim.wav", "volume": 200},
+    {"key": "f", "label": "SHAK", "sample": "samples/drums/shaker.wav", "volume": 180}
+  ]
+}

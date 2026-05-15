@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "name": "8bit",
+  "pads": [
+    {
+      "key": "q",
+      "label": "KICK",
+      "sample": "samples/8bit/kick.wav",
+      "volume": 236
+    },
+    {
+      "key": "w",
+      "label": "SN",
+      "sample": "samples/8bit/snare.wav",
+      "volume": 220
+    },
+    {
+      "key": "e",
+      "label": "CHH",
+      "sample": "samples/8bit/hat_closed.wav",
+      "volume": 178
+    },
+    {
+      "key": "r",
+      "label": "OHH",
+      "sample": "samples/8bit/hat_open.wav",
+      "volume": 178
+    },
+    {
+      "key": "a",
+      "label": "CLAP",
+      "sample": "samples/8bit/clap.wav",
+      "volume": 210
+    },
+    {
+      "key": "s",
+      "label": "TOM",
+      "sample": "samples/8bit/tom.wav",
+      "volume": 208
+    },
+    {
+      "key": "d",
+      "label": "RIM",
+      "sample": "samples/8bit/rim.wav",
+      "volume": 200
+    },
+    {
+      "key": "f",
+      "label": "SHAK",
+      "sample": "samples/8bit/shaker.wav",
+      "volume": 174
+    },
+    {
+      "key": "z",
+      "label": "PERC",
+      "sample": "samples/8bit/perc.wav",
+      "volume": 200
+    },
+    {
+      "key": "x",
+      "label": "FX1",
+      "sample": "samples/8bit/fx_down.wav",
+      "volume": 190
+    },
+    {
+      "key": "c",
+      "label": "FX2",
+      "sample": "samples/8bit/fx_up.wav",
+      "volume": 188
+    },
+    {
+      "key": "v",
+      "label": "BASS",
+      "sample": "samples/8bit/bass.wav",
+      "volume": 224
+    },
+    {
+      "key": "1",
+      "label": "LEAD",
+      "sample": "samples/8bit/lead.wav",
+      "volume": 198
+    },
+    {
+      "key": "2",
+      "label": "CHORD",
+      "sample": "samples/8bit/chord.wav",
+      "volume": 186
+    },
+    {
+      "key": "3",
+      "label": "ARP",
+      "sample": "samples/8bit/arp.wav",
+      "volume": 190
+    },
+    {
+      "key": "4",
+      "label": "BLIP",
+      "sample": "samples/8bit/blip.wav",
+      "volume": 192
+    }
+  ]
+}

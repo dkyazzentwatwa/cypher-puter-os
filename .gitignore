@@ -9,7 +9,6 @@ dist/
 # Generated dependencies and build outputs
 node_modules/
 build/
-dist/
 out/
 .next/
 .nuxt/

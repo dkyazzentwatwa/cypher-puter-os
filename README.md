@@ -1,12 +1,70 @@
 # Cypher OS
 
-Arduino CLI-only SD app launcher for the M5Stack Cardputer ADV.
+**A local-first app deck for the M5Stack Cardputer ADV.**
 
-Cypher OS keeps a small launcher resident on the Cardputer and installs
-selected app `.bin` files from SD into the large app partition. ESP32 firmware
-cannot execute directly from SD, so this gives the practical workflow we want:
-swap Cardputer apps from a local SD catalog instead of USB reflashing every
-time.
+Cypher OS turns the Cardputer ADV into a pocket-sized launcher for real
+Cardputer apps. Flash the launcher once, build a local SD catalog, then swap
+between tools, games, music, chat, storage, and field utilities without doing a
+USB reflash every time you want to change what the device does.
+
+It feels like a tiny handheld OS, but it stays honest about the hardware:
+ESP32 apps do not execute directly from SD. Cypher OS keeps a small launcher in
+the primary app slot, installs the selected app `.bin` from the SD catalog into
+the app partition, then reboots into that app. When the app supports return,
+you come back to the launcher and pick the next thing.
+
+## Why It Rules
+
+- **One Cardputer, many personalities.** Carry a launcher, groovebox, secure
+  chat tool, offline desk kit, arcade catalog, tarot journal, detector build,
+  and bench utility on one SD card.
+- **No cloud catalog. No online dependency.** The whole flow is local: build
+  apps, package the SD card, boot the launcher, pick what you want.
+- **Made for repeat use.** Apps can return to Cypher OS instead of turning the
+  workflow into flash-once-and-done firmware.
+- **Small launcher, big catalog.** The launcher stays focused on browsing,
+  installing, launching, and recovering from the SD app catalog.
+- **Arduino CLI only.** The repo is intentionally simple and scriptable for
+  local builds.
+- **Purpose-built for Cardputer ADV.** No generic board matrix, no stretched
+  scope, no pretending this is a multi-platform firmware framework.
+
+## Current App Lineup
+
+These are the supported Cardputer app targets in the current catalog flow:
+
+| App | What It Adds |
+| --- | --- |
+| **Cypher Drive** | Cardputer ADV HID payload launcher build. |
+| **Cypher Chat** | Secure-only mesh chat build using protocol `0x02` with AES-256-GCM. |
+| **Cardputer Games** | Standalone Cardputer arcade catalog. |
+| **Cardputer MPC** | MPC-style groovebox with SD-loaded samples and sequencing. |
+| **Cardputer Tarot** | Offline tarot pull, journal, history, and study deck app. |
+| **Cypher Desk** | Offline utility suite with notes, calculator, checklist, converters, and scratchpad. |
+| **Flock You** | Cardputer ADV WiFi/BLE detector build with return-to-launcher support. |
+| **WireTap-32 Cardputer** | Cardputer ADV EXT bench build with return-to-launcher support. |
+| **Cardputer Game OS games** | Individual game `.bin` files imported from the sibling `cardputer-game-os` repo when present and built successfully. |
+
+`starbeam_v2` is not part of the Cypher OS app catalog.
+
+## App Docs
+
+For deeper notes on each app, controls, SD paths, return behavior, and imported
+game manuals, see [docs/README.md](docs/README.md).
+
+## How Launching Works
+
+Cypher OS uses a compact local OTA-slot model:
+
+- The launcher lives in `ota_0`.
+- SD app binaries live under `/cypher-puter/apps`.
+- Choosing an app copies that app `.bin` into `ota_1`.
+- The device restarts into the installed app.
+- Supported apps can set a one-shot return flag and restart back to the
+  launcher menu.
+
+Use sketch app `.bin` files, not merged flash images. The launcher checks for
+oversized binaries and rejects merged images before writing.
 
 ## Hardware
 
@@ -14,14 +72,16 @@ time.
 - FAT32 SD card, preferably 32 GB or smaller
 - Apps stored under `/cypher-puter/apps`
 
-## Build The Launcher
+## Build And Flash The Launcher
+
+Build with the Cardputer ADV profile:
 
 ```bash
-cd /Users/cypher/Documents/GitHub/cypher-puter-os
+cd cypher-puter-os
 arduino-cli compile --profile adv .
 ```
 
-Or:
+Or use the helper:
 
 ```bash
 ./tools/build-launcher.sh
@@ -33,9 +93,7 @@ The canonical profile is in `sketch.yaml`:
 m5stack:esp32:m5stack_cardputer:FlashSize=8M,PartitionScheme=custom,CDCOnBoot=cdc,USBMode=hwcdc
 ```
 
-## Flash The Launcher
-
-Use the touch-first Cardputer flow:
+Flash with the local helper:
 
 ```bash
 arduino-cli board list
@@ -46,7 +104,9 @@ If you omit the port, the script uses the first `/dev/cu.usbmodem*` port it
 finds, touches it at 1200 baud, waits for re-enumeration, then uploads with the
 `adv` profile.
 
-## Build Apps For SD
+## Build And Package SD Apps
+
+Build the app binaries and package the SD card folder:
 
 ```bash
 ./tools/build-apps.sh
@@ -56,7 +116,7 @@ finds, touches it at 1200 baud, waits for re-enumeration, then uploads with the
 Then copy the contents of:
 
 ```text
-/Users/cypher/Documents/GitHub/cypher-puter-os/dist/sd-card
+dist/sd-card
 ```
 
 to the root of a FAT32 SD card.
@@ -67,6 +127,7 @@ Expected SD layout:
 /cypher-puter/apps/apps.json
 /cypher-puter/apps/cardputer-games.bin
 /cypher-puter/apps/cardputer-mpc.bin
+/cypher-puter/apps/cardputer-tarot.bin
 /cypher-puter/apps/cypher-desk.bin
 /cypher-puter/apps/cypher-chat.bin
 /cypher-puter/apps/cypher-drive.bin
@@ -77,16 +138,44 @@ Expected SD layout:
 /cardputer-game-os/saves/
 ```
 
-The catalog also imports individual game `.bin` files from
-`/Users/cypher/Documents/GitHub/cardputer-game-os`. The nested Game OS launcher
-itself is not packaged because Cypher OS already owns the launcher partition.
-Cypher Chat is built from
-`/Users/cypher/Documents/GitHub/cypher-chat/cypher-chat-firmware` with
-`BOARD_PROFILE_CARDPUTER_ADV`; its mesh protocol is secure-only `0x02`, so all
-fleet devices need matching firmware.
-The catalog also includes `starbeam-cardputer` as a visible placeholder marked
-`needs_cardputer_port`. It will not install until it has a real Cardputer ADV
-build.
+The catalog imports individual game `.bin` files from the sibling
+`cardputer-game-os` repo. The nested Game OS launcher itself is not packaged
+because Cypher OS already owns the launcher partition.
+
+Cypher Chat is built from the sibling `cypher-chat/cypher-chat-firmware` sketch
+with `BOARD_PROFILE_CARDPUTER_ADV`. Its mesh protocol is secure-only `0x02`, so
+all fleet devices need matching firmware.
+
+## Workspace Layout
+
+The app scripts default to sibling repos beside this checkout:
+
+```text
+GitHub/
+  cypher-puter-os/
+  cardputer-games/
+  cardputer-mpc/
+  cardputer-tarot/
+  cardputer-game-os/
+  cypher-chat/
+  cypher-drive/
+  cypher-desk/
+  flock-you/
+  WireTap-32/
+```
+
+For a different layout, set a workspace root:
+
+```bash
+CYPHER_OS_WORKSPACE_ROOT=/path/to/repos ./tools/build-apps.sh
+```
+
+You can also override individual app paths:
+
+```bash
+CYPHER_OS_CARDPUTER_MPC_DIR=/path/to/cardputer-mpc ./tools/package-sd.sh
+CYPHER_OS_CARDPUTER_TAROT_DIR=/path/to/cardputer-tarot ./tools/build-apps.sh
+```
 
 ## Controls
 
@@ -105,7 +194,7 @@ build.
 - WireTap-32: choose `Launcher` from the main menu, or type `launcher` /
   `return` over serial.
 
-Serial monitor commands:
+## Serial Commands
 
 ```text
 help
@@ -117,13 +206,15 @@ erase
 install <slug>
 ```
 
-## Notes
+## Technical Notes
 
-- Use sketch app `.bin` files, not merged flash images.
-- The launcher rejects oversized bins and merged images before writing.
+- This repo is Arduino CLI only.
+- Target hardware is the M5Stack Cardputer ADV.
+- The supported launch model is local SD catalog install into the app
+  partition, then reboot.
+- Keep the launcher small and local: no online OTA catalog, WebUI, USB mass
+  storage, multi-board ports, PlatformIO, or ESP-IDF project files.
 - The shared data partition is LittleFS so Cypher Drive can mount its log/config
   storage when launched from this OS.
 - `Boot behavior` can auto-try the installed app on power-up or always stop at
   the launcher menu.
-- The launcher uses a compact local OTA-slot model: launcher in `ota_0`,
-  selected app in `ota_1`, then software restart for the handoff.

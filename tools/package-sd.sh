@@ -2,22 +2,25 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+WORKSPACE_ROOT="${CYPHER_OS_WORKSPACE_ROOT:-$(cd "${ROOT}/.." && pwd)}"
 APP_DIST="${ROOT}/dist/apps"
 SD_ROOT="${ROOT}/dist/sd-card"
 SD_APPS="${SD_ROOT}/cypher-puter/apps"
 SD_GAME_OS_SAVES="${SD_ROOT}/cardputer-game-os/saves"
-MPC_SD_SRC="/Users/cypher/Documents/GitHub/cardputer-mpc/sdcard/cardputer-mpc"
+CARDPUTER_MPC_ROOT="${CYPHER_OS_CARDPUTER_MPC_DIR:-${WORKSPACE_ROOT}/cardputer-mpc}"
+MPC_SD_SRC="${CARDPUTER_MPC_ROOT}/sdcard/cardputer-mpc"
 MANIFEST="${APP_DIST}/apps.json"
+
+if [[ ! -f "${MANIFEST}" ]]; then
+  echo "[sd] missing ${MANIFEST}"
+  echo "[sd] run ./tools/build-apps.sh before packaging the SD card"
+  exit 1
+fi
 
 rm -rf "${SD_ROOT}"
 mkdir -p "${SD_APPS}" "${SD_GAME_OS_SAVES}"
 
-if [[ -f "${MANIFEST}" ]]; then
-  cp -f "${MANIFEST}" "${SD_APPS}/apps.json"
-else
-  echo "[sd] no built manifest found; using config/apps.json"
-  cp -f "${ROOT}/config/apps.json" "${SD_APPS}/apps.json"
-fi
+cp -f "${MANIFEST}" "${SD_APPS}/apps.json"
 
 if compgen -G "${APP_DIST}/*.bin" >/dev/null; then
   cp -f "${APP_DIST}"/*.bin "${SD_APPS}/"

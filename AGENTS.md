@@ -8,20 +8,20 @@ multi-board support unless the user explicitly changes scope.
 Use the Cardputer ADV profile:
 
 ```bash
-arduino-cli compile --profile adv /Users/cypher/Documents/GitHub/cypher-puter-os
+arduino-cli compile --profile adv .
 ```
 
 Flash with the local helper:
 
 ```bash
-/Users/cypher/Documents/GitHub/cypher-puter-os/tools/flash-launcher.sh /dev/cu.usbmodemXXXX
+./tools/flash-launcher.sh /dev/cu.usbmodemXXXX
 ```
 
 Build and package SD apps:
 
 ```bash
-/Users/cypher/Documents/GitHub/cypher-puter-os/tools/build-apps.sh
-/Users/cypher/Documents/GitHub/cypher-puter-os/tools/package-sd.sh
+./tools/build-apps.sh
+./tools/package-sd.sh
 ```
 
 ## Scope
@@ -34,6 +34,12 @@ Build and package SD apps:
 
 ## App Status
 
-`cardputer-games`, `cypher-chat`, and `cypher-drive` are treated as buildable
-Cardputer app targets. `flock-you`, `WireTap-32`, and `starbeam_v2` must remain
-catalog placeholders until a real Cardputer ADV port exists and compiles.
+`cardputer-games`, `cardputer-mpc`, `cardputer-tarot`, `cypher-chat`,
+`cypher-drive`, `cypher-desk`, `flock-you`, and `WireTap-32` are treated as
+buildable Cardputer app targets. Individual `cardputer-game-os` games are
+imported from the sibling repo when that repo is present and builds
+successfully. `starbeam_v2` is no longer part of the catalog.
+
+The app build scripts default to sibling repos beside this checkout. Use
+`CYPHER_OS_WORKSPACE_ROOT=/path/to/repos` or the per-app `CYPHER_OS_*_DIR`
+overrides documented in the README for nonstandard layouts.

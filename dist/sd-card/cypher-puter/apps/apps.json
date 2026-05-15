@@ -37,6 +37,15 @@
       "notes": "MPC-style groovebox with SD-loaded samples and sequencing. Press Shift+Q to return to Cypher OS."
     },
     {
+      "name": "Cardputer Tarot",
+      "slug": "cardputer-tarot",
+      "binary": "cardputer-tarot.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cardputer-tarot",
+      "version": "local",
+      "status": "ready",
+      "notes": "Offline tarot pull, journal, history, and study deck app. Back/backtick from the main menu returns to Cypher OS."
+    },
+    {
       "name": "Cypher Desk",
       "slug": "cypher-desk",
       "binary": "cypher-desk.bin",
@@ -197,15 +206,6 @@
       "version": "local-v1",
       "status": "ready",
       "notes": "Cardputer Game OS import. Original creature trail RPG with travel, battles, catching, audio, and region progression."
-    },
-    {
-      "name": "Starbeam Cardputer",
-      "slug": "starbeam-cardputer",
-      "binary": "",
-      "source_path": "/Users/cypher/Documents/GitHub/project-starbeam/starbeam_v2",
-      "version": "needs-port",
-      "status": "needs_cardputer_port",
-      "notes": "Needs a Cardputer ADV UI and external-radio pin profile before packaging."
     }
   ]
 }

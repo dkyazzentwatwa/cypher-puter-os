@@ -4,9 +4,19 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DIST="${ROOT}/dist/apps"
 BUILD_ROOT="${ROOT}/build/apps"
+WORKSPACE_ROOT="${CYPHER_OS_WORKSPACE_ROOT:-$(cd "${ROOT}/.." && pwd)}"
 CARDPUTER_FQBN="m5stack:esp32:m5stack_cardputer:FlashSize=8M,PartitionScheme=default_8MB,CDCOnBoot=cdc,USBMode=hwcdc"
 RETURN_LIB="${ROOT}/libraries/CypherPuterReturn"
-GAME_OS_ROOT="/Users/cypher/Documents/GitHub/cardputer-game-os"
+
+CARDPUTER_GAMES_ROOT="${CYPHER_OS_CARDPUTER_GAMES_DIR:-${WORKSPACE_ROOT}/cardputer-games}"
+CARDPUTER_MPC_ROOT="${CYPHER_OS_CARDPUTER_MPC_DIR:-${WORKSPACE_ROOT}/cardputer-mpc}"
+CARDPUTER_TAROT_ROOT="${CYPHER_OS_CARDPUTER_TAROT_DIR:-${WORKSPACE_ROOT}/cardputer-tarot}"
+CYPHER_CHAT_ROOT="${CYPHER_OS_CYPHER_CHAT_DIR:-${WORKSPACE_ROOT}/cypher-chat/cypher-chat-firmware}"
+CYPHER_DRIVE_ROOT="${CYPHER_OS_CYPHER_DRIVE_DIR:-${WORKSPACE_ROOT}/cypher-drive}"
+CYPHER_DESK_ROOT="${CYPHER_OS_CYPHER_DESK_DIR:-${WORKSPACE_ROOT}/cypher-desk}"
+FLOCK_YOU_ROOT="${CYPHER_OS_FLOCK_YOU_DIR:-${WORKSPACE_ROOT}/flock-you}"
+WIRETAP_ROOT="${CYPHER_OS_WIRETAP_DIR:-${WORKSPACE_ROOT}/WireTap-32}"
+GAME_OS_ROOT="${CYPHER_OS_GAME_OS_DIR:-${WORKSPACE_ROOT}/cardputer-game-os}"
 GAME_OS_APPS="${GAME_OS_ROOT}/dist/apps"
 GAME_OS_MANIFEST="${GAME_OS_APPS}/games.json"
 
@@ -15,6 +25,7 @@ mkdir -p "${DIST}" "${BUILD_ROOT}"
 
 CARDPUTER_GAMES_STATUS="build_missing"
 CARDPUTER_MPC_STATUS="build_missing"
+CARDPUTER_TAROT_STATUS="build_missing"
 CYPHER_CHAT_STATUS="build_missing"
 CYPHER_DRIVE_STATUS="build_missing"
 CYPHER_DESK_STATUS="build_missing"
@@ -42,9 +53,20 @@ copy_app_bin() {
   echo "[apps] packaged ${dest}"
 }
 
+require_dir() {
+  local name="$1"
+  local path="$2"
+
+  if [[ ! -d "${path}" ]]; then
+    echo "[apps] missing ${name}: ${path}"
+    return 1
+  fi
+}
+
 build_cardputer_games() {
-  local src="/Users/cypher/Documents/GitHub/cardputer-games"
+  local src="${CARDPUTER_GAMES_ROOT}"
   local out="${BUILD_ROOT}/cardputer-games"
+  require_dir "cardputer-games source" "${src}" || return 1
   rm -rf "${out}"
   mkdir -p "${out}"
 
@@ -55,8 +77,9 @@ build_cardputer_games() {
 }
 
 build_cardputer_mpc() {
-  local src="/Users/cypher/Documents/GitHub/cardputer-mpc"
+  local src="${CARDPUTER_MPC_ROOT}"
   local out="${BUILD_ROOT}/cardputer-mpc"
+  require_dir "cardputer-mpc source" "${src}" || return 1
   rm -rf "${out}"
   mkdir -p "${out}"
 
@@ -66,9 +89,23 @@ build_cardputer_mpc() {
   CARDPUTER_MPC_STATUS="ready"
 }
 
+build_cardputer_tarot() {
+  local src="${CARDPUTER_TAROT_ROOT}/CardputerTarot"
+  local out="${BUILD_ROOT}/cardputer-tarot"
+  require_dir "cardputer-tarot source" "${src}" || return 1
+  rm -rf "${out}"
+  mkdir -p "${out}"
+
+  echo "[apps] building cardputer-tarot"
+  arduino-cli compile --fqbn "${CARDPUTER_FQBN}" --library "${RETURN_LIB}" --output-dir "${out}" "${src}" || return 1
+  copy_app_bin "${out}" "cardputer-tarot.bin" || return 1
+  CARDPUTER_TAROT_STATUS="ready"
+}
+
 build_cypher_chat() {
-  local src="/Users/cypher/Documents/GitHub/cypher-chat/cypher-chat-firmware"
+  local src="${CYPHER_CHAT_ROOT}"
   local out="${BUILD_ROOT}/cypher-chat"
+  require_dir "cypher-chat source" "${src}" || return 1
   rm -rf "${out}"
   mkdir -p "${out}"
 
@@ -84,9 +121,10 @@ build_cypher_chat() {
 }
 
 build_cypher_drive() {
-  local src="/Users/cypher/Documents/GitHub/cypher-drive"
+  local src="${CYPHER_DRIVE_ROOT}"
   local out="${BUILD_ROOT}/cypher-drive"
   local fqbn="esp32:esp32:m5stack_cardputer:FlashSize=8M,PSRAM=disabled,USBMode=default,CDCOnBoot=cdc,PartitionScheme=default_8MB"
+  require_dir "cypher-drive source" "${src}" || return 1
   rm -rf "${out}"
   mkdir -p "${out}"
 
@@ -103,8 +141,9 @@ build_cypher_drive() {
 }
 
 build_cypher_desk() {
-  local src="/Users/cypher/Documents/GitHub/cypher-desk"
+  local src="${CYPHER_DESK_ROOT}"
   local out="${BUILD_ROOT}/cypher-desk"
+  require_dir "cypher-desk source" "${src}" || return 1
   rm -rf "${out}"
   mkdir -p "${out}"
 
@@ -115,8 +154,9 @@ build_cypher_desk() {
 }
 
 build_flock_you() {
-  local src="/Users/cypher/Documents/GitHub/flock-you"
+  local src="${FLOCK_YOU_ROOT}"
   local out="${BUILD_ROOT}/flock-you"
+  require_dir "flock-you source" "${src}" || return 1
   rm -rf "${out}"
   mkdir -p "${out}"
 
@@ -132,8 +172,9 @@ build_flock_you() {
 }
 
 build_wiretap() {
-  local src="/Users/cypher/Documents/GitHub/WireTap-32"
+  local src="${WIRETAP_ROOT}"
   local out="${BUILD_ROOT}/wiretap-32-cardputer"
+  require_dir "wiretap-32 source" "${src}" || return 1
   rm -rf "${out}"
   mkdir -p "${out}"
 
@@ -149,6 +190,8 @@ build_wiretap() {
 }
 
 build_game_os_games() {
+  require_dir "cardputer-game-os source" "${GAME_OS_ROOT}" || return 1
+
   if [[ ! -x "${GAME_OS_ROOT}/tools/build-games.sh" ]]; then
     echo "[apps] missing ${GAME_OS_ROOT}/tools/build-games.sh"
     return 1
@@ -177,6 +220,7 @@ mark_failed() {
   case "${name}" in
     cardputer-games) CARDPUTER_GAMES_STATUS="build_failed" ;;
     cardputer-mpc) CARDPUTER_MPC_STATUS="build_failed" ;;
+    cardputer-tarot) CARDPUTER_TAROT_STATUS="build_failed" ;;
     cypher-chat) CYPHER_CHAT_STATUS="build_failed" ;;
     cypher-drive) CYPHER_DRIVE_STATUS="build_failed" ;;
     cypher-desk) CYPHER_DESK_STATUS="build_failed" ;;
@@ -188,6 +232,7 @@ mark_failed() {
 
 build_cardputer_games || mark_failed "cardputer-games"
 build_cardputer_mpc || mark_failed "cardputer-mpc"
+build_cardputer_tarot || mark_failed "cardputer-tarot"
 build_cypher_chat || mark_failed "cypher-chat"
 build_cypher_drive || mark_failed "cypher-drive"
 build_cypher_desk || mark_failed "cypher-desk"
@@ -197,12 +242,22 @@ build_game_os_games || mark_failed "cardputer-game-os-games"
 
 CARDPUTER_GAMES_STATUS="${CARDPUTER_GAMES_STATUS}" \
 CARDPUTER_MPC_STATUS="${CARDPUTER_MPC_STATUS}" \
+CARDPUTER_TAROT_STATUS="${CARDPUTER_TAROT_STATUS}" \
 CYPHER_CHAT_STATUS="${CYPHER_CHAT_STATUS}" \
 CYPHER_DRIVE_STATUS="${CYPHER_DRIVE_STATUS}" \
 CYPHER_DESK_STATUS="${CYPHER_DESK_STATUS}" \
 FLOCK_YOU_STATUS="${FLOCK_YOU_STATUS}" \
 WIRETAP_STATUS="${WIRETAP_STATUS}" \
 GAME_OS_STATUS="${GAME_OS_STATUS}" \
+CARDPUTER_GAMES_ROOT="${CARDPUTER_GAMES_ROOT}" \
+CARDPUTER_MPC_ROOT="${CARDPUTER_MPC_ROOT}" \
+CARDPUTER_TAROT_ROOT="${CARDPUTER_TAROT_ROOT}" \
+CYPHER_CHAT_ROOT="${CYPHER_CHAT_ROOT}" \
+CYPHER_DRIVE_ROOT="${CYPHER_DRIVE_ROOT}" \
+CYPHER_DESK_ROOT="${CYPHER_DESK_ROOT}" \
+FLOCK_YOU_ROOT="${FLOCK_YOU_ROOT}" \
+WIRETAP_ROOT="${WIRETAP_ROOT}" \
+GAME_OS_ROOT="${GAME_OS_ROOT}" \
 python3 - "${DIST}/apps.json" "${GAME_OS_MANIFEST}" <<'PY'
 import json
 import os
@@ -217,12 +272,15 @@ def status(name):
 def binary(app_status, filename):
     return filename if app_status == "ready" else ""
 
+def path(name):
+    return os.environ[name]
+
 apps = [
     {
         "name": "Cypher Drive",
         "slug": "cypher-drive",
         "binary": binary(status("CYPHER_DRIVE_STATUS"), "cypher-drive.bin"),
-        "source_path": "/Users/cypher/Documents/GitHub/cypher-drive",
+        "source_path": path("CYPHER_DRIVE_ROOT"),
         "version": "local",
         "status": status("CYPHER_DRIVE_STATUS"),
         "notes": "Cardputer ADV HID payload launcher build.",
@@ -231,7 +289,7 @@ apps = [
         "name": "Cypher Chat",
         "slug": "cypher-chat",
         "binary": binary(status("CYPHER_CHAT_STATUS"), "cypher-chat.bin"),
-        "source_path": "/Users/cypher/Documents/GitHub/cypher-chat/cypher-chat-firmware",
+        "source_path": path("CYPHER_CHAT_ROOT"),
         "version": "local",
         "status": status("CYPHER_CHAT_STATUS"),
         "notes": "Cardputer ADV secure-only mesh chat build. Mesh protocol 0x02 uses AES-256-GCM and does not interoperate with plaintext or HMAC-only firmware.",
@@ -240,7 +298,7 @@ apps = [
         "name": "Cardputer Games",
         "slug": "cardputer-games",
         "binary": binary(status("CARDPUTER_GAMES_STATUS"), "cardputer-games.bin"),
-        "source_path": "/Users/cypher/Documents/GitHub/cardputer-games",
+        "source_path": path("CARDPUTER_GAMES_ROOT"),
         "version": "local",
         "status": status("CARDPUTER_GAMES_STATUS"),
         "notes": "Standalone Cardputer arcade catalog.",
@@ -249,16 +307,25 @@ apps = [
         "name": "Cardputer MPC",
         "slug": "cardputer-mpc",
         "binary": binary(status("CARDPUTER_MPC_STATUS"), "cardputer-mpc.bin"),
-        "source_path": "/Users/cypher/Documents/GitHub/cardputer-mpc",
+        "source_path": path("CARDPUTER_MPC_ROOT"),
         "version": "local",
         "status": status("CARDPUTER_MPC_STATUS"),
         "notes": "MPC-style groovebox with SD-loaded samples and sequencing. Press Shift+Q to return to Cypher OS.",
     },
     {
+        "name": "Cardputer Tarot",
+        "slug": "cardputer-tarot",
+        "binary": binary(status("CARDPUTER_TAROT_STATUS"), "cardputer-tarot.bin"),
+        "source_path": path("CARDPUTER_TAROT_ROOT"),
+        "version": "local",
+        "status": status("CARDPUTER_TAROT_STATUS"),
+        "notes": "Offline tarot pull, journal, history, and study deck app. Back/backtick from the main menu returns to Cypher OS.",
+    },
+    {
         "name": "Cypher Desk",
         "slug": "cypher-desk",
         "binary": binary(status("CYPHER_DESK_STATUS"), "cypher-desk.bin"),
-        "source_path": "/Users/cypher/Documents/GitHub/cypher-desk",
+        "source_path": path("CYPHER_DESK_ROOT"),
         "version": "local",
         "status": status("CYPHER_DESK_STATUS"),
         "notes": "Offline Cardputer ADV utility suite with notes, calculator, checklist, converters, and scratchpad.",
@@ -267,7 +334,7 @@ apps = [
         "name": "Flock You",
         "slug": "flock-you",
         "binary": binary(status("FLOCK_YOU_STATUS"), "flock-you.bin"),
-        "source_path": "/Users/cypher/Documents/GitHub/flock-you",
+        "source_path": path("FLOCK_YOU_ROOT"),
         "version": "local-cardputer",
         "status": status("FLOCK_YOU_STATUS"),
         "notes": "Cardputer ADV WiFi/BLE detector build with return-to-launcher support.",
@@ -276,7 +343,7 @@ apps = [
         "name": "WireTap-32 Cardputer",
         "slug": "wiretap-32-cardputer",
         "binary": binary(status("WIRETAP_STATUS"), "wiretap-32-cardputer.bin"),
-        "source_path": "/Users/cypher/Documents/GitHub/WireTap-32",
+        "source_path": path("WIRETAP_ROOT"),
         "version": "local-cardputer",
         "status": status("WIRETAP_STATUS"),
         "notes": "Cardputer ADV EXT bench build with return-to-launcher support.",
@@ -293,24 +360,12 @@ if status("GAME_OS_STATUS") == "ready" and os.path.exists(game_manifest):
                 "name": game.get("name", "Game OS App"),
                 "slug": game.get("slug", ""),
                 "binary": game.get("binary", ""),
-                "source_path": game.get("source_path", "/Users/cypher/Documents/GitHub/cardputer-game-os"),
+                "source_path": game.get("source_path", path("GAME_OS_ROOT")),
                 "version": game.get("version", "local"),
                 "status": game.get("status", "ready"),
                 "notes": "Cardputer Game OS import. " + game.get("notes", ""),
             }
         )
-
-apps.append(
-    {
-        "name": "Starbeam Cardputer",
-        "slug": "starbeam-cardputer",
-        "binary": "",
-        "source_path": "/Users/cypher/Documents/GitHub/project-starbeam/starbeam_v2",
-        "version": "needs-port",
-        "status": "needs_cardputer_port",
-        "notes": "Needs a Cardputer ADV UI and external-radio pin profile before packaging.",
-    }
-)
 
 with open(out_path, "w", encoding="utf-8") as handle:
     json.dump({"apps": apps}, handle, indent=2)
@@ -319,7 +374,7 @@ PY
 
 echo "[apps] manifest: ${DIST}/apps.json"
 
-if [[ "${CARDPUTER_GAMES_STATUS}" != "ready" || "${CARDPUTER_MPC_STATUS}" != "ready" || "${CYPHER_CHAT_STATUS}" != "ready" || "${CYPHER_DRIVE_STATUS}" != "ready" || "${CYPHER_DESK_STATUS}" != "ready" || "${FLOCK_YOU_STATUS}" != "ready" || "${WIRETAP_STATUS}" != "ready" || "${GAME_OS_STATUS}" != "ready" ]]; then
+if [[ "${CARDPUTER_GAMES_STATUS}" != "ready" || "${CARDPUTER_MPC_STATUS}" != "ready" || "${CARDPUTER_TAROT_STATUS}" != "ready" || "${CYPHER_CHAT_STATUS}" != "ready" || "${CYPHER_DRIVE_STATUS}" != "ready" || "${CYPHER_DESK_STATUS}" != "ready" || "${FLOCK_YOU_STATUS}" != "ready" || "${WIRETAP_STATUS}" != "ready" || "${GAME_OS_STATUS}" != "ready" ]]; then
   echo "[apps] one or more ready apps failed to build"
   exit 1
 fi

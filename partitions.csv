@@ -1,0 +1,10 @@
+# Cypher OS 8 MB launcher layout.
+# Launcher lives in app0. SD apps are copied into app1.
+# The data area is LittleFS because Cypher Drive expects it at runtime.
+# Name,     Type, SubType, Offset,   Size,     Flags
+nvs,        data, nvs,     0x9000,   0x5000,
+otadata,    data, ota,     0xE000,   0x2000,
+app0,       app,  ota_0,   0x10000,  0x160000,
+app1,       app,  ota_1,   0x170000, 0x4F0000,
+littlefs,   data, littlefs,0x670000, 0x180000,
+coredump,   data, coredump,0x7F0000, 0x10000,

@@ -1,0 +1,67 @@
+{
+  "apps": [
+    {
+      "name": "Cypher Drive",
+      "slug": "cypher-drive",
+      "binary": "cypher-drive.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cypher-drive",
+      "version": "local",
+      "status": "ready",
+      "notes": "Cardputer ADV HID payload launcher build."
+    },
+    {
+      "name": "Cypher Chat",
+      "slug": "cypher-chat",
+      "binary": "cypher-chat.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cypher-chat/cypher-chat-firmware",
+      "version": "local",
+      "status": "ready",
+      "notes": "Cardputer ADV secure-only mesh chat build. Mesh protocol 0x02 uses AES-256-GCM and does not interoperate with plaintext or HMAC-only firmware."
+    },
+    {
+      "name": "Cardputer Games",
+      "slug": "cardputer-games",
+      "binary": "cardputer-games.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cardputer-games",
+      "version": "local",
+      "status": "ready",
+      "notes": "Standalone Cardputer arcade catalog."
+    },
+    {
+      "name": "Cypher Desk",
+      "slug": "cypher-desk",
+      "binary": "cypher-desk.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cypher-desk",
+      "version": "local",
+      "status": "ready",
+      "notes": "Offline Cardputer ADV utility suite with notes, calculator, checklist, converters, and scratchpad."
+    },
+    {
+      "name": "Flock You",
+      "slug": "flock-you",
+      "binary": "flock-you.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/flock-you",
+      "version": "local-cardputer",
+      "status": "ready",
+      "notes": "Cardputer ADV WiFi/BLE detector build with return-to-launcher support."
+    },
+    {
+      "name": "WireTap-32 Cardputer",
+      "slug": "wiretap-32-cardputer",
+      "binary": "wiretap-32-cardputer.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/WireTap-32",
+      "version": "local-cardputer",
+      "status": "ready",
+      "notes": "Cardputer ADV EXT bench build with return-to-launcher support."
+    },
+    {
+      "name": "Starbeam Cardputer",
+      "slug": "starbeam-cardputer",
+      "binary": "",
+      "source_path": "/Users/cypher/Documents/GitHub/project-starbeam/starbeam_v2",
+      "version": "needs-port",
+      "status": "needs_cardputer_port",
+      "notes": "Needs a Cardputer ADV UI and external-radio pin profile before packaging."
+    }
+  ]
+}

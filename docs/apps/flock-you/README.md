@@ -12,6 +12,8 @@ Flock You is the Cypher Flock detector app in the Cypher OS catalog: a compact W
 - Shows live status and activity pages on-device.
 - Can save detections locally and emit JSON lines over USB serial in upstream profiles.
 
+Use wireless detection only where passive monitoring is legal and authorized.
+
 ## Controls
 
 - Cardputer ADV profile uses built-in screen, keyboard, and BtnA.

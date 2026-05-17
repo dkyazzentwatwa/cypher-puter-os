@@ -13,6 +13,7 @@ Cypher OS is still a local SD launcher: app `.bin` files live under `/cypher-put
 | [Cardputer Games](apps/cardputer-games/README.md) | `cardputer-games` | `cardputer-games.bin` | Cardputer Games is the standalone arcade catalog app. |
 | [Cardputer MPC](apps/cardputer-mpc/README.md) | `cardputer-mpc` | `cardputer-mpc.bin` | Cardputer MPC turns the Cardputer into a tiny groovebox: pads, samples, 16-step sequencing, live triggering, project save/load, and a small performance UI. |
 | [Cardputer Tarot](apps/cardputer-tarot/README.md) | `cardputer-tarot` | `cardputer-tarot.bin` | Cardputer Tarot is an offline tarot app with a full 78-card symbolic deck, spreads, history, journaling, study mode, favorites, clarifiers, and SD-backed pull records. |
+| [Cypher PN532](apps/cypher-pn532/README.md) | `cypher-pn532` | `cypher-pn532.bin` | Cypher PN532 is a Cardputer ADV port of the PN532 NFC toolkit using the EXT I2C header and SD-backed dumps. |
 | [Cypher Desk](apps/cypher-desk/README.md) | `cypher-desk` | `cypher-desk.bin` | Cypher Desk is the calm offline writing and utility workspace in the Cypher OS deck. |
 | [Flock You](apps/flock-you/README.md) | `flock-you` | `flock-you.bin` | Flock You is the Cypher Flock detector app in the Cypher OS catalog: a compact WiFi/BLE detector build adapted for Cardputer ADV controls and display. |
 | [WireTap-32 Cardputer](apps/wiretap-32-cardputer/README.md) | `wiretap-32-cardputer` | `wiretap-32-cardputer.bin` | WireTap-32 Cardputer is the electronics bench companion app in the Cypher OS deck. |
@@ -45,6 +46,7 @@ Cypher OS is still a local SD launcher: app `.bin` files live under `/cypher-put
 | Cardputer Games | `/Users/cypher/Documents/GitHub/cardputer-games` |
 | Cardputer MPC | `/Users/cypher/Documents/GitHub/cardputer-mpc` |
 | Cardputer Tarot | `/Users/cypher/Documents/GitHub/cardputer-tarot` |
+| Cypher PN532 | `/Users/cypher/Documents/GitHub/cypher-pn532` |
 | Cypher Chat firmware | `/Users/cypher/Documents/GitHub/cypher-chat/cypher-chat-firmware` |
 | Cypher Drive | `/Users/cypher/Documents/GitHub/cypher-drive` |
 | Cypher Desk | `/Users/cypher/Documents/GitHub/cypher-desk` |

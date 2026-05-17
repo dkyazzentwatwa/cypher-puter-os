@@ -34,11 +34,12 @@ Build and package SD apps:
 
 ## App Status
 
-`cardputer-games`, `cardputer-mpc`, `cardputer-tarot`, `cypher-chat`,
-`cypher-drive`, `cypher-desk`, `flock-you`, and `WireTap-32` are treated as
-buildable Cardputer app targets. Individual `cardputer-game-os` games are
-imported from the sibling repo when that repo is present and builds
-successfully. `starbeam_v2` is no longer part of the catalog.
+`cardputer-games`, `cardputer-mpc`, `cardputer-tarot`, `cypher-pn532`,
+`cypher-chat`, `cypher-drive`, `cypher-desk`, `flock-you`, and `WireTap-32`
+are treated as buildable Cardputer app targets. Individual
+`cardputer-game-os` games are imported from the sibling repo when that repo is
+present and builds successfully. `starbeam_v2` is no longer part of the
+catalog.
 
 The app build scripts default to sibling repos beside this checkout. Use
 `CYPHER_OS_WORKSPACE_ROOT=/path/to/repos` or the per-app `CYPHER_OS_*_DIR`

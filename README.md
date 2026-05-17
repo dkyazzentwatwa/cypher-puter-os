@@ -1,8 +1,8 @@
 # Cypher OS
 
-**A local-first app deck for the M5Stack Cardputer ADV.**
+**A local-first app deck for the [M5Stack Cardputer ADV][cardputer-affiliate].**
 
-Cypher OS turns the Cardputer ADV into a pocket-sized launcher for real
+Cypher OS turns the [M5Stack Cardputer ADV][cardputer-affiliate] into a pocket-sized launcher for real
 Cardputer apps. Flash the launcher once, build a local SD catalog, then swap
 between tools, games, music, chat, storage, and field utilities without doing a
 USB reflash every time you want to change what the device does.
@@ -26,7 +26,7 @@ you come back to the launcher and pick the next thing.
   installing, launching, and recovering from the SD app catalog.
 - **Arduino CLI only.** The repo is intentionally simple and scriptable for
   local builds.
-- **Purpose-built for Cardputer ADV.** No generic board matrix, no stretched
+- **Purpose-built for [Cardputer ADV][cardputer-affiliate].** No generic board matrix, no stretched
   scope, no pretending this is a multi-platform firmware framework.
 
 ## Current App Lineup
@@ -35,14 +35,15 @@ These are the supported Cardputer app targets in the current catalog flow:
 
 | App | What It Adds |
 | --- | --- |
-| **Cypher Drive** | Cardputer ADV HID payload launcher build. |
+| **Cypher Drive** | [Cardputer ADV][cardputer-affiliate] HID payload launcher build. |
 | **Cypher Chat** | Secure-only mesh chat build using protocol `0x02` with AES-256-GCM. |
 | **Cardputer Games** | Standalone Cardputer arcade catalog. |
 | **Cardputer MPC** | MPC-style groovebox with SD-loaded samples and sequencing. |
 | **Cardputer Tarot** | Offline tarot pull, journal, history, and study deck app. |
+| **Cypher PN532** | PN532 NFC toolkit for the [Cardputer ADV][cardputer-affiliate] EXT I2C header. |
 | **Cypher Desk** | Offline utility suite with notes, calculator, checklist, converters, and scratchpad. |
-| **Flock You** | Cardputer ADV WiFi/BLE detector build with return-to-launcher support. |
-| **WireTap-32 Cardputer** | Cardputer ADV EXT bench build with return-to-launcher support. |
+| **Flock You** | [Cardputer ADV][cardputer-affiliate] WiFi/BLE detector build with return-to-launcher support. |
+| **WireTap-32 Cardputer** | [Cardputer ADV][cardputer-affiliate] EXT bench build with return-to-launcher support. |
 | **Cardputer Game OS games** | Individual game `.bin` files imported from the sibling `cardputer-game-os` repo when present and built successfully. |
 
 `starbeam_v2` is not part of the Cypher OS app catalog.
@@ -68,13 +69,20 @@ oversized binaries and rejects merged images before writing.
 
 ## Hardware
 
-- M5Stack Cardputer ADV
+- [M5Stack Cardputer ADV][cardputer-affiliate]
 - FAT32 SD card, preferably 32 GB or smaller
 - Apps stored under `/cypher-puter/apps`
 
+## Responsible Use
+
+Cypher OS is for local, authorized hardware, NFC, wireless, and embedded-device
+work. Use the apps only with devices, cards, networks, and systems you own or
+have clear permission to test. The SD catalog is intentionally local-first and
+does not include an online payload or OTA feed.
+
 ## Build And Flash The Launcher
 
-Build with the Cardputer ADV profile:
+Build with the [Cardputer ADV][cardputer-affiliate] profile:
 
 ```bash
 cd cypher-puter-os
@@ -128,6 +136,7 @@ Expected SD layout:
 /cypher-puter/apps/cardputer-games.bin
 /cypher-puter/apps/cardputer-mpc.bin
 /cypher-puter/apps/cardputer-tarot.bin
+/cypher-puter/apps/cypher-pn532.bin
 /cypher-puter/apps/cypher-desk.bin
 /cypher-puter/apps/cypher-chat.bin
 /cypher-puter/apps/cypher-drive.bin
@@ -156,6 +165,7 @@ GitHub/
   cardputer-games/
   cardputer-mpc/
   cardputer-tarot/
+  cypher-pn532/
   cardputer-game-os/
   cypher-chat/
   cypher-drive/
@@ -175,6 +185,7 @@ You can also override individual app paths:
 ```bash
 CYPHER_OS_CARDPUTER_MPC_DIR=/path/to/cardputer-mpc ./tools/package-sd.sh
 CYPHER_OS_CARDPUTER_TAROT_DIR=/path/to/cardputer-tarot ./tools/build-apps.sh
+CYPHER_OS_CYPHER_PN532_DIR=/path/to/cypher-pn532 ./tools/build-apps.sh
 ```
 
 ## Controls
@@ -190,6 +201,8 @@ CYPHER_OS_CARDPUTER_TAROT_DIR=/path/to/cardputer-tarot ./tools/build-apps.sh
   on the menu instead of auto-launching again.
 - Cardputer MPC: use `Shift+Q` to return to Cypher OS. Lowercase `q` remains an
   MPC pad trigger.
+- Cypher PN532: use the `Return to Cypher OS` main-menu item or press
+  `Del`, `Tab`, backtick, or `Q` from the main menu.
 - Flock You: open the mini menu, cycle to `HOME`, then press up/down to return.
 - WireTap-32: choose `Launcher` from the main menu, or type `launcher` /
   `return` over serial.
@@ -209,7 +222,7 @@ install <slug>
 ## Technical Notes
 
 - This repo is Arduino CLI only.
-- Target hardware is the M5Stack Cardputer ADV.
+- Target hardware is the [M5Stack Cardputer ADV][cardputer-affiliate].
 - The supported launch model is local SD catalog install into the app
   partition, then reboot.
 - Keep the launcher small and local: no online OTA catalog, WebUI, USB mass
@@ -218,3 +231,8 @@ install <slug>
   storage when launched from this OS.
 - `Boot behavior` can auto-try the installed app on power-up or always stop at
   the launcher menu.
+- Cypher PN532 expects a PN532 module in I2C mode on the [Cardputer ADV][cardputer-affiliate] EXT
+  header: VCC to pin 6 `5VOUT`, GND to pin 4 `GND`, SDA to pin 8 `G8`, and SCL
+  to pin 10 `G9`; leave PN532 RESET, INT, and BUSY unconnected for this build.
+
+[cardputer-affiliate]: https://amzn.to/4dqii8h

@@ -12,6 +12,9 @@ WireTap-32 Cardputer is the electronics bench companion app in the Cypher OS dec
 - GPIO digital I/O, ADC, PWM, pulse/frequency checks, and ASCII waveform capture.
 - Cardputer ADV EXT connector mapping for bench use with 3.3V target signals.
 
+Use these bench tools only on boards and circuits you own or are authorized to
+inspect. Check voltage levels before connecting the EXT header.
+
 ## Controls
 
 - Cardputer path accepts arrows, HID arrows, `WASD`, `HJKL`, and punctuation for browsing.

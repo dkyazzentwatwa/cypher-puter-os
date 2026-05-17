@@ -1,7 +1,3 @@
-build/
-*.log
-.DS_Store
-
 # Local OS files
 .DS_Store
 
@@ -26,3 +22,15 @@ DerivedData/
 *.hex
 *.log
 *.tmp
+
+# Release artifacts
+# dist/ is intentionally tracked so users get starter launcher/app binaries
+# and a copy-ready SD card bundle after cloning the repo.
+!dist/
+!dist/**
+dist/**/.DS_Store
+dist/**/*.elf
+dist/**/*.map
+dist/**/*.hex
+dist/**/*.log
+dist/**/*.tmp

@@ -12,6 +12,9 @@ Cypher Drive is the Cardputer ADV build of the portable ESP32-S3 wireless and HI
 - System information, display diagnostics, and session logging.
 - LittleFS-backed log/config storage when launched from Cypher OS.
 
+Use payload, scan, and capture workflows only on systems you own or are
+authorized to test.
+
 ## Controls
 
 - Cardputer keyboard and menu controls are profile-specific in the app firmware.

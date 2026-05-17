@@ -46,6 +46,15 @@
       "notes": "Offline tarot pull, journal, history, and study deck app."
     },
     {
+      "name": "Cypher PN532",
+      "slug": "cypher-pn532",
+      "binary": "cypher-pn532.bin",
+      "source_path": "../cypher-pn532",
+      "version": "local-cardputer",
+      "status": "ready",
+      "notes": "Cardputer ADV PN532 NFC app using EXT I2C on G8/G9 with SD-backed dumps and return-to-launcher support."
+    },
+    {
       "name": "Flock You",
       "slug": "flock-you",
       "binary": "flock-you.bin",

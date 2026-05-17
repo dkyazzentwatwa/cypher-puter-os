@@ -11,6 +11,7 @@ RETURN_LIB="${ROOT}/libraries/CypherPuterReturn"
 CARDPUTER_GAMES_ROOT="${CYPHER_OS_CARDPUTER_GAMES_DIR:-${WORKSPACE_ROOT}/cardputer-games}"
 CARDPUTER_MPC_ROOT="${CYPHER_OS_CARDPUTER_MPC_DIR:-${WORKSPACE_ROOT}/cardputer-mpc}"
 CARDPUTER_TAROT_ROOT="${CYPHER_OS_CARDPUTER_TAROT_DIR:-${WORKSPACE_ROOT}/cardputer-tarot}"
+CYPHER_PN532_ROOT="${CYPHER_OS_CYPHER_PN532_DIR:-${WORKSPACE_ROOT}/cypher-pn532}"
 CYPHER_CHAT_ROOT="${CYPHER_OS_CYPHER_CHAT_DIR:-${WORKSPACE_ROOT}/cypher-chat/cypher-chat-firmware}"
 CYPHER_DRIVE_ROOT="${CYPHER_OS_CYPHER_DRIVE_DIR:-${WORKSPACE_ROOT}/cypher-drive}"
 CYPHER_DESK_ROOT="${CYPHER_OS_CYPHER_DESK_DIR:-${WORKSPACE_ROOT}/cypher-desk}"
@@ -26,6 +27,7 @@ mkdir -p "${DIST}" "${BUILD_ROOT}"
 CARDPUTER_GAMES_STATUS="build_missing"
 CARDPUTER_MPC_STATUS="build_missing"
 CARDPUTER_TAROT_STATUS="build_missing"
+CYPHER_PN532_STATUS="build_missing"
 CYPHER_CHAT_STATUS="build_missing"
 CYPHER_DRIVE_STATUS="build_missing"
 CYPHER_DESK_STATUS="build_missing"
@@ -100,6 +102,19 @@ build_cardputer_tarot() {
   arduino-cli compile --fqbn "${CARDPUTER_FQBN}" --library "${RETURN_LIB}" --output-dir "${out}" "${src}" || return 1
   copy_app_bin "${out}" "cardputer-tarot.bin" || return 1
   CARDPUTER_TAROT_STATUS="ready"
+}
+
+build_cypher_pn532() {
+  local src="${CYPHER_PN532_ROOT}/CardputerPN532"
+  local out="${BUILD_ROOT}/cypher-pn532"
+  require_dir "cypher-pn532 Cardputer source" "${src}" || return 1
+  rm -rf "${out}"
+  mkdir -p "${out}"
+
+  echo "[apps] building cypher-pn532"
+  arduino-cli compile --fqbn "${CARDPUTER_FQBN}" --library "${RETURN_LIB}" --output-dir "${out}" "${src}" || return 1
+  copy_app_bin "${out}" "cypher-pn532.bin" || return 1
+  CYPHER_PN532_STATUS="ready"
 }
 
 build_cypher_chat() {
@@ -221,6 +236,7 @@ mark_failed() {
     cardputer-games) CARDPUTER_GAMES_STATUS="build_failed" ;;
     cardputer-mpc) CARDPUTER_MPC_STATUS="build_failed" ;;
     cardputer-tarot) CARDPUTER_TAROT_STATUS="build_failed" ;;
+    cypher-pn532) CYPHER_PN532_STATUS="build_failed" ;;
     cypher-chat) CYPHER_CHAT_STATUS="build_failed" ;;
     cypher-drive) CYPHER_DRIVE_STATUS="build_failed" ;;
     cypher-desk) CYPHER_DESK_STATUS="build_failed" ;;
@@ -233,6 +249,7 @@ mark_failed() {
 build_cardputer_games || mark_failed "cardputer-games"
 build_cardputer_mpc || mark_failed "cardputer-mpc"
 build_cardputer_tarot || mark_failed "cardputer-tarot"
+build_cypher_pn532 || mark_failed "cypher-pn532"
 build_cypher_chat || mark_failed "cypher-chat"
 build_cypher_drive || mark_failed "cypher-drive"
 build_cypher_desk || mark_failed "cypher-desk"
@@ -243,6 +260,7 @@ build_game_os_games || mark_failed "cardputer-game-os-games"
 CARDPUTER_GAMES_STATUS="${CARDPUTER_GAMES_STATUS}" \
 CARDPUTER_MPC_STATUS="${CARDPUTER_MPC_STATUS}" \
 CARDPUTER_TAROT_STATUS="${CARDPUTER_TAROT_STATUS}" \
+CYPHER_PN532_STATUS="${CYPHER_PN532_STATUS}" \
 CYPHER_CHAT_STATUS="${CYPHER_CHAT_STATUS}" \
 CYPHER_DRIVE_STATUS="${CYPHER_DRIVE_STATUS}" \
 CYPHER_DESK_STATUS="${CYPHER_DESK_STATUS}" \
@@ -252,6 +270,7 @@ GAME_OS_STATUS="${GAME_OS_STATUS}" \
 CARDPUTER_GAMES_ROOT="${CARDPUTER_GAMES_ROOT}" \
 CARDPUTER_MPC_ROOT="${CARDPUTER_MPC_ROOT}" \
 CARDPUTER_TAROT_ROOT="${CARDPUTER_TAROT_ROOT}" \
+CYPHER_PN532_ROOT="${CYPHER_PN532_ROOT}" \
 CYPHER_CHAT_ROOT="${CYPHER_CHAT_ROOT}" \
 CYPHER_DRIVE_ROOT="${CYPHER_DRIVE_ROOT}" \
 CYPHER_DESK_ROOT="${CYPHER_DESK_ROOT}" \
@@ -322,6 +341,15 @@ apps = [
         "notes": "Offline tarot pull, journal, history, and study deck app. Back/backtick from the main menu returns to Cypher OS.",
     },
     {
+        "name": "Cypher PN532",
+        "slug": "cypher-pn532",
+        "binary": binary(status("CYPHER_PN532_STATUS"), "cypher-pn532.bin"),
+        "source_path": path("CYPHER_PN532_ROOT"),
+        "version": "local-cardputer",
+        "status": status("CYPHER_PN532_STATUS"),
+        "notes": "Cardputer ADV PN532 NFC app using EXT I2C on G8/G9 with SD-backed dumps and return-to-launcher support.",
+    },
+    {
         "name": "Cypher Desk",
         "slug": "cypher-desk",
         "binary": binary(status("CYPHER_DESK_STATUS"), "cypher-desk.bin"),
@@ -374,7 +402,7 @@ PY
 
 echo "[apps] manifest: ${DIST}/apps.json"
 
-if [[ "${CARDPUTER_GAMES_STATUS}" != "ready" || "${CARDPUTER_MPC_STATUS}" != "ready" || "${CARDPUTER_TAROT_STATUS}" != "ready" || "${CYPHER_CHAT_STATUS}" != "ready" || "${CYPHER_DRIVE_STATUS}" != "ready" || "${CYPHER_DESK_STATUS}" != "ready" || "${FLOCK_YOU_STATUS}" != "ready" || "${WIRETAP_STATUS}" != "ready" || "${GAME_OS_STATUS}" != "ready" ]]; then
+if [[ "${CARDPUTER_GAMES_STATUS}" != "ready" || "${CARDPUTER_MPC_STATUS}" != "ready" || "${CARDPUTER_TAROT_STATUS}" != "ready" || "${CYPHER_PN532_STATUS}" != "ready" || "${CYPHER_CHAT_STATUS}" != "ready" || "${CYPHER_DRIVE_STATUS}" != "ready" || "${CYPHER_DESK_STATUS}" != "ready" || "${FLOCK_YOU_STATUS}" != "ready" || "${WIRETAP_STATUS}" != "ready" || "${GAME_OS_STATUS}" != "ready" ]]; then
   echo "[apps] one or more ready apps failed to build"
   exit 1
 fi

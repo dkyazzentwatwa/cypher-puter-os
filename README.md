@@ -35,16 +35,16 @@ These are the supported Cardputer app targets in the current catalog flow:
 
 | App | What It Adds |
 | --- | --- |
-| **Cypher Drive** | [Cardputer ADV][cardputer-affiliate] HID payload launcher build. |
-| **Cypher Chat** | Secure-only mesh chat build using protocol `0x02` with AES-256-GCM. |
-| **Cardputer Games** | Standalone Cardputer arcade catalog. |
-| **Cardputer MPC** | MPC-style groovebox with SD-loaded samples and sequencing. |
-| **Cardputer Tarot** | Offline tarot pull, journal, history, and study deck app. |
-| **Cypher PN532** | PN532 NFC toolkit for the [Cardputer ADV][cardputer-affiliate] EXT I2C header. |
+| **[Cypher Drive][cypher-drive-repo]** | [Cardputer ADV][cardputer-affiliate] HID payload launcher build. |
+| **[Cypher Chat][cypher-chat-repo]** | Secure-only mesh chat build using protocol `0x02` with AES-256-GCM. |
+| **[Cardputer Games][cardputer-games-repo]** | Standalone Cardputer arcade catalog. |
+| **[Cardputer MPC][cardputer-mpc-repo]** | MPC-style groovebox with SD-loaded samples and sequencing. |
+| **[Cardputer Tarot][cardputer-tarot-repo]** | Offline tarot pull, journal, history, and study deck app. |
+| **[Cypher PN532][cypher-pn532-repo]** | PN532 NFC toolkit for the [Cardputer ADV][cardputer-affiliate] EXT I2C header. |
 | **Cypher Desk** | Offline utility suite with notes, calculator, checklist, converters, and scratchpad. |
-| **Flock You** | [Cardputer ADV][cardputer-affiliate] WiFi/BLE detector build with return-to-launcher support. |
-| **WireTap-32 Cardputer** | [Cardputer ADV][cardputer-affiliate] EXT bench build with return-to-launcher support. |
-| **Cardputer Game OS games** | Individual game `.bin` files imported from the sibling `cardputer-game-os` repo when present and built successfully. |
+| **[Flock You][cypher-flock-repo]** | [Cardputer ADV][cardputer-affiliate] WiFi/BLE detector build with return-to-launcher support. |
+| **[WireTap-32 Cardputer][wiretap-32-repo]** | [Cardputer ADV][cardputer-affiliate] EXT bench build with return-to-launcher support. |
+| **[Cardputer Game OS games][cardputer-game-os-repo]** | Individual game `.bin` files imported from the sibling `cardputer-game-os` repo when present and built successfully. |
 
 `starbeam_v2` is not part of the Cypher OS app catalog.
 
@@ -159,6 +159,13 @@ all fleet devices need matching firmware.
 
 The app scripts default to sibling repos beside this checkout:
 
+Source repositories: [Cardputer MPC][cardputer-mpc-repo],
+[Cypher Chat][cypher-chat-repo], [Cardputer Games][cardputer-games-repo],
+[Cypher Drive][cypher-drive-repo], [Cardputer Tarot][cardputer-tarot-repo],
+[Cypher PN532][cypher-pn532-repo], [Cypher Flock][cypher-flock-repo],
+[WireTap-32][wiretap-32-repo], and
+[Cardputer Game OS][cardputer-game-os-repo].
+
 ```text
 GitHub/
   cypher-puter-os/
@@ -236,3 +243,12 @@ install <slug>
   to pin 10 `G9`; leave PN532 RESET, INT, and BUSY unconnected for this build.
 
 [cardputer-affiliate]: https://amzn.to/4dqii8h
+[cardputer-game-os-repo]: https://github.com/dkyazzentwatwa/cardputer-game-os
+[cardputer-games-repo]: https://github.com/dkyazzentwatwa/cardputer-games
+[cardputer-mpc-repo]: https://github.com/dkyazzentwatwa/cardputer-mpc
+[cardputer-tarot-repo]: https://github.com/dkyazzentwatwa/cardputer-tarot
+[cypher-chat-repo]: https://github.com/dkyazzentwatwa/cypher-chat
+[cypher-drive-repo]: https://github.com/dkyazzentwatwa/cypher-drive
+[cypher-flock-repo]: https://github.com/dkyazzentwatwa/cypher-flock
+[cypher-pn532-repo]: https://github.com/dkyazzentwatwa/cypher-pn532
+[wiretap-32-repo]: https://github.com/dkyazzentwatwa/WireTap-32

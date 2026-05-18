@@ -208,6 +208,10 @@ CYPHER_OS_ESP32_BT_HID_DIR=/path/to/ESP32_BT_HID ./tools/build-apps.sh
 - `Enter` or BtnA: select
 - Backtick, `Del`, `Tab`, or `Q`: back
 - `R`: reload SD catalog
+- The launcher plays short procedural cues for movement, select, back, toggles,
+  and warnings. Use Settings -> Sound effects to turn them on or off.
+- Settings includes Boot behavior, Brightness, Sound effects, and Reload SD
+  catalog.
 - In packaged apps, use the app's **Return to Launcher** item or `Del/Q` where
   shown. The app restarts, sets a one-shot return flag, and the launcher stays
   on the menu instead of auto-launching again.

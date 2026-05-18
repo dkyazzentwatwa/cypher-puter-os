@@ -20,7 +20,10 @@ static constexpr const char* PREF_NS = "cyputeros";
 static constexpr uint32_t AUTO_LAUNCH_MAGIC = 0xC0DEC0DE;
 static constexpr uint8_t ESP_APP_IMAGE_MAGIC = 0xE9;
 static constexpr uint8_t MAX_APPS = 40;
+static constexpr uint8_t SETTINGS_COUNT = 4;
 static constexpr size_t FLASH_CHUNK = 4096;
+static constexpr uint8_t AUDIO_CHANNEL_SFX = 1;
+static constexpr uint8_t AUDIO_SFX_VOLUME = 96;
 static constexpr uint32_t BOOT_SPLASH_MS = 1800;
 static constexpr uint32_t AUTO_LAUNCH_SPLASH_MS = 1500;
 static constexpr uint16_t COLOR_BG = 0x0000;
@@ -66,6 +69,14 @@ enum ScreenMode {
   SCREEN_MESSAGE
 };
 
+enum AudioCue {
+  AUDIO_CUE_MOVE,
+  AUDIO_CUE_SELECT,
+  AUDIO_CUE_BACK,
+  AUDIO_CUE_TOGGLE,
+  AUDIO_CUE_ERROR
+};
+
 SPIClass sdSPI(FSPI);
 Preferences prefs;
 AppEntry apps[MAX_APPS];
@@ -74,6 +85,7 @@ bool sdMounted = false;
 bool appPartitionValid = false;
 bool bootToApp = true;
 bool returnToLauncherOnce = false;
+bool soundEnabled = true;
 uint8_t brightness = 180;
 char lastInstalled[40] = "";
 char lastMessage[96] = "";
@@ -108,10 +120,45 @@ void setMessage(const char* title, const char* body) {
   screenMode = SCREEN_MESSAGE;
 }
 
+void applyAudioSettings() {
+  M5Cardputer.Speaker.setChannelVolume(AUDIO_CHANNEL_SFX, soundEnabled ? AUDIO_SFX_VOLUME : 0);
+}
+
+void playCue(AudioCue cue) {
+  if (!soundEnabled) return;
+
+  uint16_t frequency = 880;
+  uint16_t durationMs = 22;
+  switch (cue) {
+    case AUDIO_CUE_MOVE:
+      frequency = 880;
+      durationMs = 22;
+      break;
+    case AUDIO_CUE_SELECT:
+      frequency = 1175;
+      durationMs = 45;
+      break;
+    case AUDIO_CUE_BACK:
+      frequency = 523;
+      durationMs = 35;
+      break;
+    case AUDIO_CUE_TOGGLE:
+      frequency = 1320;
+      durationMs = 55;
+      break;
+    case AUDIO_CUE_ERROR:
+      frequency = 180;
+      durationMs = 90;
+      break;
+  }
+  M5Cardputer.Speaker.tone(frequency, durationMs, AUDIO_CHANNEL_SFX, true);
+}
+
 void loadPrefs() {
   prefs.begin(PREF_NS, false);
   brightness = prefs.getUChar("brightness", 180);
   bootToApp = prefs.getBool("bootToApp", false);
+  soundEnabled = prefs.getBool("soundEnabled", true);
   returnToLauncherOnce = prefs.getBool("returnOnce", false);
   if (returnToLauncherOnce) {
     prefs.putBool("returnOnce", false);
@@ -125,6 +172,7 @@ void loadPrefs() {
 void savePrefs() {
   prefs.putUChar("brightness", brightness);
   prefs.putBool("bootToApp", bootToApp);
+  prefs.putBool("soundEnabled", soundEnabled);
   prefs.putString("lastApp", lastInstalled);
 }
 
@@ -293,7 +341,8 @@ void drawSettings() {
   snprintf(brightBuf, sizeof(brightBuf), "%u", brightness);
   drawRow(0, "Boot behavior", bootToApp ? "auto app" : "menu", selectedSettings == 0);
   drawRow(1, "Brightness", brightBuf, selectedSettings == 1);
-  drawRow(2, "Reload SD catalog", "", selectedSettings == 2);
+  drawRow(2, "Sound effects", soundEnabled ? "on" : "off", selectedSettings == 2);
+  drawRow(3, "Reload SD catalog", "", selectedSettings == 3);
   drawFooter("Enter toggle/change  ` back");
 }
 
@@ -461,12 +510,14 @@ void drawInstallProgress(const char* name, size_t written, size_t total, const c
 bool eraseInstalledApp(bool showMessage) {
   const esp_partition_t* part = appPartition();
   if (!part) {
+    playCue(AUDIO_CUE_ERROR);
     if (showMessage) setMessage("Erase Failed", "No app partition was found.");
     return false;
   }
   esp_err_t err = esp_partition_erase_range(part, 0, 4096);
   if (err != ESP_OK) {
     Serial.printf("[erase] failed: %s\n", esp_err_to_name(err));
+    playCue(AUDIO_CUE_ERROR);
     if (showMessage) setMessage("Erase Failed", esp_err_to_name(err));
     return false;
   }
@@ -479,9 +530,13 @@ bool eraseInstalledApp(bool showMessage) {
 }
 
 bool installApp(uint8_t index) {
-  if (index >= appCount) return false;
+  if (index >= appCount) {
+    playCue(AUDIO_CUE_ERROR);
+    return false;
+  }
   AppEntry& app = apps[index];
   if (!app.installable) {
+    playCue(AUDIO_CUE_ERROR);
     setMessage("Not Installable", "This catalog entry is marked as needing a Cardputer port.");
     return false;
   }
@@ -490,6 +545,7 @@ bool installApp(uint8_t index) {
   snprintf(path, sizeof(path), "%s/%s", APP_DIR, app.binary);
   File file = SD.open(path, FILE_READ);
   if (!file) {
+    playCue(AUDIO_CUE_ERROR);
     setMessage("Install Failed", "The binary file was not found on the SD card.");
     return false;
   }
@@ -497,6 +553,7 @@ bool installApp(uint8_t index) {
   const esp_partition_t* part = appPartition();
   if (!part) {
     file.close();
+    playCue(AUDIO_CUE_ERROR);
     setMessage("Install Failed", "No OTA app partition exists in the current partition table.");
     return false;
   }
@@ -504,6 +561,7 @@ bool installApp(uint8_t index) {
   size_t total = file.size();
   if (total < 16 || total > part->size) {
     file.close();
+    playCue(AUDIO_CUE_ERROR);
     setMessage("Install Failed", "The .bin is empty or too large for the Cardputer app slot.");
     return false;
   }
@@ -511,11 +569,13 @@ bool installApp(uint8_t index) {
   uint8_t header[16] = {0};
   if (file.read(header, sizeof(header)) != sizeof(header) || header[0] != ESP_APP_IMAGE_MAGIC) {
     file.close();
+    playCue(AUDIO_CUE_ERROR);
     setMessage("Install Failed", "Use the sketch app .bin, not a data file.");
     return false;
   }
   if (fileLooksMerged(file)) {
     file.close();
+    playCue(AUDIO_CUE_ERROR);
     setMessage("Install Failed", "This looks like a merged flash image. Use the sketch .bin only.");
     return false;
   }
@@ -527,6 +587,7 @@ bool installApp(uint8_t index) {
   esp_err_t err = esp_partition_erase_range(part, 0, part->size);
   if (err != ESP_OK) {
     file.close();
+    playCue(AUDIO_CUE_ERROR);
     setMessage("Install Failed", esp_err_to_name(err));
     return false;
   }
@@ -541,6 +602,7 @@ bool installApp(uint8_t index) {
     size_t got = file.read(buffer, want);
     if (got == 0) {
       file.close();
+      playCue(AUDIO_CUE_ERROR);
       setMessage("Install Failed", "SD read stopped before the binary was complete.");
       return false;
     }
@@ -556,6 +618,7 @@ bool installApp(uint8_t index) {
       err = esp_partition_write(part, written + offset, buffer + offset, got - offset);
       if (err != ESP_OK) {
         file.close();
+        playCue(AUDIO_CUE_ERROR);
         setMessage("Install Failed", esp_err_to_name(err));
         return false;
       }
@@ -573,6 +636,7 @@ bool installApp(uint8_t index) {
   drawInstallProgress(app.name, total, total, "Finalizing boot header");
   err = esp_partition_write(part, 0, firstBlock, sizeof(firstBlock));
   if (err != ESP_OK) {
+    playCue(AUDIO_CUE_ERROR);
     setMessage("Install Failed", esp_err_to_name(err));
     return false;
   }
@@ -580,6 +644,7 @@ bool installApp(uint8_t index) {
   uint8_t verify = 0;
   err = esp_partition_read(part, 0, &verify, 1);
   if (err != ESP_OK || verify != ESP_APP_IMAGE_MAGIC) {
+    playCue(AUDIO_CUE_ERROR);
     setMessage("Install Failed", "The app slot did not verify after writing.");
     return false;
   }
@@ -589,6 +654,7 @@ bool installApp(uint8_t index) {
   appPartitionValid = true;
   autoLaunchAttempt = AUTO_LAUNCH_MAGIC;
   if (!setBootPartition(part)) {
+    playCue(AUDIO_CUE_ERROR);
     setMessage("Install Failed", "Could not select the app boot partition.");
     return false;
   }
@@ -600,14 +666,17 @@ bool installApp(uint8_t index) {
 
 void launchInstalled() {
   if (!appPartitionValid) {
+    playCue(AUDIO_CUE_ERROR);
     setMessage("No Installed App", "Install a .bin from the SD catalog first.");
     return;
   }
   autoLaunchAttempt = AUTO_LAUNCH_MAGIC;
   if (!setBootPartition(appPartition())) {
+    playCue(AUDIO_CUE_ERROR);
     setMessage("Launch Failed", "Could not select the app boot partition.");
     return;
   }
+  playCue(AUDIO_CUE_SELECT);
   M5Cardputer.Display.fillScreen(COLOR_BG);
   drawHeader("Launching");
   drawWrapped(lastInstalled, 8, 40, 37, 2, COLOR_ACCENT);
@@ -639,25 +708,39 @@ InputEvent readInput() {
 }
 
 void handleHome(InputEvent event) {
-  if (event.up) selectedHome = selectedHome == 0 ? homeCount() - 1 : selectedHome - 1;
-  if (event.down) selectedHome = (selectedHome + 1) % homeCount();
+  if (event.up) {
+    selectedHome = selectedHome == 0 ? homeCount() - 1 : selectedHome - 1;
+    playCue(AUDIO_CUE_MOVE);
+  }
+  if (event.down) {
+    selectedHome = (selectedHome + 1) % homeCount();
+    playCue(AUDIO_CUE_MOVE);
+  }
   if (!event.select) return;
 
   switch (selectedHome) {
     case 0:
+      playCue(AUDIO_CUE_SELECT);
       screenMode = SCREEN_APPS;
       break;
     case 1:
       launchInstalled();
       break;
     case 2:
+      playCue(AUDIO_CUE_SELECT);
       screenMode = SCREEN_SETTINGS;
       break;
     case 3:
-      if (appPartitionValid) screenMode = SCREEN_CONFIRM_ERASE;
-      else setMessage("Nothing To Erase", "The app partition is already empty.");
+      if (appPartitionValid) {
+        playCue(AUDIO_CUE_SELECT);
+        screenMode = SCREEN_CONFIRM_ERASE;
+      } else {
+        playCue(AUDIO_CUE_ERROR);
+        setMessage("Nothing To Erase", "The app partition is already empty.");
+      }
       break;
     case 4:
+      playCue(AUDIO_CUE_SELECT);
       screenMode = SCREEN_INFO;
       break;
   }
@@ -665,47 +748,83 @@ void handleHome(InputEvent event) {
 
 void handleApps(InputEvent event) {
   if (event.back) {
+    playCue(AUDIO_CUE_BACK);
     screenMode = SCREEN_HOME;
     return;
   }
   if (event.reload) {
-    mountSd();
-    loadCatalog();
+    bool ok = mountSd() && loadCatalog();
+    playCue(ok ? AUDIO_CUE_SELECT : AUDIO_CUE_ERROR);
     return;
   }
-  if (appCount == 0) return;
-  if (event.up) selectedApp = selectedApp == 0 ? appCount - 1 : selectedApp - 1;
-  if (event.down) selectedApp = (selectedApp + 1) % appCount;
+  if (appCount == 0) {
+    if (event.select) playCue(AUDIO_CUE_ERROR);
+    return;
+  }
+  if (event.up) {
+    selectedApp = selectedApp == 0 ? appCount - 1 : selectedApp - 1;
+    playCue(AUDIO_CUE_MOVE);
+  }
+  if (event.down) {
+    selectedApp = (selectedApp + 1) % appCount;
+    playCue(AUDIO_CUE_MOVE);
+  }
   if (event.select) {
-    if (apps[selectedApp].installable) screenMode = SCREEN_CONFIRM_INSTALL;
-    else setMessage("Needs Port", apps[selectedApp].notes);
+    if (apps[selectedApp].installable) {
+      playCue(AUDIO_CUE_SELECT);
+      screenMode = SCREEN_CONFIRM_INSTALL;
+    } else {
+      playCue(AUDIO_CUE_ERROR);
+      setMessage("Needs Port", apps[selectedApp].notes);
+    }
   }
 }
 
 void handleSettings(InputEvent event) {
   if (event.back) {
+    playCue(AUDIO_CUE_BACK);
     screenMode = SCREEN_HOME;
     return;
   }
-  if (event.up) selectedSettings = selectedSettings == 0 ? 2 : selectedSettings - 1;
-  if (event.down) selectedSettings = (selectedSettings + 1) % 3;
+  if (event.up) {
+    selectedSettings = selectedSettings == 0 ? SETTINGS_COUNT - 1 : selectedSettings - 1;
+    playCue(AUDIO_CUE_MOVE);
+  }
+  if (event.down) {
+    selectedSettings = (selectedSettings + 1) % SETTINGS_COUNT;
+    playCue(AUDIO_CUE_MOVE);
+  }
   if (!event.select && !event.left && !event.right) return;
 
   switch (selectedSettings) {
     case 0:
       bootToApp = !bootToApp;
       savePrefs();
+      playCue(AUDIO_CUE_TOGGLE);
       break;
     case 1:
       if (event.left) brightness = brightness <= 35 ? 20 : brightness - 15;
       else brightness = brightness >= 240 ? 255 : brightness + 15;
       M5Cardputer.Display.setBrightness(brightness);
       savePrefs();
+      playCue(AUDIO_CUE_TOGGLE);
       break;
     case 2:
-      mountSd();
-      loadCatalog();
+      if (soundEnabled) {
+        playCue(AUDIO_CUE_TOGGLE);
+        soundEnabled = false;
+      } else {
+        soundEnabled = true;
+        applyAudioSettings();
+        playCue(AUDIO_CUE_TOGGLE);
+      }
+      savePrefs();
       break;
+    case 3: {
+      bool ok = mountSd() && loadCatalog();
+      playCue(ok ? AUDIO_CUE_SELECT : AUDIO_CUE_ERROR);
+      break;
+    }
   }
 }
 
@@ -722,18 +841,34 @@ void handleInput(InputEvent event) {
       handleSettings(event);
       break;
     case SCREEN_INFO:
-      if (event.back || event.select) screenMode = SCREEN_HOME;
+      if (event.back || event.select) {
+        playCue(event.back ? AUDIO_CUE_BACK : AUDIO_CUE_SELECT);
+        screenMode = SCREEN_HOME;
+      }
       break;
     case SCREEN_CONFIRM_INSTALL:
-      if (event.back) screenMode = SCREEN_APPS;
-      else if (event.select) installApp(selectedApp);
+      if (event.back) {
+        playCue(AUDIO_CUE_BACK);
+        screenMode = SCREEN_APPS;
+      } else if (event.select) {
+        playCue(AUDIO_CUE_SELECT);
+        installApp(selectedApp);
+      }
       break;
     case SCREEN_CONFIRM_ERASE:
-      if (event.back) screenMode = SCREEN_HOME;
-      else if (event.select) eraseInstalledApp(true);
+      if (event.back) {
+        playCue(AUDIO_CUE_BACK);
+        screenMode = SCREEN_HOME;
+      } else if (event.select) {
+        playCue(AUDIO_CUE_SELECT);
+        eraseInstalledApp(true);
+      }
       break;
     case SCREEN_MESSAGE:
-      if (event.back || event.select) screenMode = SCREEN_HOME;
+      if (event.back || event.select) {
+        playCue(event.back ? AUDIO_CUE_BACK : AUDIO_CUE_SELECT);
+        screenMode = SCREEN_HOME;
+      }
       break;
   }
   redraw();
@@ -932,11 +1067,13 @@ void setup() {
 
   auto cfg = M5.config();
   M5Cardputer.begin(cfg, true);
+  M5Cardputer.Speaker.begin();
   M5Cardputer.Display.setRotation(1);
   M5Cardputer.Display.setTextDatum(top_left);
   M5Cardputer.Display.setTextWrap(false);
 
   loadPrefs();
+  applyAudioSettings();
   M5Cardputer.Display.setBrightness(brightness);
   menuInterruptRequested = bootSplash(BOOT_SPLASH_MS, true);
 

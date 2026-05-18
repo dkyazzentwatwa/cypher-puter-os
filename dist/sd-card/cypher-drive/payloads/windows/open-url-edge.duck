@@ -1,0 +1,9 @@
+REM Title: Open URL in Edge
+REM Author: Cypher
+REM Description: Launches Edge from Run dialog with a URL.
+REM Target: Windows 10/11
+DELAY 500
+GUI r
+DELAY 500
+STRING msedge https://example.com
+ENTER

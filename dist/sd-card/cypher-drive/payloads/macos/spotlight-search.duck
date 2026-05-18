@@ -1,0 +1,6 @@
+REM Title: Open Spotlight
+REM Author: Cypher
+REM Description: Cmd+Space opens Spotlight, the launcher for everything else.
+REM Target: macOS
+DELAY 500
+GUI SPACE

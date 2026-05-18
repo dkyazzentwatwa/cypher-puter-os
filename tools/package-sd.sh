@@ -8,7 +8,9 @@ SD_ROOT="${ROOT}/dist/sd-card"
 SD_APPS="${SD_ROOT}/cypher-puter/apps"
 SD_GAME_OS_SAVES="${SD_ROOT}/cardputer-game-os/saves"
 CARDPUTER_MPC_ROOT="${CYPHER_OS_CARDPUTER_MPC_DIR:-${WORKSPACE_ROOT}/cardputer-mpc}"
+ESP32_BT_HID_ROOT="${CYPHER_OS_ESP32_BT_HID_DIR:-${WORKSPACE_ROOT}/ESP32_BT_HID}"
 MPC_SD_SRC="${CARDPUTER_MPC_ROOT}/sdcard/cardputer-mpc"
+ESP32_BT_HID_SD_SRC="${ESP32_BT_HID_ROOT}/dist/sd-card/cypher-drive"
 MANIFEST="${APP_DIST}/apps.json"
 
 if [[ ! -f "${MANIFEST}" ]]; then
@@ -30,6 +32,20 @@ if [[ -d "${MPC_SD_SRC}" ]]; then
   cp -R "${MPC_SD_SRC}" "${SD_ROOT}/"
 else
   echo "[sd] warning: ${MPC_SD_SRC} missing; Cardputer MPC will use its fallback kit"
+fi
+
+if [[ -x "${ESP32_BT_HID_ROOT}/tools/package-sd.sh" ]]; then
+  echo "[sd] packaging ESP32 BT HID payloads"
+  (cd "${ESP32_BT_HID_ROOT}" && ./tools/package-sd.sh)
+else
+  echo "[sd] warning: ${ESP32_BT_HID_ROOT}/tools/package-sd.sh missing; ESP32 BT HID will seed only its fallback payload"
+fi
+
+if [[ -d "${ESP32_BT_HID_SD_SRC}" ]]; then
+  mkdir -p "${SD_ROOT}/cypher-drive"
+  cp -R "${ESP32_BT_HID_SD_SRC}/." "${SD_ROOT}/cypher-drive/"
+else
+  echo "[sd] warning: ${ESP32_BT_HID_SD_SRC} missing; ESP32 BT HID payload bundle was not copied"
 fi
 
 echo "[sd] prepared ${SD_ROOT}"

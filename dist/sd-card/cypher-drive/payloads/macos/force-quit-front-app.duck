@@ -1,0 +1,7 @@
+REM Title: Force-quit front app
+REM Author: Cypher
+REM Description: Cmd+Option+Shift+Esc held for ~3s force-quits the frontmost app.
+REM We hold via a long DELAY between press lines.
+REM Target: macOS
+DELAY 500
+GUI ALT SHIFT ESC

@@ -14,6 +14,7 @@ CARDPUTER_TAROT_ROOT="${CYPHER_OS_CARDPUTER_TAROT_DIR:-${WORKSPACE_ROOT}/cardput
 CYPHER_PN532_ROOT="${CYPHER_OS_CYPHER_PN532_DIR:-${WORKSPACE_ROOT}/cypher-pn532}"
 CYPHER_CHAT_ROOT="${CYPHER_OS_CYPHER_CHAT_DIR:-${WORKSPACE_ROOT}/cypher-chat/cypher-chat-firmware}"
 CYPHER_DRIVE_ROOT="${CYPHER_OS_CYPHER_DRIVE_DIR:-${WORKSPACE_ROOT}/cypher-drive}"
+ESP32_BT_HID_ROOT="${CYPHER_OS_ESP32_BT_HID_DIR:-${WORKSPACE_ROOT}/ESP32_BT_HID}"
 CYPHER_DESK_ROOT="${CYPHER_OS_CYPHER_DESK_DIR:-${WORKSPACE_ROOT}/cypher-desk}"
 FLOCK_YOU_ROOT="${CYPHER_OS_FLOCK_YOU_DIR:-${WORKSPACE_ROOT}/flock-you}"
 WIRETAP_ROOT="${CYPHER_OS_WIRETAP_DIR:-${WORKSPACE_ROOT}/WireTap-32}"
@@ -30,6 +31,7 @@ CARDPUTER_TAROT_STATUS="build_missing"
 CYPHER_PN532_STATUS="build_missing"
 CYPHER_CHAT_STATUS="build_missing"
 CYPHER_DRIVE_STATUS="build_missing"
+ESP32_BT_HID_STATUS="build_missing"
 CYPHER_DESK_STATUS="build_missing"
 FLOCK_YOU_STATUS="build_missing"
 WIRETAP_STATUS="build_missing"
@@ -155,6 +157,23 @@ build_cypher_drive() {
   CYPHER_DRIVE_STATUS="ready"
 }
 
+build_esp32_bt_hid() {
+  local src="${ESP32_BT_HID_ROOT}"
+  local out="${BUILD_ROOT}/esp32-bt-hid"
+  require_dir "ESP32_BT_HID source" "${src}" || return 1
+  rm -rf "${out}"
+  mkdir -p "${out}"
+
+  echo "[apps] building esp32-bt-hid"
+  arduino-cli compile \
+    --profile cardputer \
+    --output-dir "${out}" \
+    --build-property "compiler.cpp.extra_flags=-I${RETURN_LIB}/src" \
+    "${src}" || return 1
+  copy_app_bin "${out}" "esp32-bt-hid.bin" || return 1
+  ESP32_BT_HID_STATUS="ready"
+}
+
 build_cypher_desk() {
   local src="${CYPHER_DESK_ROOT}"
   local out="${BUILD_ROOT}/cypher-desk"
@@ -239,6 +258,7 @@ mark_failed() {
     cypher-pn532) CYPHER_PN532_STATUS="build_failed" ;;
     cypher-chat) CYPHER_CHAT_STATUS="build_failed" ;;
     cypher-drive) CYPHER_DRIVE_STATUS="build_failed" ;;
+    esp32-bt-hid) ESP32_BT_HID_STATUS="build_failed" ;;
     cypher-desk) CYPHER_DESK_STATUS="build_failed" ;;
     flock-you) FLOCK_YOU_STATUS="build_failed" ;;
     wiretap-32-cardputer) WIRETAP_STATUS="build_failed" ;;
@@ -252,6 +272,7 @@ build_cardputer_tarot || mark_failed "cardputer-tarot"
 build_cypher_pn532 || mark_failed "cypher-pn532"
 build_cypher_chat || mark_failed "cypher-chat"
 build_cypher_drive || mark_failed "cypher-drive"
+build_esp32_bt_hid || mark_failed "esp32-bt-hid"
 build_cypher_desk || mark_failed "cypher-desk"
 build_flock_you || mark_failed "flock-you"
 build_wiretap || mark_failed "wiretap-32-cardputer"
@@ -263,6 +284,7 @@ CARDPUTER_TAROT_STATUS="${CARDPUTER_TAROT_STATUS}" \
 CYPHER_PN532_STATUS="${CYPHER_PN532_STATUS}" \
 CYPHER_CHAT_STATUS="${CYPHER_CHAT_STATUS}" \
 CYPHER_DRIVE_STATUS="${CYPHER_DRIVE_STATUS}" \
+ESP32_BT_HID_STATUS="${ESP32_BT_HID_STATUS}" \
 CYPHER_DESK_STATUS="${CYPHER_DESK_STATUS}" \
 FLOCK_YOU_STATUS="${FLOCK_YOU_STATUS}" \
 WIRETAP_STATUS="${WIRETAP_STATUS}" \
@@ -273,6 +295,7 @@ CARDPUTER_TAROT_ROOT="${CARDPUTER_TAROT_ROOT}" \
 CYPHER_PN532_ROOT="${CYPHER_PN532_ROOT}" \
 CYPHER_CHAT_ROOT="${CYPHER_CHAT_ROOT}" \
 CYPHER_DRIVE_ROOT="${CYPHER_DRIVE_ROOT}" \
+ESP32_BT_HID_ROOT="${ESP32_BT_HID_ROOT}" \
 CYPHER_DESK_ROOT="${CYPHER_DESK_ROOT}" \
 FLOCK_YOU_ROOT="${FLOCK_YOU_ROOT}" \
 WIRETAP_ROOT="${WIRETAP_ROOT}" \
@@ -303,6 +326,15 @@ apps = [
         "version": "local",
         "status": status("CYPHER_DRIVE_STATUS"),
         "notes": "Cardputer ADV HID payload launcher build.",
+    },
+    {
+        "name": "ESP32 BT HID",
+        "slug": "esp32-bt-hid",
+        "binary": binary(status("ESP32_BT_HID_STATUS"), "esp32-bt-hid.bin"),
+        "source_path": path("ESP32_BT_HID_ROOT"),
+        "version": "local-cardputer",
+        "status": status("ESP32_BT_HID_STATUS"),
+        "notes": "Cardputer ADV BLE-HID payload deck with SD-backed DuckyScript payloads and Cypher OS return support.",
     },
     {
         "name": "Cypher Chat",
@@ -402,7 +434,7 @@ PY
 
 echo "[apps] manifest: ${DIST}/apps.json"
 
-if [[ "${CARDPUTER_GAMES_STATUS}" != "ready" || "${CARDPUTER_MPC_STATUS}" != "ready" || "${CARDPUTER_TAROT_STATUS}" != "ready" || "${CYPHER_PN532_STATUS}" != "ready" || "${CYPHER_CHAT_STATUS}" != "ready" || "${CYPHER_DRIVE_STATUS}" != "ready" || "${CYPHER_DESK_STATUS}" != "ready" || "${FLOCK_YOU_STATUS}" != "ready" || "${WIRETAP_STATUS}" != "ready" || "${GAME_OS_STATUS}" != "ready" ]]; then
+if [[ "${CARDPUTER_GAMES_STATUS}" != "ready" || "${CARDPUTER_MPC_STATUS}" != "ready" || "${CARDPUTER_TAROT_STATUS}" != "ready" || "${CYPHER_PN532_STATUS}" != "ready" || "${CYPHER_CHAT_STATUS}" != "ready" || "${CYPHER_DRIVE_STATUS}" != "ready" || "${ESP32_BT_HID_STATUS}" != "ready" || "${CYPHER_DESK_STATUS}" != "ready" || "${FLOCK_YOU_STATUS}" != "ready" || "${WIRETAP_STATUS}" != "ready" || "${GAME_OS_STATUS}" != "ready" ]]; then
   echo "[apps] one or more ready apps failed to build"
   exit 1
 fi

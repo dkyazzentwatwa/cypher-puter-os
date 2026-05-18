@@ -10,6 +10,15 @@
       "notes": "Cardputer ADV HID payload launcher build."
     },
     {
+      "name": "ESP32 BT HID",
+      "slug": "esp32-bt-hid",
+      "binary": "esp32-bt-hid.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/ESP32_BT_HID",
+      "version": "local-cardputer",
+      "status": "ready",
+      "notes": "Cardputer ADV BLE-HID payload deck with SD-backed DuckyScript payloads and Cypher OS return support."
+    },
+    {
       "name": "Cypher Chat",
       "slug": "cypher-chat",
       "binary": "cypher-chat.bin",

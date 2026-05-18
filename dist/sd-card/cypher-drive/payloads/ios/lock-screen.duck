@@ -1,0 +1,6 @@
+REM Title: Lock screen (iPadOS)
+REM Author: Cypher
+REM Description: Ctrl+Cmd+Q locks the iPad when a Magic Keyboard is attached.
+REM Target: iPadOS
+DELAY 500
+CTRL GUI q

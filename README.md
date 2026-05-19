@@ -109,7 +109,7 @@ oversized binaries and rejects merged images before writing.
 ## Hardware
 
 - [M5Stack Cardputer ADV][cardputer-affiliate]
-- FAT32 SD card, preferably 32 GB or smaller
+- [FAT32 SD card, preferably 32 GB or smaller](https://amzn.to/494chNq) (16GB MicroSD is great)
 - Apps stored under `/cypher-puter/apps`
 
 ## Responsible Use

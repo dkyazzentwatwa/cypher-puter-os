@@ -1,5 +1,19 @@
 # Cypher PN532
 
+## Cypher OS Package
+
+| Field | Value |
+| --- | --- |
+| Catalog slug | `cypher-pn532` |
+| SD binary | `/cypher-puter/apps/cypher-pn532.bin` |
+| Source repo | https://github.com/dkyazzentwatwa/cypher-pn532 |
+| Local source path | `/Users/cypher/Documents/GitHub/cypher-pn532` |
+| Build profile | `cardputer-adv-pn532` |
+| Extra SD paths | `/cypher-pn532/` |
+| Return path | Use Return to Cypher OS, or press Del, Tab, backtick, or Q from the main menu. |
+| Package note | Cardputer ADV PN532 NFC app using EXT I2C on G8/G9 with SD-backed dumps and return-to-launcher support. |
+| Use it when | You have a PN532 module on the Cardputer ADV EXT I2C header and want NFC tools. |
+
 ## Overview
 
 Cypher PN532 is the Cardputer ADV port of the Cypher NFC toolkit. It uses a PN532 module on the Cardputer EXT I2C header and saves NFC dump output to the SD card.

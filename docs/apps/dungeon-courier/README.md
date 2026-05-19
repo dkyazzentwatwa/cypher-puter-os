@@ -1,5 +1,19 @@
 # Dungeon Courier
 
+## Cypher OS Package
+
+| Field | Value |
+| --- | --- |
+| Catalog slug | `dungeon-courier` |
+| SD binary | `/cypher-puter/apps/dungeon-courier.bin` |
+| Source repo | https://github.com/dkyazzentwatwa/cardputer-game-os |
+| Local source path | `/Users/cypher/Documents/GitHub/cardputer-game-os` |
+| Build profile | `cardputer-game-os` import |
+| Extra SD paths | `/cardputer-game-os/saves/dungeon-courier/save.sav` |
+| Return path | Use the imported game's title-screen return control, usually `Backspace` or `Q`. |
+| Package note | Imported Cardputer Game OS title: Delivery RPG. Cypher OS packages the individual game binary, not the nested Game OS launcher. |
+| Use it when | You want this imported offline Game OS title as an individual Cypher OS app. |
+
 ## Overview
 
 Dungeon Courier is an imported Cypher Game OS title in the Cypher OS SD catalog. Genre: Delivery RPG.

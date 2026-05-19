@@ -1,5 +1,19 @@
 # Cypher Drive
 
+## Cypher OS Package
+
+| Field | Value |
+| --- | --- |
+| Catalog slug | `cypher-drive` |
+| SD binary | `/cypher-puter/apps/cypher-drive.bin` |
+| Source repo | https://github.com/dkyazzentwatwa/cypher-drive |
+| Local source path | `/Users/cypher/Documents/GitHub/cypher-drive` |
+| Build profile | `cardputer-adv-hid` |
+| Extra SD paths | `/cypher-drive/payloads/`, `/cypher-drive/payloads.json` |
+| Return path | Use the app's Return to Launcher item where shown. |
+| Package note | Cardputer ADV HID payload launcher build. |
+| Use it when | You need the broader wireless, payload, capture, logging, and device-utility tool in the deck. |
+
 ## Overview
 
 Cypher Drive is the Cardputer ADV build of the portable ESP32-S3 wireless and HID utility firmware. Inside Cypher OS it works as the payload, scan, capture, and storage-heavy tool in the app deck.

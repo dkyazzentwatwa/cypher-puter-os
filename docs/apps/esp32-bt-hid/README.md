@@ -1,5 +1,19 @@
 # ESP32 BT HID
 
+## Cypher OS Package
+
+| Field | Value |
+| --- | --- |
+| Catalog slug | `esp32-bt-hid` |
+| SD binary | `/cypher-puter/apps/esp32-bt-hid.bin` |
+| Source repo | https://github.com/dkyazzentwatwa/ESP32_BT_HID |
+| Local source path | `/Users/cypher/Documents/GitHub/ESP32_BT_HID` |
+| Build profile | `cardputer` |
+| Extra SD paths | `/cypher-drive/payloads/`, `/cypher-drive/payloads.json` |
+| Return path | Press backtick, Esc, or Del from the top-level device list. |
+| Package note | Cardputer ADV BLE-HID payload deck with SD-backed DuckyScript payloads and Cypher OS return support. |
+| Use it when | You want a BLE keyboard payload app with SD-backed DuckyScript files and a Wi-Fi editor. |
+
 ## Overview
 
 ESP32 BT HID is the Cardputer ADV build of the ESP32_BT_HID payload deck. In Cypher OS it is a separate BLE keyboard payload app that reads DuckyScript files from SD and exposes a Wi-Fi editor for managing them.

@@ -1,5 +1,19 @@
 # Poke-Trail
 
+## Cypher OS Package
+
+| Field | Value |
+| --- | --- |
+| Catalog slug | `poke-trail` |
+| SD binary | `/cypher-puter/apps/poke-trail.bin` |
+| Source repo | https://github.com/dkyazzentwatwa/cardputer-game-os |
+| Local source path | `/Users/cypher/Documents/GitHub/cardputer-game-os` |
+| Build profile | `cardputer-game-os` import |
+| Extra SD paths | `/poke-trail/save.sav` |
+| Return path | Use the imported game's title-screen return control, usually `Backspace` or `Q`. |
+| Package note | Imported Cardputer Game OS title: Creature trail RPG. Cypher OS packages the individual game binary, not the nested Game OS launcher. |
+| Use it when | You want this imported offline Game OS title as an individual Cypher OS app. |
+
 ## Overview
 
 Poke-Trail is an imported creature trail RPG in the Cypher OS SD catalog. It mixes an Oregon Trail-style day-by-day survival loop with original creature battles, catching, audio, and region progression.

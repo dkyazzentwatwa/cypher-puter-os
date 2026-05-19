@@ -1,5 +1,19 @@
 # ESP32 Pokedex
 
+## Cypher OS Package
+
+| Field | Value |
+| --- | --- |
+| Catalog slug | `esp32-pokedex` |
+| SD binary | `/cypher-puter/apps/esp32-pokedex.bin` |
+| Source repo | https://github.com/dkyazzentwatwa/esp32-pokedex |
+| Local source path | `/Users/cypher/Documents/GitHub/esp32-pokedex` |
+| Build profile | `cardputer-adv` |
+| Extra SD paths | `/pokemon/`, `/audio/`, `/config/` |
+| Return path | Choose Return to Cypher OS from the home menu. |
+| Package note | Offline Cardputer Pokemon GO field guide using existing SD data under /pokemon, /audio, and /config. |
+| Use it when | You want an offline Pokemon GO-style field guide using local SD data and sprites. |
+
 ## Overview
 
 ESP32 Pokedex is an offline Pokemon GO-style field guide for the Cardputer. It

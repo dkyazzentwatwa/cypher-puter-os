@@ -1,5 +1,19 @@
 # Cardputer Tarot
 
+## Cypher OS Package
+
+| Field | Value |
+| --- | --- |
+| Catalog slug | `cardputer-tarot` |
+| SD binary | `/cypher-puter/apps/cardputer-tarot.bin` |
+| Source repo | https://github.com/dkyazzentwatwa/cardputer-tarot |
+| Local source path | `/Users/cypher/Documents/GitHub/cardputer-tarot` |
+| Build profile | `cardputer-adv` |
+| Extra SD paths | `/cardputer-tarot/` |
+| Return path | Back/backtick from the main menu returns to Cypher OS. |
+| Package note | Offline tarot pull, journal, history, and study deck app. |
+| Use it when | You want offline tarot pulls, study, history, journaling, and saved readings. |
+
 ## Overview
 
 Cardputer Tarot is an offline tarot app with a full 78-card symbolic deck, spreads, history, journaling, study mode, favorites, clarifiers, and SD-backed pull records.

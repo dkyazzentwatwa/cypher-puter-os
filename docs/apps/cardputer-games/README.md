@@ -1,5 +1,19 @@
 # Cardputer Games
 
+## Cypher OS Package
+
+| Field | Value |
+| --- | --- |
+| Catalog slug | `cardputer-games` |
+| SD binary | `/cypher-puter/apps/cardputer-games.bin` |
+| Source repo | https://github.com/dkyazzentwatwa/cardputer-games |
+| Local source path | `/Users/cypher/Documents/GitHub/cardputer-games` |
+| Build profile | `cardputer-adv` |
+| Extra SD paths | None required beyond `/cypher-puter/apps/`. |
+| Return path | Use the app's Return to Launcher item where shown. |
+| Package note | Standalone Cardputer arcade catalog. |
+| Use it when | You want a standalone arcade catalog with quick local games. |
+
 ## Overview
 
 Cardputer Games is the standalone arcade catalog app. It boots into a compact launcher with 53 tiny offline games mapped to a shared Cardputer-friendly game canvas.

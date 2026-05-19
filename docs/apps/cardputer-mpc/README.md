@@ -1,5 +1,19 @@
 # Cardputer MPC
 
+## Cypher OS Package
+
+| Field | Value |
+| --- | --- |
+| Catalog slug | `cardputer-mpc` |
+| SD binary | `/cypher-puter/apps/cardputer-mpc.bin` |
+| Source repo | https://github.com/dkyazzentwatwa/cardputer-mpc |
+| Local source path | `/Users/cypher/Documents/GitHub/cardputer-mpc` |
+| Build profile | `cardputer` |
+| Extra SD paths | `/cardputer-mpc/` |
+| Return path | Press Shift+Q to return to Cypher OS. Lowercase q remains an MPC pad trigger. |
+| Package note | MPC-style groovebox with SD-loaded samples and sequencing. |
+| Use it when | You want a tiny groovebox with pads, samples, sequencing, and SD project files. |
+
 ## Overview
 
 Cardputer MPC turns the Cardputer into a tiny groovebox: pads, samples, 16-step sequencing, live triggering, project save/load, and a small performance UI.

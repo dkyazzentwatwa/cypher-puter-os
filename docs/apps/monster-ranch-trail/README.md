@@ -1,5 +1,19 @@
 # Monster Ranch
 
+## Cypher OS Package
+
+| Field | Value |
+| --- | --- |
+| Catalog slug | `monster-ranch-trail` |
+| SD binary | `/cypher-puter/apps/monster-ranch-trail.bin` |
+| Source repo | https://github.com/dkyazzentwatwa/cardputer-game-os |
+| Local source path | `/Users/cypher/Documents/GitHub/cardputer-game-os` |
+| Build profile | `cardputer-game-os` import |
+| Extra SD paths | `/cardputer-game-os/saves/monster-ranch-trail/save.sav` |
+| Return path | Use the imported game's title-screen return control, usually `Backspace` or `Q`. |
+| Package note | Imported Cardputer Game OS title: Creature ranch sim. Cypher OS packages the individual game binary, not the nested Game OS launcher. |
+| Use it when | You want this imported offline Game OS title as an individual Cypher OS app. |
+
 ## Overview
 
 Monster Ranch is an imported Cypher Game OS title in the Cypher OS SD catalog. Genre: Creature ranch sim.

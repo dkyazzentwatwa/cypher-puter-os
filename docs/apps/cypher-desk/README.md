@@ -1,35 +1,54 @@
 # Cypher Desk
 
+## Cypher OS Package
+
+| Field | Value |
+| --- | --- |
+| Catalog slug | `cypher-desk` |
+| SD binary | `/cypher-puter/apps/cypher-desk.bin` |
+| Source repo | https://github.com/dkyazzentwatwa/cypher-desk |
+| Local source path | `/Users/cypher/Documents/GitHub/cypher-desk` |
+| Build profile | `cardputer-adv` |
+| Extra SD paths | `/cypher-puter/desk/` |
+| Return path | Use Return to Launcher from the app menu. |
+| Package note | Current upstream app is an ultra-simple SD-backed notepad/file browser for the Cardputer ADV. |
+| Use it when | You want a small SD-backed notepad for plain text and Markdown files. |
+
 ## Overview
 
-Cypher Desk is the calm offline writing and utility workspace in the Cypher OS deck. It is document-first, SD-backed, and designed around the Cardputer keyboard.
+Cypher Desk is the simple offline notepad in the Cypher OS deck. It creates and edits plain `.txt` and `.md` files from a small one-level SD file browser designed around the Cardputer keyboard.
 
 ## What It Does
 
-- Home workspace with recent drafts, notebooks, scratchpad, today list, status, sessions, reference tools, and archive access.
-- Plain-text document storage on the SD card.
-- Single-pane editor with cursor navigation, autosave, manual save, and command shortcuts.
-- Notebook folders, scratchpad capture, today list, and archive workflows.
-- Session stats for saves, word count, character count, and focus time.
+- Creates new `.txt` notes.
+- Creates new `.md` notes.
+- Creates one-level folders.
+- Shows folders first, then loose notes from the home screen.
+- Opens a folder to edit files inside it.
+- Refreshes the visible file list from the SD card.
+- Edits text with cursor navigation, autosave, and manual save.
 
 ## Controls
 
-- Move: `W/S`, `K/J`, arrow legends, `,/.`.
-- Cursor left/right: `A/D`, `H/L`, or arrow legends.
-- Select/newline: `Enter` or BtnA.
+- Menu move: `W/S`, `K/J`, or arrow-labeled keys.
+- Open folder / file: `Enter` or BtnA.
+- Newline in editor: `Enter` or BtnA.
+- Editor cursor move: `Fn` + arrow-labeled keys.
 - Back/exit: backtick only.
-- Delete text: `Del`. Save: `Fn+S`. New: `Fn+N`. Retitle: `Fn+R`. Move to notebook: `Fn+M`. Archive: `Fn+A`.
+- Delete text: `Del`.
+- Save note: `Fn+S`.
+- Refresh file list: select `Refresh files`.
 
 ## SD And Runtime Files
 
-- `/cypher-puter/desk/docs/`
-- `/cypher-puter/desk/notebooks/`
-- `/cypher-puter/desk/archive/`
-- `/cypher-puter/desk/scratch.txt`
-- `/cypher-puter/desk/today.txt`
-- `/cypher-puter/desk/state/recents.txt`
-- `/cypher-puter/desk/state/session.txt`
+- `/cypher-puter/desk/notes/`
+- Example loose note: `/cypher-puter/desk/notes/0001_note.txt`
+- Example folder note: `/cypher-puter/desk/notes/folder-01/0001_note.md`
 - Cypher OS app binary: `/cypher-puter/apps/cypher-desk.bin`.
+
+Older Cypher Desk folders such as `docs`, `notebooks`, `archive`,
+`scratch.txt`, `today.txt`, and `state` are not deleted or migrated. The
+simplified app just stops showing them.
 
 ## Return To Cypher OS
 

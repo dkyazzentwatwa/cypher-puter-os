@@ -1,5 +1,19 @@
 # Star Trail Ranch
 
+## Cypher OS Package
+
+| Field | Value |
+| --- | --- |
+| Catalog slug | `star-trail-rancher` |
+| SD binary | `/cypher-puter/apps/star-trail-rancher.bin` |
+| Source repo | https://github.com/dkyazzentwatwa/cardputer-game-os |
+| Local source path | `/Users/cypher/Documents/GitHub/cardputer-game-os` |
+| Build profile | `cardputer-game-os` import |
+| Extra SD paths | `/cardputer-game-os/saves/star-trail-rancher/save.sav` |
+| Return path | Use the imported game's title-screen return control, usually `Backspace` or `Q`. |
+| Package note | Imported Cardputer Game OS title: Space creature transport. Cypher OS packages the individual game binary, not the nested Game OS launcher. |
+| Use it when | You want this imported offline Game OS title as an individual Cypher OS app. |
+
 ## Overview
 
 Star Trail Ranch is an imported Cypher Game OS title in the Cypher OS SD catalog. Genre: Space creature transport.

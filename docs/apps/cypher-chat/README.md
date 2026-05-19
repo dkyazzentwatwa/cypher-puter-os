@@ -1,5 +1,19 @@
 # Cypher Chat
 
+## Cypher OS Package
+
+| Field | Value |
+| --- | --- |
+| Catalog slug | `cypher-chat` |
+| SD binary | `/cypher-puter/apps/cypher-chat.bin` |
+| Source repo | https://github.com/dkyazzentwatwa/cypher-chat |
+| Local source path | `/Users/cypher/Documents/GitHub/cypher-chat/cypher-chat-firmware` |
+| Build profile | `cardputer-adv-secure-mesh` |
+| Extra SD paths | None required beyond `/cypher-puter/apps/`. |
+| Return path | Use the app's Return to Launcher item where shown. |
+| Package note | Cardputer ADV secure-only mesh chat build. Mesh protocol 0x02 uses AES-256-GCM and does not interoperate with plaintext or HMAC-only firmware. |
+| Use it when | You need secure-only ESP-NOW mesh chat between matching Cypher Chat devices. |
+
 ## Overview
 
 Cypher Chat is the secure-only mesh communication app in the Cypher OS catalog. The packaged Cardputer ADV build comes from the unified `cypher-chat-firmware` sketch.

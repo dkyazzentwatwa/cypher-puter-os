@@ -287,7 +287,11 @@ build_esp32_pokedex() {
   mkdir -p "${out}"
 
   echo "[apps] building esp32-pokedex"
-  arduino-cli compile --fqbn "${CARDPUTER_FQBN}" --library "${RETURN_LIB}" --output-dir "${out}" "${src}" || return 1
+  arduino-cli compile \
+    --profile cardputer \
+    --output-dir "${out}" \
+    --build-property "compiler.cpp.extra_flags=-I${RETURN_LIB}/src" \
+    "${src}" || return 1
   copy_app_bin "${out}" "esp32-pokedex.bin" || return 1
   ESP32_POKEDEX_STATUS="ready"
 }

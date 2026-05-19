@@ -20,17 +20,29 @@ jobs:
 
       - name: Clone public app sources
         working-directory: cypher-puter-os
+        env:
+          CYPHER_OS_RELEASE_PAT: ${{ secrets.CYPHER_OS_RELEASE_PAT }}
         run: |
           python3 - <<'PY'
           import json
+          import os
           import shutil
           import subprocess
           from pathlib import Path
+          from urllib.parse import urlparse, urlunparse
 
           root = Path.cwd()
           workspace = root.parent
+          token = os.environ.get("CYPHER_OS_RELEASE_PAT", "")
           with (root / "config/apps.json").open("r", encoding="utf-8") as handle:
               catalog = json.load(handle)
+
+          def clone_url(repo_url):
+              if not token:
+                  return repo_url
+              parsed = urlparse(repo_url)
+              host = parsed.netloc
+              return urlunparse((parsed.scheme, f"x-access-token:{token}@{host}", parsed.path, "", "", ""))
 
           entries = catalog.get("apps", []) + catalog.get("imports", [])
           for entry in entries:
@@ -42,7 +54,7 @@ jobs:
                   shutil.rmtree(target)
               target.parent.mkdir(parents=True, exist_ok=True)
               print(f"[release] clone {repo_url} -> {target.relative_to(workspace)}")
-              subprocess.check_call(["git", "clone", "--depth", "1", repo_url, str(target)])
+              subprocess.check_call(["git", "clone", "--depth", "1", clone_url(repo_url), str(target)])
           PY
 
       - name: Install Arduino CLI

@@ -1,17 +1,55 @@
-# Cypher OS
+<p align="center">
+  <img src="docs/assets/cypher-os-banner.png" alt="Cypher OS banner with Cardputers and floating launcher features" width="100%">
+</p>
 
-**A local-first app deck for the [M5Stack Cardputer ADV][cardputer-affiliate].**
+<h1 align="center">Cypher OS</h1>
 
-Cypher OS turns the [M5Stack Cardputer ADV][cardputer-affiliate] into a pocket-sized launcher for real
-Cardputer apps. Flash the launcher once, build a local SD catalog, then swap
-between tools, games, music, chat, storage, and field utilities without doing a
-USB reflash every time you want to change what the device does.
+<p align="center">
+  <strong>A local-first app deck for the <a href="https://amzn.to/4dqii8h">M5Stack Cardputer ADV</a>.</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/dkyazzentwatwa/cypher-puter-os/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/dkyazzentwatwa/cypher-puter-os?style=for-the-badge&label=Release&color=00d1ff"></a>
+  <img alt="Arduino CLI" src="https://img.shields.io/badge/Arduino_CLI-only-00979D?style=for-the-badge">
+  <img alt="Target hardware" src="https://img.shields.io/badge/Target-Cardputer_ADV-ffb000?style=for-the-badge">
+  <img alt="Catalog" src="https://img.shields.io/badge/Catalog-SD_card_local-f72585?style=for-the-badge">
+  <img alt="Release assets" src="https://img.shields.io/badge/Release_assets-4-7bd88f?style=for-the-badge">
+</p>
+
+<p align="center">
+  <a href="#install-from-a-release">Install</a>
+  ·
+  <a href="#current-app-lineup">Apps</a>
+  ·
+  <a href="#build-and-package-sd-apps-locally">Build</a>
+  ·
+  <a href="#controls">Controls</a>
+  ·
+  <a href="docs/README.md">Docs</a>
+</p>
+
+Cypher OS turns the [M5Stack Cardputer ADV][cardputer-affiliate] into a
+pocket-sized launcher for real Cardputer apps. Flash the launcher once, copy a
+release SD bundle, then swap between tools, games, music, chat, storage, and
+field utilities without doing a USB reflash every time you want to change what
+the device does.
 
 It feels like a tiny handheld OS, but it stays honest about the hardware:
 ESP32 apps do not execute directly from SD. Cypher OS keeps a small launcher in
 the primary app slot, installs the selected app `.bin` from the SD catalog into
 the app partition, then reboots into that app. When the app supports return,
 you come back to the launcher and pick the next thing.
+
+## At A Glance
+
+| You Get | Details |
+| --- | --- |
+| **Flash once, swap often** | Install app binaries from SD instead of reflashing over USB for every app change. |
+| **Public release bundle** | Each GitHub release ships the launcher `.bin`, SD card zip, generated catalog, and build report. |
+| **Local catalog** | No cloud feed, no online OTA, no account, no remote dependency. |
+| **Return-to-launcher flow** | Supported apps can reboot back into Cypher OS when you are done. |
+| **Diagnostics screen** | See SD mount state, app count, installed app, app slot size, selected binary size, and last install error. |
+| **Arduino CLI only** | Small, scriptable, and intentionally scoped to Cardputer ADV. |
 
 ## Why It Rules
 
@@ -23,11 +61,10 @@ you come back to the launcher and pick the next thing.
 - **Made for repeat use.** Apps can return to Cypher OS instead of turning the
   workflow into flash-once-and-done firmware.
 - **Small launcher, big catalog.** The launcher stays focused on browsing,
-  installing, launching, and recovering from the SD app catalog.
-- **Arduino CLI only.** The repo is intentionally simple and scriptable for
-  local builds.
-- **Purpose-built for [Cardputer ADV][cardputer-affiliate].** No generic board matrix, no stretched
-  scope, no pretending this is a multi-platform firmware framework.
+  installing, launching, diagnostics, and recovering from the SD app catalog.
+- **Purpose-built for [Cardputer ADV][cardputer-affiliate].** No generic board
+  matrix, no stretched scope, no pretending this is a multi-platform firmware
+  framework.
 
 ## Current App Lineup
 
@@ -84,8 +121,29 @@ does not include an online payload or OTA feed.
 
 ## Install From A Release
 
-Official public builds are shipped through GitHub Releases. Each tagged release
-publishes four files:
+Official public builds are shipped through [GitHub Releases][latest-release].
+Grab the newest `v*` release when you want the stable public bundle.
+
+Each tagged release publishes exactly four public assets:
+
+| Asset | Use It For |
+| --- | --- |
+| `cypher-os-launcher.bin` | Flash this launcher firmware to the Cardputer ADV. |
+| `cypher-os-sd-card.zip` | Unzip this directly to the root of a FAT32 SD card. |
+| `apps.json` | Inspect the generated public catalog without opening the SD zip. |
+| `BUILD_REPORT.md` | Check app build status, binary sizes, source commits, and packaging notes. |
+
+Quick install flow:
+
+```text
+1. Flash cypher-os-launcher.bin
+2. Unzip cypher-os-sd-card.zip to a FAT32 SD card
+3. Insert SD card
+4. Boot Cardputer
+5. Pick an app from the Cypher OS catalog
+```
+
+Release asset names:
 
 ```text
 cypher-os-launcher.bin
@@ -94,9 +152,7 @@ apps.json
 BUILD_REPORT.md
 ```
 
-Use `cypher-os-launcher.bin` as the launcher firmware artifact, then unzip
-`cypher-os-sd-card.zip` to the root of a FAT32 SD card. The zip is packaged so
-its contents land directly at the SD root:
+The SD zip is packaged so its contents land directly at the SD root:
 
 ```text
 /cypher-puter/apps/apps.json
@@ -105,10 +161,6 @@ its contents land directly at the SD root:
 /cypher-drive/
 /cardputer-game-os/saves/
 ```
-
-`apps.json` is also uploaded separately for quick inspection. `BUILD_REPORT.md`
-lists the apps that built, skipped, or failed, along with binary sizes and
-source commits when available.
 
 ESP32 Pokedex ships as an app binary in the Cypher OS release bundle, but its
 larger data, sprite, and optional audio folders still live at the app's
@@ -350,4 +402,5 @@ install <slug>
 [cypher-pn532-repo]: https://github.com/dkyazzentwatwa/cypher-pn532
 [esp32-bt-hid-repo]: https://github.com/dkyazzentwatwa/ESP32_BT_HID
 [esp32-pokedex-repo]: https://github.com/dkyazzentwatwa/esp32-pokedex
+[latest-release]: https://github.com/dkyazzentwatwa/cypher-puter-os/releases/latest
 [wiretap-32-repo]: https://github.com/dkyazzentwatwa/WireTap-32

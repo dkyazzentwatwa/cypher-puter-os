@@ -119,6 +119,33 @@ work. Use the apps only with devices, cards, networks, and systems you own or
 have clear permission to test. The SD catalog is intentionally local-first and
 does not include an online payload or OTA feed.
 
+## Install With Codex Or Claude Code
+
+If you use Codex or Claude Code on the machine connected to your Cardputer ADV,
+you can hand the agent this repo and ask it to perform the release install. The
+agent should use this repo's Arduino CLI workflow, keep the target hardware as
+Cardputer ADV, and avoid adding PlatformIO, ESP-IDF project files, online OTA,
+or multi-board scope.
+
+Copy/paste prompt:
+
+```text
+Install Cypher OS on my M5Stack Cardputer ADV from the latest GitHub release.
+Use the release launcher bin and SD card zip, flash the launcher through the
+repo helper when a /dev/cu.usbmodem* port is present, and tell me exactly what
+you copied to the SD card. Do not change firmware or rebuild unless the release
+assets are unavailable.
+```
+
+For a local source build instead, use:
+
+```text
+Build and package this exact Cypher OS checkout for the M5Stack Cardputer ADV.
+Run arduino-cli compile --profile adv ., then ./tools/build-apps.sh and
+./tools/package-sd.sh. Use ./tools/flash-launcher.sh /dev/cu.usbmodemXXXX for
+flashing. Keep the repo Arduino CLI only.
+```
+
 ## Install From A Release
 
 Official public builds are shipped through [GitHub Releases][latest-release].

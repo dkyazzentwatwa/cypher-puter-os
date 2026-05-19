@@ -24,9 +24,23 @@ mkdir -p "${SD_APPS}" "${SD_GAME_OS_SAVES}"
 
 cp -f "${MANIFEST}" "${SD_APPS}/apps.json"
 
-if compgen -G "${APP_DIST}/*.bin" >/dev/null; then
-  cp -f "${APP_DIST}"/*.bin "${SD_APPS}/"
-fi
+python3 - "${MANIFEST}" <<'PY' | while IFS= read -r binary; do
+import json
+import sys
+
+with open(sys.argv[1], "r", encoding="utf-8") as handle:
+    data = json.load(handle)
+for app in data.get("apps", []):
+    binary = app.get("binary", "")
+    if app.get("status") == "ready" and binary:
+        print(binary)
+PY
+  if [[ -f "${APP_DIST}/${binary}" ]]; then
+    cp -f "${APP_DIST}/${binary}" "${SD_APPS}/"
+  else
+    echo "[sd] warning: manifest references missing binary ${binary}"
+  fi
+done
 
 if [[ -d "${MPC_SD_SRC}" ]]; then
   cp -R "${MPC_SD_SRC}" "${SD_ROOT}/"
@@ -47,6 +61,8 @@ if [[ -d "${ESP32_BT_HID_SD_SRC}" ]]; then
 else
   echo "[sd] warning: ${ESP32_BT_HID_SD_SRC} missing; ESP32 BT HID payload bundle was not copied"
 fi
+
+python3 "${ROOT}/tools/validate-catalog.py" "${ROOT}/config/apps.json" --manifest "${SD_APPS}/apps.json" --dist "${SD_APPS}"
 
 echo "[sd] prepared ${SD_ROOT}"
 echo "[sd] copy the contents of ${SD_ROOT} to the root of a FAT32 SD card"

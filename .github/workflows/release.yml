@@ -1,0 +1,80 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Cypher OS
+        uses: actions/checkout@v4
+        with:
+          path: cypher-puter-os
+
+      - name: Clone public app sources
+        working-directory: cypher-puter-os
+        run: |
+          python3 - <<'PY'
+          import json
+          import shutil
+          import subprocess
+          from pathlib import Path
+
+          root = Path.cwd()
+          workspace = root.parent
+          with (root / "config/apps.json").open("r", encoding="utf-8") as handle:
+              catalog = json.load(handle)
+
+          entries = catalog.get("apps", []) + catalog.get("imports", [])
+          for entry in entries:
+              if not entry.get("public_release", False):
+                  continue
+              repo_url = entry["repo_url"]
+              target = (root / entry["local_default_path"]).resolve()
+              if target.exists():
+                  shutil.rmtree(target)
+              target.parent.mkdir(parents=True, exist_ok=True)
+              print(f"[release] clone {repo_url} -> {target.relative_to(workspace)}")
+              subprocess.check_call(["git", "clone", "--depth", "1", repo_url, str(target)])
+          PY
+
+      - name: Install Arduino CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+          echo "$PWD/bin" >> "$GITHUB_PATH"
+
+      - name: Install Arduino platforms and libraries
+        run: |
+          ARDUINO_URLS="https://static-cdn.m5stack.com/resource/arduino/package_m5stack_index.json,https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json"
+          arduino-cli config init --overwrite
+          arduino-cli core update-index --additional-urls "$ARDUINO_URLS"
+          arduino-cli core install m5stack:esp32 --additional-urls "$ARDUINO_URLS"
+          arduino-cli core install esp32:esp32 --additional-urls "$ARDUINO_URLS"
+          arduino-cli lib install "M5Cardputer@1.1.1"
+          arduino-cli lib install "M5Unified@0.2.14"
+          arduino-cli lib install "M5GFX@0.2.20"
+          arduino-cli lib install "ArduinoJson@7.4.3"
+
+      - name: Build release assets
+        working-directory: cypher-puter-os
+        env:
+          CYPHER_OS_RELEASE_VERSION: ${{ github.ref_name }}
+        run: |
+          ./tools/prepare-release.sh "${GITHUB_REF_NAME}"
+
+      - name: Upload GitHub Release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            cypher-puter-os/dist/release/cypher-os-launcher.bin
+            cypher-puter-os/dist/release/cypher-os-sd-card.zip
+            cypher-puter-os/dist/release/apps.json
+            cypher-puter-os/dist/release/BUILD_REPORT.md
+          fail_on_unmatched_files: true

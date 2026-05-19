@@ -10,6 +10,7 @@ Cypher OS is still a local SD launcher: app `.bin` files live under `/cypher-put
 | --- | --- | --- | --- |
 | [Cypher Drive](apps/cypher-drive/README.md) | `cypher-drive` | `cypher-drive.bin` | Cypher Drive is the Cardputer ADV build of the portable ESP32-S3 wireless and HID utility firmware. |
 | [ESP32 BT HID](apps/esp32-bt-hid/README.md) | `esp32-bt-hid` | `esp32-bt-hid.bin` | ESP32 BT HID is the BLE-HID payload deck with SD-backed DuckyScript files and a Wi-Fi editor. |
+| [ESP32 Pokedex](apps/esp32-pokedex/README.md) | `esp32-pokedex` | `esp32-pokedex.bin` | ESP32 Pokedex is the offline Pokemon GO-style field guide that uses the existing SD Pokemon catalog and sprite data. |
 | [Cypher Chat](apps/cypher-chat/README.md) | `cypher-chat` | `cypher-chat.bin` | Cypher Chat is the secure-only mesh communication app in the Cypher OS catalog. |
 | [Cardputer Games](apps/cardputer-games/README.md) | `cardputer-games` | `cardputer-games.bin` | Cardputer Games is the standalone arcade catalog app. |
 | [Cardputer MPC](apps/cardputer-mpc/README.md) | `cardputer-mpc` | `cardputer-mpc.bin` | Cardputer MPC turns the Cardputer into a tiny groovebox: pads, samples, 16-step sequencing, live triggering, project save/load, and a small performance UI. |
@@ -51,6 +52,7 @@ Cypher OS is still a local SD launcher: app `.bin` files live under `/cypher-put
 | Cypher Chat firmware | `/Users/cypher/Documents/GitHub/cypher-chat/cypher-chat-firmware` |
 | Cypher Drive | `/Users/cypher/Documents/GitHub/cypher-drive` |
 | ESP32 BT HID | `/Users/cypher/Documents/GitHub/ESP32_BT_HID` |
+| ESP32 Pokedex | `/Users/cypher/Documents/GitHub/esp32-pokedex` |
 | Cypher Desk | `/Users/cypher/Documents/GitHub/cypher-desk` |
 | Flock You / Cypher Flock | `/Users/cypher/Documents/GitHub/flock-you` |
 | WireTap-32 | `/Users/cypher/Documents/GitHub/WireTap-32` |

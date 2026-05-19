@@ -35,8 +35,8 @@ Build and package SD apps:
 ## App Status
 
 `cardputer-games`, `cardputer-mpc`, `cardputer-tarot`, `cypher-pn532`,
-`cypher-chat`, `cypher-drive`, `cypher-desk`, `flock-you`, and `WireTap-32`
-are treated as buildable Cardputer app targets. Individual
+`cypher-chat`, `cypher-drive`, `cypher-desk`, `esp32-pokedex`, `flock-you`,
+and `WireTap-32` are treated as buildable Cardputer app targets. Individual
 `cardputer-game-os` games are imported from the sibling repo when that repo is
 present and builds successfully. `starbeam_v2` is no longer part of the
 catalog.

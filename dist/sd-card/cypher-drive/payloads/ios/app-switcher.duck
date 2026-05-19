@@ -1,6 +1,0 @@
-REM Title: App switcher (Cmd+Tab)
-REM Author: Cypher
-REM Description: Cmd+Tab cycles through recent apps. Hold Cmd, tap Tab to advance.
-REM Target: iPadOS
-DELAY 500
-GUI TAB

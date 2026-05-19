@@ -1,6 +1,0 @@
-REM Title: Open Task Manager
-REM Author: Cypher
-REM Description: Ctrl+Shift+Esc jumps straight to Task Manager.
-REM Target: Windows 10/11
-DELAY 500
-CTRL SHIFT ESC

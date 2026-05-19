@@ -37,12 +37,13 @@ These are the supported Cardputer app targets in the current catalog flow:
 | --- | --- |
 | **[Cypher Drive][cypher-drive-repo]** | [Cardputer ADV][cardputer-affiliate] HID payload launcher build. |
 | **[ESP32 BT HID][esp32-bt-hid-repo]** | BLE-HID payload deck with SD-backed DuckyScript payloads and a Wi-Fi editor. |
+| **[ESP32 Pokedex][esp32-pokedex-repo]** | Offline Pokemon GO field guide that uses your existing SD data and sprites. |
 | **[Cypher Chat][cypher-chat-repo]** | Secure-only mesh chat build using protocol `0x02` with AES-256-GCM. |
 | **[Cardputer Games][cardputer-games-repo]** | Standalone Cardputer arcade catalog. |
 | **[Cardputer MPC][cardputer-mpc-repo]** | MPC-style groovebox with SD-loaded samples and sequencing. |
 | **[Cardputer Tarot][cardputer-tarot-repo]** | Offline tarot pull, journal, history, and study deck app. |
 | **[Cypher PN532][cypher-pn532-repo]** | PN532 NFC toolkit for the [Cardputer ADV][cardputer-affiliate] EXT I2C header. |
-| **Cypher Desk** | Offline utility suite with notes, calculator, checklist, converters, and scratchpad. |
+| **[Cypher Desk][cypher-desk-repo]** | Offline utility suite with notes, calculator, checklist, converters, and scratchpad. |
 | **[Flock You][cypher-flock-repo]** | [Cardputer ADV][cardputer-affiliate] WiFi/BLE detector build with return-to-launcher support. |
 | **[WireTap-32 Cardputer][wiretap-32-repo]** | [Cardputer ADV][cardputer-affiliate] EXT bench build with return-to-launcher support. |
 | **[Cardputer Game OS games][cardputer-game-os-repo]** | Individual game `.bin` files imported from the sibling `cardputer-game-os` repo when present and built successfully. |
@@ -81,7 +82,56 @@ work. Use the apps only with devices, cards, networks, and systems you own or
 have clear permission to test. The SD catalog is intentionally local-first and
 does not include an online payload or OTA feed.
 
-## Build And Flash The Launcher
+## Install From A Release
+
+Official public builds are shipped through GitHub Releases. Each tagged release
+publishes four files:
+
+```text
+cypher-os-launcher.bin
+cypher-os-sd-card.zip
+apps.json
+BUILD_REPORT.md
+```
+
+Use `cypher-os-launcher.bin` as the launcher firmware artifact, then unzip
+`cypher-os-sd-card.zip` to the root of a FAT32 SD card. The zip is packaged so
+its contents land directly at the SD root:
+
+```text
+/cypher-puter/apps/apps.json
+/cypher-puter/apps/*.bin
+/cardputer-mpc/
+/cypher-drive/
+/cardputer-game-os/saves/
+```
+
+`apps.json` is also uploaded separately for quick inspection. `BUILD_REPORT.md`
+lists the apps that built, skipped, or failed, along with binary sizes and
+source commits when available.
+
+ESP32 Pokedex ships as an app binary in the Cypher OS release bundle, but its
+larger data, sprite, and optional audio folders still live at the app's
+documented SD paths: `/pokemon`, `/audio`, and `/config`.
+
+## Catalog Model
+
+`config/apps.json` is the human source of truth for the public catalog: app
+names, slugs, binary names, public repo URLs, local default paths, build
+profiles, SD paths, return behavior, and release flags.
+
+Generated manifests live under `dist/`:
+
+```text
+dist/apps/apps.json
+dist/sd-card/cypher-puter/apps/apps.json
+dist/BUILD_REPORT.md
+```
+
+Do not edit generated manifests by hand. Update `config/apps.json`, rebuild the
+apps, and let the tools regenerate release output.
+
+## Build And Flash The Launcher Locally
 
 Build with the [Cardputer ADV][cardputer-affiliate] profile:
 
@@ -113,13 +163,34 @@ If you omit the port, the script uses the first `/dev/cu.usbmodem*` port it
 finds, touches it at 1200 baud, waits for re-enumeration, then uploads with the
 `adv` profile.
 
-## Build And Package SD Apps
+## Build And Package SD Apps Locally
 
 Build the app binaries and package the SD card folder:
 
 ```bash
 ./tools/build-apps.sh
 ./tools/package-sd.sh
+```
+
+Build just one app while developing:
+
+```bash
+./tools/build-apps.sh --app cypher-chat
+./tools/build-apps.sh --app esp32-pokedex
+./tools/build-apps.sh --app cypher-desk
+```
+
+Prepare the same artifact set used by official releases:
+
+```bash
+./tools/prepare-release.sh v0.1.0
+```
+
+Official GitHub releases are created by pushing a version tag:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
 ```
 
 Then copy the contents of:
@@ -142,6 +213,7 @@ Expected SD layout:
 /cypher-puter/apps/cypher-chat.bin
 /cypher-puter/apps/cypher-drive.bin
 /cypher-puter/apps/esp32-bt-hid.bin
+/cypher-puter/apps/esp32-pokedex.bin
 /cypher-puter/apps/flock-you.bin
 /cypher-puter/apps/wiretap-32-cardputer.bin
 /cypher-puter/apps/<cardputer-game-os-game>.bin
@@ -149,6 +221,10 @@ Expected SD layout:
 /cypher-drive/payloads/
 /cardputer-game-os/saves/
 ```
+
+ESP32 Pokedex uses SD data already stored at `/pokemon`, `/audio`, and
+`/config`; the Cypher OS package only includes the app `.bin` and catalog
+entry.
 
 The catalog imports individual game `.bin` files from the sibling
 `cardputer-game-os` repo. The nested Game OS launcher itself is not packaged
@@ -165,7 +241,9 @@ The app scripts default to sibling repos beside this checkout:
 Source repositories: [Cardputer MPC][cardputer-mpc-repo],
 [Cypher Chat][cypher-chat-repo], [Cardputer Games][cardputer-games-repo],
 [Cypher Drive][cypher-drive-repo], [Cardputer Tarot][cardputer-tarot-repo],
-[ESP32 BT HID][esp32-bt-hid-repo], [Cypher PN532][cypher-pn532-repo], [Cypher Flock][cypher-flock-repo],
+[ESP32 BT HID][esp32-bt-hid-repo], [ESP32 Pokedex][esp32-pokedex-repo],
+[Cypher PN532][cypher-pn532-repo], [Cypher Desk][cypher-desk-repo],
+[Cypher Flock][cypher-flock-repo],
 [WireTap-32][wiretap-32-repo], and
 [Cardputer Game OS][cardputer-game-os-repo].
 
@@ -180,6 +258,7 @@ GitHub/
   cypher-chat/
   cypher-drive/
   ESP32_BT_HID/
+  esp32-pokedex/
   cypher-desk/
   flock-you/
   WireTap-32/
@@ -198,6 +277,8 @@ CYPHER_OS_CARDPUTER_MPC_DIR=/path/to/cardputer-mpc ./tools/package-sd.sh
 CYPHER_OS_CARDPUTER_TAROT_DIR=/path/to/cardputer-tarot ./tools/build-apps.sh
 CYPHER_OS_CYPHER_PN532_DIR=/path/to/cypher-pn532 ./tools/build-apps.sh
 CYPHER_OS_ESP32_BT_HID_DIR=/path/to/ESP32_BT_HID ./tools/build-apps.sh
+CYPHER_OS_ESP32_POKEDEX_DIR=/path/to/esp32-pokedex ./tools/build-apps.sh
+CYPHER_OS_CYPHER_DESK_DIR=/path/to/cypher-desk ./tools/build-apps.sh
 ```
 
 ## Controls
@@ -210,8 +291,11 @@ CYPHER_OS_ESP32_BT_HID_DIR=/path/to/ESP32_BT_HID ./tools/build-apps.sh
 - `R`: reload SD catalog
 - The launcher plays short procedural cues for movement, select, back, toggles,
   and warnings. Use Settings -> Sound effects to turn them on or off.
-- Settings includes Boot behavior, Brightness, Sound effects, and Reload SD
-  catalog.
+- Settings includes Boot behavior, Brightness, Sound effects, Theme, and Reload
+  SD catalog.
+- The Theme setting cycles through built-in launcher themes stored in firmware:
+  Neon Grid, Terminal, Amber CRT, Synthwave, and Ice. The selected theme is saved
+  in Preferences and does not require an SD theme file.
 - In packaged apps, use the app's **Return to Launcher** item or `Del/Q` where
   shown. The app restarts, sets a one-shot return flag, and the launcher stays
   on the menu instead of auto-launching again.
@@ -221,6 +305,7 @@ CYPHER_OS_ESP32_BT_HID_DIR=/path/to/ESP32_BT_HID ./tools/build-apps.sh
   `Del`, `Tab`, backtick, or `Q` from the main menu.
 - ESP32 BT HID: press backtick, `Esc`, or `Del` from the top-level device list
   to return to Cypher OS.
+- ESP32 Pokedex: choose `Return to Cypher OS` from the home menu.
 - Flock You: open the mini menu, cycle to `HOME`, then press up/down to return.
 - WireTap-32: choose `Launcher` from the main menu, or type `launcher` /
   `return` over serial.
@@ -259,8 +344,10 @@ install <slug>
 [cardputer-mpc-repo]: https://github.com/dkyazzentwatwa/cardputer-mpc
 [cardputer-tarot-repo]: https://github.com/dkyazzentwatwa/cardputer-tarot
 [cypher-chat-repo]: https://github.com/dkyazzentwatwa/cypher-chat
+[cypher-desk-repo]: https://github.com/dkyazzentwatwa/cypher-desk
 [cypher-drive-repo]: https://github.com/dkyazzentwatwa/cypher-drive
 [cypher-flock-repo]: https://github.com/dkyazzentwatwa/cypher-flock
 [cypher-pn532-repo]: https://github.com/dkyazzentwatwa/cypher-pn532
 [esp32-bt-hid-repo]: https://github.com/dkyazzentwatwa/ESP32_BT_HID
+[esp32-pokedex-repo]: https://github.com/dkyazzentwatwa/esp32-pokedex
 [wiretap-32-repo]: https://github.com/dkyazzentwatwa/WireTap-32

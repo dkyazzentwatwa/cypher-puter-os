@@ -1,6 +1,0 @@
-REM Title: Open Settings
-REM Author: Cypher
-REM Description: Win+I opens the Settings app directly.
-REM Target: Windows 10/11
-DELAY 500
-GUI i

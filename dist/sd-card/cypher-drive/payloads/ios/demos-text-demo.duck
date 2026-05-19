@@ -1,7 +1,0 @@
-STRING ESP32-S3 iOS keyboard demo is active.
-DELAY 400
-ENTER
-STRING This is benign sample text for notes, chat, or docs.
-DELAY 400
-ENTER
-STRING Done.

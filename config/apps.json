@@ -1,11 +1,21 @@
 {
+  "catalog_version": 1,
+  "name": "Cypher OS App Catalog",
+  "target_hardware": "M5Stack Cardputer ADV",
   "apps": [
     {
       "name": "Cypher Drive",
       "slug": "cypher-drive",
       "binary": "cypher-drive.bin",
-      "source_path": "../cypher-drive",
-      "version": "local",
+      "repo_url": "https://github.com/dkyazzentwatwa/cypher-drive",
+      "local_default_path": "../cypher-drive",
+      "build_profile": "cardputer-adv-hid",
+      "sd_paths": [
+        "/cypher-drive/payloads/",
+        "/cypher-drive/payloads.json"
+      ],
+      "return_to_launcher": "Use the app's Return to Launcher item where shown.",
+      "public_release": true,
       "status": "ready",
       "notes": "Cardputer ADV HID payload launcher build."
     },
@@ -13,17 +23,46 @@
       "name": "ESP32 BT HID",
       "slug": "esp32-bt-hid",
       "binary": "esp32-bt-hid.bin",
-      "source_path": "../ESP32_BT_HID",
-      "version": "local-cardputer",
+      "repo_url": "https://github.com/dkyazzentwatwa/ESP32_BT_HID",
+      "local_default_path": "../ESP32_BT_HID",
+      "build_profile": "cardputer",
+      "sd_paths": [
+        "/cypher-drive/payloads/",
+        "/cypher-drive/payloads.json"
+      ],
+      "return_to_launcher": "Press backtick, Esc, or Del from the top-level device list.",
+      "public_release": true,
       "status": "ready",
       "notes": "Cardputer ADV BLE-HID payload deck with SD-backed DuckyScript payloads and Cypher OS return support."
+    },
+    {
+      "name": "ESP32 Pokedex",
+      "slug": "esp32-pokedex",
+      "binary": "esp32-pokedex.bin",
+      "repo_url": "https://github.com/dkyazzentwatwa/esp32-pokedex",
+      "local_default_path": "../esp32-pokedex",
+      "build_profile": "cardputer-adv",
+      "sd_paths": [
+        "/pokemon/",
+        "/audio/",
+        "/config/"
+      ],
+      "return_to_launcher": "Choose Return to Cypher OS from the home menu.",
+      "public_release": true,
+      "status": "ready",
+      "notes": "Offline Cardputer Pokemon GO field guide using existing SD data under /pokemon, /audio, and /config."
     },
     {
       "name": "Cypher Chat",
       "slug": "cypher-chat",
       "binary": "cypher-chat.bin",
-      "source_path": "../cypher-chat/cypher-chat-firmware",
-      "version": "local",
+      "repo_url": "https://github.com/dkyazzentwatwa/cypher-chat",
+      "local_default_path": "../cypher-chat",
+      "source_subpath": "cypher-chat-firmware",
+      "build_profile": "cardputer-adv-secure-mesh",
+      "sd_paths": [],
+      "return_to_launcher": "Use the app's Return to Launcher item where shown.",
+      "public_release": true,
       "status": "ready",
       "notes": "Cardputer ADV secure-only mesh chat build. Mesh protocol 0x02 uses AES-256-GCM and does not interoperate with plaintext or HMAC-only firmware."
     },
@@ -31,26 +70,42 @@
       "name": "Cardputer Games",
       "slug": "cardputer-games",
       "binary": "cardputer-games.bin",
-      "source_path": "../cardputer-games",
-      "version": "local",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-games",
+      "local_default_path": "../cardputer-games",
+      "build_profile": "cardputer-adv",
+      "sd_paths": [],
+      "return_to_launcher": "Use the app's Return to Launcher item where shown.",
+      "public_release": true,
       "status": "ready",
       "notes": "Standalone Cardputer arcade catalog."
     },
     {
-      "name": "Cypher Desk",
-      "slug": "cypher-desk",
-      "binary": "cypher-desk.bin",
-      "source_path": "../cypher-desk",
-      "version": "local",
+      "name": "Cardputer MPC",
+      "slug": "cardputer-mpc",
+      "binary": "cardputer-mpc.bin",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-mpc",
+      "local_default_path": "../cardputer-mpc",
+      "build_profile": "cardputer",
+      "sd_paths": [
+        "/cardputer-mpc/"
+      ],
+      "return_to_launcher": "Press Shift+Q to return to Cypher OS. Lowercase q remains an MPC pad trigger.",
+      "public_release": true,
       "status": "ready",
-      "notes": "Offline Cardputer ADV utility suite with notes, calculator, checklist, converters, and scratchpad."
+      "notes": "MPC-style groovebox with SD-loaded samples and sequencing."
     },
     {
       "name": "Cardputer Tarot",
       "slug": "cardputer-tarot",
       "binary": "cardputer-tarot.bin",
-      "source_path": "../cardputer-tarot",
-      "version": "local",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-tarot",
+      "local_default_path": "../cardputer-tarot",
+      "build_profile": "cardputer-adv",
+      "sd_paths": [
+        "/cardputer-tarot/"
+      ],
+      "return_to_launcher": "Back/backtick from the main menu returns to Cypher OS.",
+      "public_release": true,
       "status": "ready",
       "notes": "Offline tarot pull, journal, history, and study deck app."
     },
@@ -58,17 +113,42 @@
       "name": "Cypher PN532",
       "slug": "cypher-pn532",
       "binary": "cypher-pn532.bin",
-      "source_path": "../cypher-pn532",
-      "version": "local-cardputer",
+      "repo_url": "https://github.com/dkyazzentwatwa/cypher-pn532",
+      "local_default_path": "../cypher-pn532",
+      "build_profile": "cardputer-adv-pn532",
+      "sd_paths": [
+        "/cypher-pn532/"
+      ],
+      "return_to_launcher": "Use Return to Cypher OS, or press Del, Tab, backtick, or Q from the main menu.",
+      "public_release": true,
       "status": "ready",
       "notes": "Cardputer ADV PN532 NFC app using EXT I2C on G8/G9 with SD-backed dumps and return-to-launcher support."
+    },
+    {
+      "name": "Cypher Desk",
+      "slug": "cypher-desk",
+      "binary": "cypher-desk.bin",
+      "repo_url": "https://github.com/dkyazzentwatwa/cypher-desk",
+      "local_default_path": "../cypher-desk",
+      "build_profile": "cardputer-adv",
+      "sd_paths": [
+        "/cypher-puter/desk/"
+      ],
+      "return_to_launcher": "Use Return to Launcher from the app menu.",
+      "public_release": true,
+      "status": "ready",
+      "notes": "Offline Cardputer ADV utility suite with notes, calculator, checklist, converters, and scratchpad."
     },
     {
       "name": "Flock You",
       "slug": "flock-you",
       "binary": "flock-you.bin",
-      "source_path": "../flock-you",
-      "version": "local-cardputer",
+      "repo_url": "https://github.com/dkyazzentwatwa/cypher-flock",
+      "local_default_path": "../flock-you",
+      "build_profile": "cardputer-adv-detector",
+      "sd_paths": [],
+      "return_to_launcher": "Open the mini menu, cycle to HOME, then press up/down to return.",
+      "public_release": true,
       "status": "ready",
       "notes": "Cardputer ADV WiFi/BLE detector build with return-to-launcher support."
     },
@@ -76,10 +156,30 @@
       "name": "WireTap-32 Cardputer",
       "slug": "wiretap-32-cardputer",
       "binary": "wiretap-32-cardputer.bin",
-      "source_path": "../WireTap-32",
-      "version": "local-cardputer",
+      "repo_url": "https://github.com/dkyazzentwatwa/WireTap-32",
+      "local_default_path": "../WireTap-32",
+      "build_profile": "cardputer-adv-ext-bench",
+      "sd_paths": [],
+      "return_to_launcher": "Choose Launcher from the main menu, or type launcher / return over serial.",
+      "public_release": true,
       "status": "ready",
       "notes": "Cardputer ADV EXT bench build with return-to-launcher support."
+    }
+  ],
+  "imports": [
+    {
+      "name": "Cardputer Game OS Games",
+      "slug": "cardputer-game-os-games",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-game-os",
+      "local_default_path": "../cardputer-game-os",
+      "build_profile": "cardputer-game-os",
+      "sd_paths": [
+        "/cardputer-game-os/saves/"
+      ],
+      "return_to_launcher": "Use the imported game's launcher return control where documented.",
+      "public_release": true,
+      "status": "ready",
+      "notes": "Imports individual game .bin files from the sibling Cardputer Game OS build manifest."
     }
   ]
 }

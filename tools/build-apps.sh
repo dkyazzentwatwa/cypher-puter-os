@@ -4,9 +4,56 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DIST="${ROOT}/dist/apps"
 BUILD_ROOT="${ROOT}/build/apps"
+CATALOG="${ROOT}/config/apps.json"
+REPORT="${ROOT}/dist/BUILD_REPORT.md"
 WORKSPACE_ROOT="${CYPHER_OS_WORKSPACE_ROOT:-$(cd "${ROOT}/.." && pwd)}"
 CARDPUTER_FQBN="m5stack:esp32:m5stack_cardputer:FlashSize=8M,PartitionScheme=default_8MB,CDCOnBoot=cdc,USBMode=hwcdc"
 RETURN_LIB="${ROOT}/libraries/CypherPuterReturn"
+REQUESTED_APP=""
+
+usage() {
+  cat <<'EOF'
+Usage: ./tools/build-apps.sh [--app <slug>]
+
+Build Cypher OS app binaries into dist/apps and write:
+  dist/apps/apps.json
+  dist/BUILD_REPORT.md
+
+Without --app, all public catalog apps are built. With --app, only that primary
+app slug is built. Use --app cardputer-game-os-games to rebuild imported Game OS
+titles.
+EOF
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --app)
+      if [[ $# -lt 2 ]]; then
+        echo "[apps] --app requires a slug" >&2
+        exit 2
+      fi
+      REQUESTED_APP="$2"
+      shift 2
+      ;;
+    --help|-h)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "[apps] unknown argument: $1" >&2
+      usage >&2
+      exit 2
+      ;;
+  esac
+done
+
+case "${REQUESTED_APP}" in
+  ""|cardputer-games|cardputer-mpc|cardputer-tarot|cypher-pn532|cypher-chat|cypher-drive|esp32-bt-hid|esp32-pokedex|cypher-desk|flock-you|wiretap-32-cardputer|cardputer-game-os-games) ;;
+  *)
+    echo "[apps] unknown app slug: ${REQUESTED_APP}" >&2
+    exit 2
+    ;;
+esac
 
 CARDPUTER_GAMES_ROOT="${CYPHER_OS_CARDPUTER_GAMES_DIR:-${WORKSPACE_ROOT}/cardputer-games}"
 CARDPUTER_MPC_ROOT="${CYPHER_OS_CARDPUTER_MPC_DIR:-${WORKSPACE_ROOT}/cardputer-mpc}"
@@ -15,6 +62,7 @@ CYPHER_PN532_ROOT="${CYPHER_OS_CYPHER_PN532_DIR:-${WORKSPACE_ROOT}/cypher-pn532}
 CYPHER_CHAT_ROOT="${CYPHER_OS_CYPHER_CHAT_DIR:-${WORKSPACE_ROOT}/cypher-chat/cypher-chat-firmware}"
 CYPHER_DRIVE_ROOT="${CYPHER_OS_CYPHER_DRIVE_DIR:-${WORKSPACE_ROOT}/cypher-drive}"
 ESP32_BT_HID_ROOT="${CYPHER_OS_ESP32_BT_HID_DIR:-${WORKSPACE_ROOT}/ESP32_BT_HID}"
+ESP32_POKEDEX_ROOT="${CYPHER_OS_ESP32_POKEDEX_DIR:-${WORKSPACE_ROOT}/esp32-pokedex}"
 CYPHER_DESK_ROOT="${CYPHER_OS_CYPHER_DESK_DIR:-${WORKSPACE_ROOT}/cypher-desk}"
 FLOCK_YOU_ROOT="${CYPHER_OS_FLOCK_YOU_DIR:-${WORKSPACE_ROOT}/flock-you}"
 WIRETAP_ROOT="${CYPHER_OS_WIRETAP_DIR:-${WORKSPACE_ROOT}/WireTap-32}"
@@ -25,6 +73,10 @@ GAME_OS_MANIFEST="${GAME_OS_APPS}/games.json"
 rm -rf "${DIST}"
 mkdir -p "${DIST}" "${BUILD_ROOT}"
 
+if [[ -f "${CATALOG}" ]]; then
+  python3 "${ROOT}/tools/validate-catalog.py" "${CATALOG}"
+fi
+
 CARDPUTER_GAMES_STATUS="build_missing"
 CARDPUTER_MPC_STATUS="build_missing"
 CARDPUTER_TAROT_STATUS="build_missing"
@@ -32,10 +84,63 @@ CYPHER_PN532_STATUS="build_missing"
 CYPHER_CHAT_STATUS="build_missing"
 CYPHER_DRIVE_STATUS="build_missing"
 ESP32_BT_HID_STATUS="build_missing"
+ESP32_POKEDEX_STATUS="build_missing"
 CYPHER_DESK_STATUS="build_missing"
 FLOCK_YOU_STATUS="build_missing"
 WIRETAP_STATUS="build_missing"
 GAME_OS_STATUS="build_missing"
+
+set_status() {
+  local slug="$1"
+  local status="$2"
+  case "${slug}" in
+    cardputer-games) CARDPUTER_GAMES_STATUS="${status}" ;;
+    cardputer-mpc) CARDPUTER_MPC_STATUS="${status}" ;;
+    cardputer-tarot) CARDPUTER_TAROT_STATUS="${status}" ;;
+    cypher-pn532) CYPHER_PN532_STATUS="${status}" ;;
+    cypher-chat) CYPHER_CHAT_STATUS="${status}" ;;
+    cypher-drive) CYPHER_DRIVE_STATUS="${status}" ;;
+    esp32-bt-hid) ESP32_BT_HID_STATUS="${status}" ;;
+    esp32-pokedex) ESP32_POKEDEX_STATUS="${status}" ;;
+    cypher-desk) CYPHER_DESK_STATUS="${status}" ;;
+    flock-you) FLOCK_YOU_STATUS="${status}" ;;
+    wiretap-32-cardputer) WIRETAP_STATUS="${status}" ;;
+    cardputer-game-os-games) GAME_OS_STATUS="${status}" ;;
+  esac
+}
+
+get_status() {
+  local slug="$1"
+  case "${slug}" in
+    cardputer-games) echo "${CARDPUTER_GAMES_STATUS}" ;;
+    cardputer-mpc) echo "${CARDPUTER_MPC_STATUS}" ;;
+    cardputer-tarot) echo "${CARDPUTER_TAROT_STATUS}" ;;
+    cypher-pn532) echo "${CYPHER_PN532_STATUS}" ;;
+    cypher-chat) echo "${CYPHER_CHAT_STATUS}" ;;
+    cypher-drive) echo "${CYPHER_DRIVE_STATUS}" ;;
+    esp32-bt-hid) echo "${ESP32_BT_HID_STATUS}" ;;
+    esp32-pokedex) echo "${ESP32_POKEDEX_STATUS}" ;;
+    cypher-desk) echo "${CYPHER_DESK_STATUS}" ;;
+    flock-you) echo "${FLOCK_YOU_STATUS}" ;;
+    wiretap-32-cardputer) echo "${WIRETAP_STATUS}" ;;
+    cardputer-game-os-games) echo "${GAME_OS_STATUS}" ;;
+  esac
+}
+
+should_build() {
+  local slug="$1"
+  [[ -z "${REQUESTED_APP}" || "${REQUESTED_APP}" == "${slug}" ]]
+}
+
+run_build() {
+  local slug="$1"
+  local fn="$2"
+  if ! should_build "${slug}"; then
+    set_status "${slug}" "skipped"
+    return 0
+  fi
+  "${fn}" || mark_failed "${slug}"
+}
 
 copy_app_bin() {
   local build_dir="$1"
@@ -174,6 +279,19 @@ build_esp32_bt_hid() {
   ESP32_BT_HID_STATUS="ready"
 }
 
+build_esp32_pokedex() {
+  local src="${ESP32_POKEDEX_ROOT}"
+  local out="${BUILD_ROOT}/esp32-pokedex"
+  require_dir "esp32-pokedex source" "${src}" || return 1
+  rm -rf "${out}"
+  mkdir -p "${out}"
+
+  echo "[apps] building esp32-pokedex"
+  arduino-cli compile --fqbn "${CARDPUTER_FQBN}" --library "${RETURN_LIB}" --output-dir "${out}" "${src}" || return 1
+  copy_app_bin "${out}" "esp32-pokedex.bin" || return 1
+  ESP32_POKEDEX_STATUS="ready"
+}
+
 build_cypher_desk() {
   local src="${CYPHER_DESK_ROOT}"
   local out="${BUILD_ROOT}/cypher-desk"
@@ -259,6 +377,7 @@ mark_failed() {
     cypher-chat) CYPHER_CHAT_STATUS="build_failed" ;;
     cypher-drive) CYPHER_DRIVE_STATUS="build_failed" ;;
     esp32-bt-hid) ESP32_BT_HID_STATUS="build_failed" ;;
+    esp32-pokedex) ESP32_POKEDEX_STATUS="build_failed" ;;
     cypher-desk) CYPHER_DESK_STATUS="build_failed" ;;
     flock-you) FLOCK_YOU_STATUS="build_failed" ;;
     wiretap-32-cardputer) WIRETAP_STATUS="build_failed" ;;
@@ -266,17 +385,18 @@ mark_failed() {
   esac
 }
 
-build_cardputer_games || mark_failed "cardputer-games"
-build_cardputer_mpc || mark_failed "cardputer-mpc"
-build_cardputer_tarot || mark_failed "cardputer-tarot"
-build_cypher_pn532 || mark_failed "cypher-pn532"
-build_cypher_chat || mark_failed "cypher-chat"
-build_cypher_drive || mark_failed "cypher-drive"
-build_esp32_bt_hid || mark_failed "esp32-bt-hid"
-build_cypher_desk || mark_failed "cypher-desk"
-build_flock_you || mark_failed "flock-you"
-build_wiretap || mark_failed "wiretap-32-cardputer"
-build_game_os_games || mark_failed "cardputer-game-os-games"
+run_build "cardputer-games" build_cardputer_games
+run_build "cardputer-mpc" build_cardputer_mpc
+run_build "cardputer-tarot" build_cardputer_tarot
+run_build "cypher-pn532" build_cypher_pn532
+run_build "cypher-chat" build_cypher_chat
+run_build "cypher-drive" build_cypher_drive
+run_build "esp32-bt-hid" build_esp32_bt_hid
+run_build "esp32-pokedex" build_esp32_pokedex
+run_build "cypher-desk" build_cypher_desk
+run_build "flock-you" build_flock_you
+run_build "wiretap-32-cardputer" build_wiretap
+run_build "cardputer-game-os-games" build_game_os_games
 
 CARDPUTER_GAMES_STATUS="${CARDPUTER_GAMES_STATUS}" \
 CARDPUTER_MPC_STATUS="${CARDPUTER_MPC_STATUS}" \
@@ -285,6 +405,7 @@ CYPHER_PN532_STATUS="${CYPHER_PN532_STATUS}" \
 CYPHER_CHAT_STATUS="${CYPHER_CHAT_STATUS}" \
 CYPHER_DRIVE_STATUS="${CYPHER_DRIVE_STATUS}" \
 ESP32_BT_HID_STATUS="${ESP32_BT_HID_STATUS}" \
+ESP32_POKEDEX_STATUS="${ESP32_POKEDEX_STATUS}" \
 CYPHER_DESK_STATUS="${CYPHER_DESK_STATUS}" \
 FLOCK_YOU_STATUS="${FLOCK_YOU_STATUS}" \
 WIRETAP_STATUS="${WIRETAP_STATUS}" \
@@ -296,145 +417,31 @@ CYPHER_PN532_ROOT="${CYPHER_PN532_ROOT}" \
 CYPHER_CHAT_ROOT="${CYPHER_CHAT_ROOT}" \
 CYPHER_DRIVE_ROOT="${CYPHER_DRIVE_ROOT}" \
 ESP32_BT_HID_ROOT="${ESP32_BT_HID_ROOT}" \
+ESP32_POKEDEX_ROOT="${ESP32_POKEDEX_ROOT}" \
 CYPHER_DESK_ROOT="${CYPHER_DESK_ROOT}" \
 FLOCK_YOU_ROOT="${FLOCK_YOU_ROOT}" \
 WIRETAP_ROOT="${WIRETAP_ROOT}" \
 GAME_OS_ROOT="${GAME_OS_ROOT}" \
-python3 - "${DIST}/apps.json" "${GAME_OS_MANIFEST}" <<'PY'
-import json
-import os
-import sys
+CYPHER_OS_RELEASE_VERSION="${CYPHER_OS_RELEASE_VERSION:-local}" \
+python3 "${ROOT}/tools/build-report.py" \
+  --catalog "${CATALOG}" \
+  --dist "${DIST}" \
+  --game-manifest "${GAME_OS_MANIFEST}" \
+  --report "${REPORT}" \
+  --selected "${REQUESTED_APP}"
 
-out_path = sys.argv[1]
-game_manifest = sys.argv[2]
+python3 "${ROOT}/tools/validate-catalog.py" "${CATALOG}" --manifest "${DIST}/apps.json" --dist "${DIST}"
 
-def status(name):
-    return os.environ[name]
+failed=0
+if [[ -n "${REQUESTED_APP}" ]]; then
+  if [[ "$(get_status "${REQUESTED_APP}")" != "ready" ]]; then
+    failed=1
+  fi
+elif [[ "${CARDPUTER_GAMES_STATUS}" != "ready" || "${CARDPUTER_MPC_STATUS}" != "ready" || "${CARDPUTER_TAROT_STATUS}" != "ready" || "${CYPHER_PN532_STATUS}" != "ready" || "${CYPHER_CHAT_STATUS}" != "ready" || "${CYPHER_DRIVE_STATUS}" != "ready" || "${ESP32_BT_HID_STATUS}" != "ready" || "${ESP32_POKEDEX_STATUS}" != "ready" || "${CYPHER_DESK_STATUS}" != "ready" || "${FLOCK_YOU_STATUS}" != "ready" || "${WIRETAP_STATUS}" != "ready" || "${GAME_OS_STATUS}" != "ready" ]]; then
+  failed=1
+fi
 
-def binary(app_status, filename):
-    return filename if app_status == "ready" else ""
-
-def path(name):
-    return os.environ[name]
-
-apps = [
-    {
-        "name": "Cypher Drive",
-        "slug": "cypher-drive",
-        "binary": binary(status("CYPHER_DRIVE_STATUS"), "cypher-drive.bin"),
-        "source_path": path("CYPHER_DRIVE_ROOT"),
-        "version": "local",
-        "status": status("CYPHER_DRIVE_STATUS"),
-        "notes": "Cardputer ADV HID payload launcher build.",
-    },
-    {
-        "name": "ESP32 BT HID",
-        "slug": "esp32-bt-hid",
-        "binary": binary(status("ESP32_BT_HID_STATUS"), "esp32-bt-hid.bin"),
-        "source_path": path("ESP32_BT_HID_ROOT"),
-        "version": "local-cardputer",
-        "status": status("ESP32_BT_HID_STATUS"),
-        "notes": "Cardputer ADV BLE-HID payload deck with SD-backed DuckyScript payloads and Cypher OS return support.",
-    },
-    {
-        "name": "Cypher Chat",
-        "slug": "cypher-chat",
-        "binary": binary(status("CYPHER_CHAT_STATUS"), "cypher-chat.bin"),
-        "source_path": path("CYPHER_CHAT_ROOT"),
-        "version": "local",
-        "status": status("CYPHER_CHAT_STATUS"),
-        "notes": "Cardputer ADV secure-only mesh chat build. Mesh protocol 0x02 uses AES-256-GCM and does not interoperate with plaintext or HMAC-only firmware.",
-    },
-    {
-        "name": "Cardputer Games",
-        "slug": "cardputer-games",
-        "binary": binary(status("CARDPUTER_GAMES_STATUS"), "cardputer-games.bin"),
-        "source_path": path("CARDPUTER_GAMES_ROOT"),
-        "version": "local",
-        "status": status("CARDPUTER_GAMES_STATUS"),
-        "notes": "Standalone Cardputer arcade catalog.",
-    },
-    {
-        "name": "Cardputer MPC",
-        "slug": "cardputer-mpc",
-        "binary": binary(status("CARDPUTER_MPC_STATUS"), "cardputer-mpc.bin"),
-        "source_path": path("CARDPUTER_MPC_ROOT"),
-        "version": "local",
-        "status": status("CARDPUTER_MPC_STATUS"),
-        "notes": "MPC-style groovebox with SD-loaded samples and sequencing. Press Shift+Q to return to Cypher OS.",
-    },
-    {
-        "name": "Cardputer Tarot",
-        "slug": "cardputer-tarot",
-        "binary": binary(status("CARDPUTER_TAROT_STATUS"), "cardputer-tarot.bin"),
-        "source_path": path("CARDPUTER_TAROT_ROOT"),
-        "version": "local",
-        "status": status("CARDPUTER_TAROT_STATUS"),
-        "notes": "Offline tarot pull, journal, history, and study deck app. Back/backtick from the main menu returns to Cypher OS.",
-    },
-    {
-        "name": "Cypher PN532",
-        "slug": "cypher-pn532",
-        "binary": binary(status("CYPHER_PN532_STATUS"), "cypher-pn532.bin"),
-        "source_path": path("CYPHER_PN532_ROOT"),
-        "version": "local-cardputer",
-        "status": status("CYPHER_PN532_STATUS"),
-        "notes": "Cardputer ADV PN532 NFC app using EXT I2C on G8/G9 with SD-backed dumps and return-to-launcher support.",
-    },
-    {
-        "name": "Cypher Desk",
-        "slug": "cypher-desk",
-        "binary": binary(status("CYPHER_DESK_STATUS"), "cypher-desk.bin"),
-        "source_path": path("CYPHER_DESK_ROOT"),
-        "version": "local",
-        "status": status("CYPHER_DESK_STATUS"),
-        "notes": "Offline Cardputer ADV utility suite with notes, calculator, checklist, converters, and scratchpad.",
-    },
-    {
-        "name": "Flock You",
-        "slug": "flock-you",
-        "binary": binary(status("FLOCK_YOU_STATUS"), "flock-you.bin"),
-        "source_path": path("FLOCK_YOU_ROOT"),
-        "version": "local-cardputer",
-        "status": status("FLOCK_YOU_STATUS"),
-        "notes": "Cardputer ADV WiFi/BLE detector build with return-to-launcher support.",
-    },
-    {
-        "name": "WireTap-32 Cardputer",
-        "slug": "wiretap-32-cardputer",
-        "binary": binary(status("WIRETAP_STATUS"), "wiretap-32-cardputer.bin"),
-        "source_path": path("WIRETAP_ROOT"),
-        "version": "local-cardputer",
-        "status": status("WIRETAP_STATUS"),
-        "notes": "Cardputer ADV EXT bench build with return-to-launcher support.",
-    },
-]
-
-if status("GAME_OS_STATUS") == "ready" and os.path.exists(game_manifest):
-    with open(game_manifest, "r", encoding="utf-8") as handle:
-        data = json.load(handle)
-    games = data if isinstance(data, list) else data.get("games", [])
-    for game in games:
-        apps.append(
-            {
-                "name": game.get("name", "Game OS App"),
-                "slug": game.get("slug", ""),
-                "binary": game.get("binary", ""),
-                "source_path": game.get("source_path", path("GAME_OS_ROOT")),
-                "version": game.get("version", "local"),
-                "status": game.get("status", "ready"),
-                "notes": "Cardputer Game OS import. " + game.get("notes", ""),
-            }
-        )
-
-with open(out_path, "w", encoding="utf-8") as handle:
-    json.dump({"apps": apps}, handle, indent=2)
-    handle.write("\n")
-PY
-
-echo "[apps] manifest: ${DIST}/apps.json"
-
-if [[ "${CARDPUTER_GAMES_STATUS}" != "ready" || "${CARDPUTER_MPC_STATUS}" != "ready" || "${CARDPUTER_TAROT_STATUS}" != "ready" || "${CYPHER_PN532_STATUS}" != "ready" || "${CYPHER_CHAT_STATUS}" != "ready" || "${CYPHER_DRIVE_STATUS}" != "ready" || "${ESP32_BT_HID_STATUS}" != "ready" || "${CYPHER_DESK_STATUS}" != "ready" || "${FLOCK_YOU_STATUS}" != "ready" || "${WIRETAP_STATUS}" != "ready" || "${GAME_OS_STATUS}" != "ready" ]]; then
+if [[ "${failed}" -ne 0 ]]; then
   echo "[apps] one or more ready apps failed to build"
   exit 1
 fi

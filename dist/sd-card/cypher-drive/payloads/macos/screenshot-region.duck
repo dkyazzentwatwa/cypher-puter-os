@@ -1,6 +1,0 @@
-REM Title: Screenshot region selector
-REM Author: Cypher
-REM Description: Cmd+Shift+4 starts a crosshair region capture. Cmd+Shift+5 for full UI.
-REM Target: macOS 10.14+
-DELAY 500
-GUI SHIFT 4

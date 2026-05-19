@@ -1,7 +1,0 @@
-REM Title: Go to Home Screen
-REM Author: Cypher
-REM Description: Cmd+H returns to the Home Screen on iPadOS with Magic Keyboard.
-REM Target: iPadOS 14+ (Magic Keyboard / Smart Keyboard)
-REM Source: support.apple.com/guide/ipad/ipaddf61a0c2/ipados
-DELAY 500
-GUI h

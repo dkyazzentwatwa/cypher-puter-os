@@ -1,6 +1,0 @@
-REM Title: Lock screen
-REM Author: Cypher
-REM Description: Ctrl+Cmd+Q locks the Mac immediately.
-REM Target: macOS 10.13+
-DELAY 500
-CTRL GUI q

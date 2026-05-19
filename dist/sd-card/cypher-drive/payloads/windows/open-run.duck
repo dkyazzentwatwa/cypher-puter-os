@@ -1,7 +1,0 @@
-REM Title: Open Run dialog
-REM Author: Cypher
-REM Description: Win+R opens the Run dialog. Foundation for most Windows payloads.
-REM Target: Windows 10/11
-REM Source: support.microsoft.com/en-us/windows/keyboard-shortcuts-in-windows
-DELAY 500
-GUI r

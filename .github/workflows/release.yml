@@ -1,92 +1,101 @@
-name: Release
+name: Release firmware
+
+# Builds each board with arduino-cli and attaches the merged factory bin to the
+# GitHub Release for the pushed tag. Platform/libs/FQBN are read from sketch.yaml
+# (single source of truth); custom libs are vendored under ./libraries and picked
+# up via --libraries (profiles can't reference local libs, so we build by FQBN).
 
 on:
   push:
-    tags:
-      - "v*"
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to attach assets to (e.g. v0.1.0)"
+        required: true
 
 permissions:
   contents: write
 
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
-
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - profile: adv
+            sketch: "."
+            asset: cypher-puter-os-cardputer-adv.merged.bin
     steps:
-      - name: Check out Cypher OS
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          path: cypher-puter-os
+          submodules: recursive
 
-      - name: Clone public app sources
-        working-directory: cypher-puter-os
-        env:
-          CYPHER_OS_RELEASE_PAT: ${{ secrets.CYPHER_OS_RELEASE_PAT }}
+      - name: Install arduino-cli
         run: |
-          python3 - <<'PY'
-          import json
-          import os
-          import shutil
-          import subprocess
-          from pathlib import Path
-          from urllib.parse import urlparse, urlunparse
+          mkdir -p "$HOME/bin"
+          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh \
+            | BINDIR="$HOME/bin" sh
+          echo "$HOME/bin" >> "$GITHUB_PATH"
 
-          root = Path.cwd()
-          workspace = root.parent
-          token = os.environ.get("CYPHER_OS_RELEASE_PAT", "")
-          with (root / "config/apps.json").open("r", encoding="utf-8") as handle:
-              catalog = json.load(handle)
-
-          def clone_url(repo_url):
-              if not token:
-                  return repo_url
-              parsed = urlparse(repo_url)
-              host = parsed.netloc
-              return urlunparse((parsed.scheme, f"x-access-token:{token}@{host}", parsed.path, "", "", ""))
-
-          entries = catalog.get("apps", []) + catalog.get("imports", [])
-          for entry in entries:
-              if not entry.get("public_release", False):
-                  continue
-              repo_url = entry["repo_url"]
-              target = (root / entry["local_default_path"]).resolve()
-              if target.exists():
-                  shutil.rmtree(target)
-              target.parent.mkdir(parents=True, exist_ok=True)
-              print(f"[release] clone {repo_url} -> {target.relative_to(workspace)}")
-              subprocess.check_call(["git", "clone", "--depth", "1", clone_url(repo_url), str(target)])
+      - name: Resolve platform + libraries from sketch.yaml
+        id: prof
+        run: |
+          python3 -c "import yaml" 2>/dev/null || sudo apt-get install -y python3-yaml
+          python3 - "${{ matrix.sketch }}" "${{ matrix.profile }}" >> "$GITHUB_OUTPUT" <<'PY'
+          import sys, os, yaml
+          sketch, profile = sys.argv[1], sys.argv[2]
+          p = yaml.safe_load(open(os.path.join(sketch, "sketch.yaml")))["profiles"][profile]
+          def conv(lib):
+              lib = lib.strip()
+              if "(" in lib:
+                  n, v = lib.split("(", 1)
+                  return f"{n.strip()}@{v.strip(') ').strip()}"
+              return lib
+          urls = ",".join(pl.get("platform_index_url", "") for pl in p.get("platforms", []) if pl.get("platform_index_url"))
+          print("fqbn=" + p["fqbn"])
+          print("urls=" + urls)
+          print("plats=" + " ".join(pl["platform"] for pl in p.get("platforms", [])))
+          print("libs=" + " ".join(conv(l) for l in p.get("libraries", [])))
           PY
 
-      - name: Install Arduino CLI
+      - name: Install platform + libraries
         run: |
-          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-          echo "$PWD/bin" >> "$GITHUB_PATH"
+          URLS="${{ steps.prof.outputs.urls }}"
+          ADD=""
+          [ -n "$URLS" ] && ADD="--additional-urls $URLS"
+          arduino-cli core update-index $ADD
+          arduino-cli core install ${{ steps.prof.outputs.plats }} $ADD
+          if [ -n "${{ steps.prof.outputs.libs }}" ]; then
+            arduino-cli lib install ${{ steps.prof.outputs.libs }}
+          fi
 
-      - name: Install Arduino platforms and libraries
+      - name: Compile ${{ matrix.profile }}
         run: |
-          ARDUINO_URLS="https://static-cdn.m5stack.com/resource/arduino/package_m5stack_index.json,https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json"
-          arduino-cli config init --overwrite
-          arduino-cli core update-index --additional-urls "$ARDUINO_URLS"
-          arduino-cli core install m5stack:esp32 --additional-urls "$ARDUINO_URLS"
-          arduino-cli core install esp32:esp32 --additional-urls "$ARDUINO_URLS"
-          arduino-cli lib install "M5Cardputer@1.1.1"
-          arduino-cli lib install "M5Unified@0.2.14"
-          arduino-cli lib install "M5GFX@0.2.20"
-          arduino-cli lib install "ArduinoJson@7.4.3"
+          LIBARG=""
+          [ -d "${{ matrix.sketch }}/libraries" ] && LIBARG="--libraries ${{ matrix.sketch }}/libraries"
+          rm -rf build_out
+          arduino-cli compile \
+            --fqbn "${{ steps.prof.outputs.fqbn }}" \
+            $LIBARG \
+            --output-dir build_out \
+            "${{ matrix.sketch }}"
 
-      - name: Build release assets
-        working-directory: cypher-puter-os
-        env:
-          CYPHER_OS_RELEASE_VERSION: ${{ github.ref_name }}
+      - name: Collect merged binary
         run: |
-          ./tools/prepare-release.sh "${GITHUB_REF_NAME}"
+          merged="$(ls build_out/*.merged.bin 2>/dev/null | head -1)"
+          if [ -z "$merged" ]; then
+            echo "::error::No *.merged.bin produced. build_out contents:"
+            ls -R build_out
+            exit 1
+          fi
+          cp "$merged" "${{ matrix.asset }}"
+          ls -l "${{ matrix.asset }}"
 
-      - name: Upload GitHub Release assets
+      - name: Attach to release
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            cypher-puter-os/dist/release/cypher-os-launcher.bin
-            cypher-puter-os/dist/release/cypher-os-sd-card.zip
-            cypher-puter-os/dist/release/apps.json
-            cypher-puter-os/dist/release/BUILD_REPORT.md
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          files: ${{ matrix.asset }}
           fail_on_unmatched_files: true

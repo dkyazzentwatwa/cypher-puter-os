@@ -1,7 +1,7 @@
 name: Release firmware
 
-# Builds the Cardputer ADV launcher, all public app binaries, the SD-card
-# package, the generated catalog, and the build report for every v* release.
+# Publishes the committed Cardputer ADV launcher, SD-card package, generated
+# catalog, and build report for every v* release.
 
 on:
   push:
@@ -24,31 +24,42 @@ jobs:
           ref: ${{ github.event.inputs.tag || github.ref }}
           submodules: recursive
 
-      - name: Install Arduino CLI
-        run: |
-          mkdir -p "$HOME/bin"
-          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh \
-            | BINDIR="$HOME/bin" sh
-          echo "$HOME/bin" >> "$GITHUB_PATH"
-
-      - name: Install Python dependencies
-        run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install pyyaml
-
-      - name: Checkout release app workspace
-        run: |
-          python3 tools/checkout-release-workspace.py
-
-      - name: Install Arduino platforms and libraries
-        run: |
-          python3 tools/install-release-deps.py
-
-      - name: Prepare release bundle
+      - name: Validate committed release bundle
         env:
           CYPHER_OS_RELEASE_VERSION: ${{ github.event.inputs.tag || github.ref_name }}
         run: |
-          ./tools/prepare-release.sh "${CYPHER_OS_RELEASE_VERSION}"
+          test -f dist/release/cypher-os-launcher.bin
+          test -f dist/release/cypher-os-sd-card.zip
+          test -f dist/release/apps.json
+          test -f dist/release/BUILD_REPORT.md
+          python3 tools/validate-catalog.py config/apps.json --manifest dist/release/apps.json --dist dist/apps
+          python3 - "${CYPHER_OS_RELEASE_VERSION}" <<'PY'
+          import json
+          import sys
+          import zipfile
+
+          expected = sys.argv[1]
+          with open("dist/release/apps.json", "r", encoding="utf-8") as handle:
+              manifest = json.load(handle)
+          if manifest.get("release_version") != expected:
+              raise SystemExit(f"release_version {manifest.get('release_version')} does not match {expected}")
+
+          ready = [app for app in manifest.get("apps", []) if app.get("status") == "ready"]
+          with zipfile.ZipFile("dist/release/cypher-os-sd-card.zip") as archive:
+              names = archive.namelist()
+              bins = [name for name in names if name.startswith("cypher-puter/apps/") and name.endswith(".bin")]
+              required = {
+                  "cypher-puter/apps/apps.json",
+                  "cardputer-game-os/saves/",
+              }
+              missing = sorted(required - set(names))
+              if missing:
+                  raise SystemExit(f"SD zip missing required paths: {missing}")
+              if len(bins) != len(ready):
+                  raise SystemExit(f"SD zip has {len(bins)} bins but manifest has {len(ready)} ready apps")
+
+          print(f"release bundle ok: {expected}, {len(ready)} ready apps")
+          PY
           ls -lah dist/release
 
       - name: Attach launcher and SD bundle to release

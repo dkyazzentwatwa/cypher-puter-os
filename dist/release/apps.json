@@ -1,0 +1,464 @@
+{
+  "generated_by": "tools/build-apps.sh",
+  "generated_at": "2026-05-30T19:28:38+00:00",
+  "release_version": "v0.1.2",
+  "catalog_version": 1,
+  "target_hardware": "M5Stack Cardputer ADV",
+  "apps": [
+    {
+      "name": "Cypher Drive",
+      "slug": "cypher-drive",
+      "binary": "cypher-drive.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cypher-drive",
+      "repo_url": "https://github.com/dkyazzentwatwa/cypher-drive",
+      "version": "v0.1.2",
+      "status": "ready",
+      "notes": "Cardputer ADV HID payload launcher build.",
+      "return_to_launcher": "Use the app's Return to Launcher item where shown.",
+      "sd_paths": [
+        "/cypher-drive/payloads/",
+        "/cypher-drive/payloads.json"
+      ],
+      "binary_size": 1689616,
+      "sha256": "2b3e221cc7d9e0e99f4cee16a5abaa6563e1c26e2549f6753fc0b0ad09d8b3cf",
+      "source_commit": "b8462fe"
+    },
+    {
+      "name": "ESP32 BT HID",
+      "slug": "esp32-bt-hid",
+      "binary": "esp32-bt-hid.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/ESP32_BT_HID",
+      "repo_url": "https://github.com/dkyazzentwatwa/ESP32_BT_HID",
+      "version": "v0.1.2",
+      "status": "ready",
+      "notes": "Cardputer ADV BLE-HID payload deck with SD-backed DuckyScript payloads and Cypher OS return support.",
+      "return_to_launcher": "Press backtick, Esc, or Del from the top-level device list.",
+      "sd_paths": [
+        "/cypher-drive/payloads/",
+        "/cypher-drive/payloads.json"
+      ],
+      "binary_size": 1371280,
+      "sha256": "deb7d66ef95652522ff4c1417c39f3750a99787608939114088e84167864f0c3",
+      "source_commit": "bb11aa9"
+    },
+    {
+      "name": "ESP32 Pokedex",
+      "slug": "esp32-pokedex",
+      "binary": "esp32-pokedex.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/esp32-pokedex",
+      "repo_url": "https://github.com/dkyazzentwatwa/esp32-pokedex",
+      "version": "v0.1.2",
+      "status": "ready",
+      "notes": "Offline Cardputer Pokemon GO field guide using existing SD data under /pokemon, /audio, and /config.",
+      "return_to_launcher": "Choose Return to Cypher OS from the home menu.",
+      "sd_paths": [
+        "/pokemon/",
+        "/audio/",
+        "/config/"
+      ],
+      "binary_size": 614000,
+      "sha256": "457f61701ea18708dda50685be7917386b046641c0a92b078fc7b5691ccfdd2e",
+      "source_commit": "96d6afa"
+    },
+    {
+      "name": "Cypher Chat",
+      "slug": "cypher-chat",
+      "binary": "cypher-chat.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cypher-chat/cypher-chat-firmware",
+      "repo_url": "https://github.com/dkyazzentwatwa/cypher-chat",
+      "version": "v0.1.2",
+      "status": "ready",
+      "notes": "Cardputer ADV secure-only mesh chat build. Mesh protocol 0x02 uses AES-256-GCM and does not interoperate with plaintext or HMAC-only firmware.",
+      "return_to_launcher": "Use the app's Return to Launcher item where shown.",
+      "sd_paths": [],
+      "binary_size": 1409392,
+      "sha256": "b901e6408bf5e2dc1d6becc5c22c0cc0070d822d4e5d3f7d13924faf769cdd76",
+      "source_commit": "0c4bc58"
+    },
+    {
+      "name": "Cardputer Games",
+      "slug": "cardputer-games",
+      "binary": "cardputer-games.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cardputer-games",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-games",
+      "version": "v0.1.2",
+      "status": "ready",
+      "notes": "Standalone Cardputer arcade catalog.",
+      "return_to_launcher": "Use the app's Return to Launcher item where shown.",
+      "sd_paths": [],
+      "binary_size": 557424,
+      "sha256": "f363a45ede5b1cf01671640a87798c73386d530a99831cef792ff4939fae7d31",
+      "source_commit": "ffeb78a"
+    },
+    {
+      "name": "Cardputer MPC",
+      "slug": "cardputer-mpc",
+      "binary": "cardputer-mpc.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cardputer-mpc",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-mpc",
+      "version": "v0.1.2",
+      "status": "ready",
+      "notes": "MPC-style groovebox with SD-loaded samples and sequencing.",
+      "return_to_launcher": "Press Shift+Q to return to Cypher OS. Lowercase q remains an MPC pad trigger.",
+      "sd_paths": [
+        "/cardputer-mpc/"
+      ],
+      "binary_size": 612736,
+      "sha256": "eabae0eb47c4098d1baa5c3c670d0c99cf24a9470b261370bd775f5b7f70b4c0",
+      "source_commit": "0a428d4"
+    },
+    {
+      "name": "Cardputer Tarot",
+      "slug": "cardputer-tarot",
+      "binary": "cardputer-tarot.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cardputer-tarot",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-tarot",
+      "version": "v0.1.2",
+      "status": "ready",
+      "notes": "Offline tarot pull, journal, history, and study deck app.",
+      "return_to_launcher": "Back/backtick from the main menu returns to Cypher OS.",
+      "sd_paths": [
+        "/cardputer-tarot/"
+      ],
+      "binary_size": 712800,
+      "sha256": "7ec7aa845c02e6b7893aa5421815c4b729e691ba451f515a6d0a0f1bb477d916",
+      "source_commit": "7870413"
+    },
+    {
+      "name": "Cypher PN532",
+      "slug": "cypher-pn532",
+      "binary": "cypher-pn532.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cypher-pn532",
+      "repo_url": "https://github.com/dkyazzentwatwa/cypher-pn532",
+      "version": "v0.1.2",
+      "status": "ready",
+      "notes": "Cardputer ADV PN532 NFC app using EXT I2C on G8/G9 with SD-backed dumps, read-only SD web browser, and return-to-launcher support.",
+      "return_to_launcher": "Use Return to Cypher OS, or press Del, Tab, backtick, or Q from the main menu.",
+      "sd_paths": [
+        "/cypher-pn532/"
+      ],
+      "binary_size": 1444960,
+      "sha256": "59866b55bafd839cfe62e78f5b63e9c600a1af36f1e3982851305345a15674cd",
+      "source_commit": "87cf07b"
+    },
+    {
+      "name": "Cypher Desk",
+      "slug": "cypher-desk",
+      "binary": "cypher-desk.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cypher-desk",
+      "repo_url": "https://github.com/dkyazzentwatwa/cypher-desk",
+      "version": "v0.1.2",
+      "status": "ready",
+      "notes": "Offline Cardputer ADV utility suite with notes, calculator, checklist, converters, and scratchpad.",
+      "return_to_launcher": "Use Return to Launcher from the app menu.",
+      "sd_paths": [
+        "/cypher-puter/desk/"
+      ],
+      "binary_size": 550096,
+      "sha256": "6faf531ba7899d604a1adc68d43fc4aaeebdf5715ed935c683f287ca9ed4fb18",
+      "source_commit": "041353f"
+    },
+    {
+      "name": "Flock You",
+      "slug": "flock-you",
+      "binary": "flock-you.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/flock-you",
+      "repo_url": "https://github.com/dkyazzentwatwa/cypher-flock",
+      "version": "v0.1.2",
+      "status": "ready",
+      "notes": "Cardputer ADV WiFi/BLE detector build with return-to-launcher support.",
+      "return_to_launcher": "Open the mini menu, cycle to HOME, then press up/down to return.",
+      "sd_paths": [],
+      "binary_size": 1429264,
+      "sha256": "c9ea7fbbec002e877f92ef946111e513706d62873a59ebd4dafa7622347469d7",
+      "source_commit": "f1ea971"
+    },
+    {
+      "name": "WireTap-32 Cardputer",
+      "slug": "wiretap-32-cardputer",
+      "binary": "wiretap-32-cardputer.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/WireTap-32",
+      "repo_url": "https://github.com/dkyazzentwatwa/WireTap-32",
+      "version": "v0.1.2",
+      "status": "ready",
+      "notes": "Cardputer ADV EXT bench build with return-to-launcher support.",
+      "return_to_launcher": "Choose Launcher from the main menu, or type launcher / return over serial.",
+      "sd_paths": [],
+      "binary_size": 624272,
+      "sha256": "9755cbd188dc530ba9fa4eac71ec35498440901d422b76bc0274ca3f0ae3e09d",
+      "source_commit": "bf5ea1f"
+    },
+    {
+      "name": "Drone Mesh Mapper",
+      "slug": "drone-mesh-mapper",
+      "binary": "drone-mesh-mapper.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/drone-mesh-mapper",
+      "repo_url": "https://github.com/dkyazzentwatwa/drone-mesh-mapper",
+      "version": "v0.1.2",
+      "status": "ready",
+      "notes": "Cardputer ADV Remote ID drone scanner with WiFi/BLE detection, SD logging, and Cypher OS return support.",
+      "return_to_launcher": "Open the Launcher page, then press BtnA, Enter, or Space.",
+      "sd_paths": [
+        "/drone/"
+      ],
+      "binary_size": 1323072,
+      "sha256": "dc928a23d15c8d4a2af1ff678d9ee4123a7b743e9cbd709387252dbb7d848d5a",
+      "source_commit": "efe96b6"
+    },
+    {
+      "name": "Star Trader",
+      "slug": "star-trader-pocket-frontier",
+      "binary": "star-trader-pocket-frontier.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cardputer-game-os/games/star_trader_pocket_frontier",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-game-os",
+      "version": "deep-v2",
+      "status": "ready",
+      "notes": "Cardputer Game OS import. Deep ship-console trading sim with markets, routes, cargo, crew, upgrades, and route events.",
+      "return_to_launcher": "Use the imported game's launcher return control where documented.",
+      "sd_paths": [
+        "/cardputer-game-os/saves/"
+      ],
+      "binary_size": 578640,
+      "sha256": "50f42328a9596e8eb9a84afc747856fbf0e8455e7499263044d49dd3b7746532",
+      "source_commit": "aeb476a"
+    },
+    {
+      "name": "Dungeon Courier",
+      "slug": "dungeon-courier",
+      "binary": "dungeon-courier.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cardputer-game-os/games/dungeon_courier",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-game-os",
+      "version": "deep-v2",
+      "status": "ready",
+      "notes": "Cardputer Game OS import. Deep contract delivery RPG with town boards, package integrity, supplies, route choices, and perks.",
+      "return_to_launcher": "Use the imported game's launcher return control where documented.",
+      "sd_paths": [
+        "/cardputer-game-os/saves/"
+      ],
+      "binary_size": 583120,
+      "sha256": "a42452ae2e663e42133f884edd9b635c038185ab21aa1841a1ea72913e73348e",
+      "source_commit": "aeb476a"
+    },
+    {
+      "name": "Tiny Wasteland",
+      "slug": "tiny-wasteland",
+      "binary": "tiny-wasteland.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cardputer-game-os/games/tiny_wasteland",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-game-os",
+      "version": "deep-v2",
+      "status": "ready",
+      "notes": "Cardputer Game OS import. Deep survival road drama with regions, camp care, scavenging risk, party state, trade, and vehicle pressure.",
+      "return_to_launcher": "Use the imported game's launcher return control where documented.",
+      "sd_paths": [
+        "/cardputer-game-os/saves/"
+      ],
+      "binary_size": 579392,
+      "sha256": "e19ae8d59b8745c2c7f6c2ecc966d6608b67c9e1d1a33238182e0caf46e397f5",
+      "source_commit": "aeb476a"
+    },
+    {
+      "name": "Pocket Kingdom",
+      "slug": "pocket-kingdom-manager",
+      "binary": "pocket-kingdom-manager.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cardputer-game-os/games/pocket_kingdom_manager",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-game-os",
+      "version": "deep-v2",
+      "status": "ready",
+      "notes": "Cardputer Game OS import. Deep seasonal kingdom ledger with workers, buildings, laws, advisors, crises, and yearly reports.",
+      "return_to_launcher": "Use the imported game's launcher return control where documented.",
+      "sd_paths": [
+        "/cardputer-game-os/saves/"
+      ],
+      "binary_size": 582144,
+      "sha256": "555a7f51541bfc969e3e61a9aa6927c862024b7a35e2d12ff31751d0a780d119",
+      "source_commit": "aeb476a"
+    },
+    {
+      "name": "Monster Ranch",
+      "slug": "monster-ranch-trail",
+      "binary": "monster-ranch-trail.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cardputer-game-os/games/monster_ranch_trail",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-game-os",
+      "version": "deep-v2",
+      "status": "ready",
+      "notes": "Cardputer Game OS import. Deep weekly ranch sim with creature care, training, expeditions, facilities, tournaments, and ranch events.",
+      "return_to_launcher": "Use the imported game's launcher return control where documented.",
+      "sd_paths": [
+        "/cardputer-game-os/saves/"
+      ],
+      "binary_size": 580192,
+      "sha256": "72189c6fcf66d547f05afcb8fee5a5ff63007030df3e73a598bd53286e6d57c0",
+      "source_commit": "aeb476a"
+    },
+    {
+      "name": "Guildmaster",
+      "slug": "guildmaster-pocket",
+      "binary": "guildmaster-pocket.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cardputer-game-os/games/guildmaster_pocket",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-game-os",
+      "version": "deep-v2",
+      "status": "ready",
+      "notes": "Cardputer Game OS import. Deep quest desk sim with generated contracts, class parties, staged results, hall upgrades, and rivals.",
+      "return_to_launcher": "Use the imported game's launcher return control where documented.",
+      "sd_paths": [
+        "/cardputer-game-os/saves/"
+      ],
+      "binary_size": 581344,
+      "sha256": "6296489b07051565d9559e3daecf328774d6be7f8b929eec98885d0436e52fa6",
+      "source_commit": "aeb476a"
+    },
+    {
+      "name": "Haunted Radio",
+      "slug": "haunted-radio-operator",
+      "binary": "haunted-radio-operator.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cardputer-game-os/games/haunted_radio_operator",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-game-os",
+      "version": "deep-v2",
+      "status": "ready",
+      "notes": "Cardputer Game OS import. Deep fictional station mystery with tuning, fake signals, decode tools, cases, logs, and power routing.",
+      "return_to_launcher": "Use the imported game's launcher return control where documented.",
+      "sd_paths": [
+        "/cardputer-game-os/saves/"
+      ],
+      "binary_size": 580560,
+      "sha256": "f05c923ba595a0e4122b26e29a4e5af47f521dcb3bf2d4eb085fb98850a030fa",
+      "source_commit": "aeb476a"
+    },
+    {
+      "name": "Cyberdeck RPG",
+      "slug": "cyberdeck-hacker-rpg",
+      "binary": "cyberdeck-hacker-rpg.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cardputer-game-os/games/cyberdeck_hacker_rpg",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-game-os",
+      "version": "deep-v2",
+      "status": "ready",
+      "notes": "Cardputer Game OS import. Deep offline fake node-crawl with job board, simulated nodes, tools, recovered files, market, and reps.",
+      "return_to_launcher": "Use the imported game's launcher return control where documented.",
+      "sd_paths": [
+        "/cardputer-game-os/saves/"
+      ],
+      "binary_size": 581504,
+      "sha256": "35610733fdf8585fa63488cb96e7a1e6cb426d17119afde51c258422b2661100",
+      "source_commit": "aeb476a"
+    },
+    {
+      "name": "Pocket Detective",
+      "slug": "pocket-detective-agency",
+      "binary": "pocket-detective-agency.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cardputer-game-os/games/pocket_detective_agency",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-game-os",
+      "version": "deep-v2",
+      "status": "ready",
+      "notes": "Cardputer Game OS import. Deep notebook mystery game with cases, maps, interviews, clue book, clue comparison, and accusations.",
+      "return_to_launcher": "Use the imported game's launcher return control where documented.",
+      "sd_paths": [
+        "/cardputer-game-os/saves/"
+      ],
+      "binary_size": 583360,
+      "sha256": "1bc526fe01d5482613e480880ec40cee595237712fb686d53181eca14fe61e7b",
+      "source_commit": "aeb476a"
+    },
+    {
+      "name": "Cryptid Ranger",
+      "slug": "cryptid-park-ranger",
+      "binary": "cryptid-park-ranger.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cardputer-game-os/games/cryptid_park_ranger",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-game-os",
+      "version": "deep-v2",
+      "status": "ready",
+      "notes": "Cardputer Game OS import. Deep ethical field research game with zones, gear, patrols, evidence tracking, guide entries, and reports.",
+      "return_to_launcher": "Use the imported game's launcher return control where documented.",
+      "sd_paths": [
+        "/cardputer-game-os/saves/"
+      ],
+      "binary_size": 581648,
+      "sha256": "79d8bc4711a250ad5411bd1b396f6b881970cb914eb6f54ce4cfa3c3c5826a93",
+      "source_commit": "aeb476a"
+    },
+    {
+      "name": "Cyber Ranger",
+      "slug": "cyber-ranger",
+      "binary": "cyber-ranger.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cardputer-game-os/games/cyber_ranger",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-game-os",
+      "version": "deep-v2",
+      "status": "ready",
+      "notes": "Cardputer Game OS import. Deep fictional cyber-wilderness investigation with park zones, fake anomaly boards, deck commands, guide, cases, and gear.",
+      "return_to_launcher": "Use the imported game's launcher return control where documented.",
+      "sd_paths": [
+        "/cardputer-game-os/saves/"
+      ],
+      "binary_size": 580208,
+      "sha256": "de890fbb21f9b826281f676cc67ce86ee0371eda80c7c24ca191491bb616b1b9",
+      "source_commit": "aeb476a"
+    },
+    {
+      "name": "Star Trail Ranch",
+      "slug": "star-trail-rancher",
+      "binary": "star-trail-rancher.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cardputer-game-os/games/star_trail_rancher",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-game-os",
+      "version": "deep-v2",
+      "status": "ready",
+      "notes": "Cardputer Game OS import. Deep space creature transport sim with contracts, habitats, route decay, market supplies, and discovery logs.",
+      "return_to_launcher": "Use the imported game's launcher return control where documented.",
+      "sd_paths": [
+        "/cardputer-game-os/saves/"
+      ],
+      "binary_size": 578704,
+      "sha256": "0eb470230ac55647b7761f33b3a3d05276b7c4e893b43b46a3dd33e0b6540565",
+      "source_commit": "aeb476a"
+    },
+    {
+      "name": "Waste Guild",
+      "slug": "wasteland-guildmaster",
+      "binary": "wasteland-guildmaster.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cardputer-game-os/games/wasteland_guildmaster",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-game-os",
+      "version": "deep-v2",
+      "status": "ready",
+      "notes": "Cardputer Game OS import. Deep settlement command sim with base pressure, expeditions, team roles, staged results, facilities, and threats.",
+      "return_to_launcher": "Use the imported game's launcher return control where documented.",
+      "sd_paths": [
+        "/cardputer-game-os/saves/"
+      ],
+      "binary_size": 582224,
+      "sha256": "6c4d24a729f85e8b7ce800833bb9ac2af47d73b5fd3cf023588fdb6b4323d21b",
+      "source_commit": "aeb476a"
+    },
+    {
+      "name": "Signal Rat",
+      "slug": "signal-rat-cyberdeck-rpg",
+      "binary": "signal-rat-cyberdeck-rpg.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/cardputer-game-os/games/signal_rat_cyberdeck_rpg",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-game-os",
+      "version": "deep-v2",
+      "status": "ready",
+      "notes": "Cardputer Game OS import. Deep flagship fictional cyberdeck RPG with safehouse, faction jobs, simulated nodes, recovered files, and deck upgrades.",
+      "return_to_launcher": "Use the imported game's launcher return control where documented.",
+      "sd_paths": [
+        "/cardputer-game-os/saves/"
+      ],
+      "binary_size": 576784,
+      "sha256": "8bb46a808070874f1e65d817eef7fefa6ff67017f7d9f0f899a4c2a1bc56341b",
+      "source_commit": "aeb476a"
+    },
+    {
+      "name": "Poke-Trail",
+      "slug": "poke-trail",
+      "binary": "poke-trail.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/poke-trail/PokeTrail",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-game-os",
+      "version": "local-v1",
+      "status": "ready",
+      "notes": "Cardputer Game OS import. Original creature trail RPG with travel, battles, catching, audio, and region progression.",
+      "return_to_launcher": "Use the imported game's launcher return control where documented.",
+      "sd_paths": [
+        "/cardputer-game-os/saves/"
+      ],
+      "binary_size": 609008,
+      "sha256": "b1f04a948649ff66703a2082753ee8318f568c1f3d954ef55201aaf0732555ae",
+      "source_commit": "aeb476a"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+uptime_ms,node_id,source,channel,mac,rssi,basic_id,operator_id,drone_lat,drone_lon,drone_altitude_msl,height_agl,pilot_lat,pilot_lon,speed,heading

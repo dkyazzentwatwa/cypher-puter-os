@@ -1,0 +1,10 @@
+REM Title: App switcher hop
+REM Author: Cypher
+REM Description: Cmd+Tab three times to cycle to the third-most-recent app.
+REM Target: macOS
+DELAY 500
+GUI TAB
+DELAY 200
+GUI TAB
+DELAY 200
+GUI TAB

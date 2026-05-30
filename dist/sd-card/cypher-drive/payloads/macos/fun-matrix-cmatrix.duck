@@ -1,0 +1,16 @@
+REM Title: Matrix rain (cmatrix)
+REM Author: Cypher
+REM Description: Opens Terminal fullscreen and runs cmatrix. Falls back to a
+REM Perl one-liner if cmatrix isn't installed.
+REM Target: macOS (cmatrix optional via `brew install cmatrix`)
+DELAY 500
+GUI SPACE
+DELAY 500
+STRING Terminal
+DELAY 1000
+ENTER
+DELAY 800
+CTRL GUI f
+DELAY 500
+STRING cmatrix 2>/dev/null || perl -e 'while(1){print chr(33+int(rand(94)));select(undef,undef,undef,0.003)}'
+ENTER

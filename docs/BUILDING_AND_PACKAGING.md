@@ -100,9 +100,11 @@ Expected packaged layout:
 /cypher-puter/apps/esp32-pokedex.bin
 /cypher-puter/apps/flock-you.bin
 /cypher-puter/apps/wiretap-32-cardputer.bin
+/cypher-puter/apps/drone-mesh-mapper.bin
 /cypher-puter/apps/<cardputer-game-os-game>.bin
 /cardputer-mpc/
 /cypher-drive/payloads/
+/drone/
 /cardputer-game-os/saves/
 ```
 
@@ -125,6 +127,7 @@ GitHub/
   cypher-desk/
   flock-you/
   WireTap-32/
+  drone-mesh-mapper/
 ```
 
 Set a different workspace root:
@@ -147,6 +150,7 @@ CYPHER_OS_ESP32_POKEDEX_DIR=/path/to/esp32-pokedex ./tools/build-apps.sh
 CYPHER_OS_CYPHER_DESK_DIR=/path/to/cypher-desk ./tools/build-apps.sh
 CYPHER_OS_FLOCK_YOU_DIR=/path/to/flock-you ./tools/build-apps.sh
 CYPHER_OS_WIRETAP_DIR=/path/to/WireTap-32 ./tools/build-apps.sh
+CYPHER_OS_DRONE_MESH_MAPPER_DIR=/path/to/drone-mesh-mapper ./tools/build-apps.sh
 CYPHER_OS_GAME_OS_DIR=/path/to/cardputer-game-os ./tools/build-apps.sh
 ```
 
@@ -170,5 +174,11 @@ apps.json
 BUILD_REPORT.md
 ```
 
+`cypher-os-launcher.bin` is the merged one-file launcher image when Arduino CLI
+produces one. `cypher-os-sd-card.zip` contains the app catalog, app binaries,
+and bundled SD folders users copy to the FAT32 card.
+
 Generated manifests are derived output. Update `config/apps.json`, rebuild, and
-let the tools regenerate `dist/`.
+let the tools regenerate `dist/`. `dist/` is intentionally trackable so the repo
+can expose the latest prepared bundle as well as publishing the same bundle from
+GitHub Actions.

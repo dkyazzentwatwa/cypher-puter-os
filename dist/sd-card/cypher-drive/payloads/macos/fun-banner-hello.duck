@@ -1,0 +1,13 @@
+REM Title: Banner hello
+REM Author: Cypher
+REM Description: Prints a big banner via `banner` (BSD) or falls back to `say`.
+REM Target: macOS
+DELAY 500
+GUI SPACE
+DELAY 500
+STRING Terminal
+DELAY 1000
+ENTER
+DELAY 800
+STRING banner -w 80 "HACKED" 2>/dev/null || say "you have been visited by the cypherbox"
+ENTER

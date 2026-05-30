@@ -1,0 +1,153 @@
+{
+  "schema": "littlehakr.remoteid.sd_payload.v1",
+  "name": "Passive Remote ID Identifier Payload",
+  "version": "1.1.0",
+  "mode": "passive_receive_only",
+  "safety": {
+    "transmit": false,
+    "spoof_remote_id": false,
+    "jam_or_deauth": false,
+    "owner_lookup": false,
+    "note": "This payload is for decoding and logging publicly broadcast Remote ID signals only."
+  },
+  "log": {
+    "enabled": true,
+    "file": "/drone/logs/remote_id_seen.csv",
+    "jsonl_file": "/drone/logs/detections.jsonl",
+    "rotate_kb": 512,
+    "columns": [
+      "uptime_ms",
+      "node_id",
+      "source",
+      "channel",
+      "mac",
+      "rssi",
+      "basic_id",
+      "operator_id",
+      "drone_lat",
+      "drone_lon",
+      "drone_altitude_msl",
+      "height_agl",
+      "pilot_lat",
+      "pilot_lon",
+      "speed",
+      "heading"
+    ]
+  },
+  "scan": {
+    "ble_legacy_advertising": true,
+    "ble_extended_advertising": true,
+    "wifi_beacon": true,
+    "wifi_channel_hopping": true,
+    "wifi_channels": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+    "wifi_dwell_ms": 250,
+    "wifi_nan": true,
+    "wifi_channels_2ghz": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+    "wifi_channels_5ghz": [],
+    "rssi_min_dbm": -95,
+    "dedupe_window_ms": 3000,
+    "track_timeout_ms": 15000
+  },
+  "remote_id": {
+    "standard_family": [
+      "ASTM F3411 / FAA-accepted broadcast Remote ID",
+      "ASD-STAN Direct Remote ID / OpenDroneID compatible messages"
+    ],
+    "message_type_map": {
+      "0": "Basic ID",
+      "1": "Location / Vector",
+      "2": "Authentication",
+      "3": "Self ID",
+      "4": "System",
+      "5": "Operator ID",
+      "15": "Message Pack"
+    },
+    "id_type_priority": [
+      {
+        "id_type": 1,
+        "name": "Manufacturer Serial Number",
+        "reliability": "high",
+        "use_as_persistent_id": true,
+        "notes": "Best practical persistent identifier when present."
+      },
+      {
+        "id_type": 2,
+        "name": "CAA Registration ID",
+        "reliability": "high_if_valid_in_region",
+        "use_as_persistent_id": true,
+        "notes": "Format and privacy behavior vary by jurisdiction."
+      },
+      {
+        "id_type": 3,
+        "name": "UTM Assigned UUID",
+        "reliability": "medium",
+        "use_as_persistent_id": false,
+        "notes": "Useful when ecosystem-supported; do not assume owner identity."
+      },
+      {
+        "id_type": 4,
+        "name": "Specific Session ID",
+        "reliability": "session_only",
+        "use_as_persistent_id": false,
+        "notes": "Useful for a flight/session, weak for recognizing the same aircraft later."
+      }
+    ],
+    "field_rules": {
+      "uas_id_max_bytes": 20,
+      "ignore_empty_uas_id": true,
+      "null_trim_uas_id": true,
+      "store_raw_hex": false,
+      "label_unverified": true
+    }
+  },
+  "confidence_score": {
+    "start": 0,
+    "rules": [
+      {
+        "add": 45,
+        "when": "valid_opendroneid_decode"
+      },
+      {
+        "add": 20,
+        "when": "basic_id_present"
+      },
+      {
+        "add": 15,
+        "when": "location_present_and_valid"
+      },
+      {
+        "add": 10,
+        "when": "same_uas_id_seen_3_plus_times"
+      },
+      {
+        "add": 10,
+        "when": "same_track_seen_on_multiple_radios"
+      },
+      {
+        "subtract": 20,
+        "when": "session_id_only"
+      },
+      {
+        "subtract": 30,
+        "when": "malformed_or_short_packet"
+      },
+      {
+        "subtract": 40,
+        "when": "impossible_gps_jump"
+      }
+    ],
+    "labels": {
+      "0-39": "low",
+      "40-69": "medium",
+      "70-100": "high"
+    }
+  },
+  "display": {
+    "title": "Remote ID Watch",
+    "show_raw_hex": false,
+    "show_location": true,
+    "show_operator_or_takeoff_location": true,
+    "warning_text": "Observed broadcast only; identity is not cryptographically verified."
+  },
+  "csv_header": "unix_ms,source_radio,rssi,mac_or_adv_addr,confidence,message_type,id_type,uas_id,ua_type,lat,lon,alt_m,speed_mps,heading_deg,operator_or_takeoff_lat,operator_or_takeoff_lon,raw_hex\n"
+}

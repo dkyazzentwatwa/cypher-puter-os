@@ -1,0 +1,14 @@
+REM Title: Eject (any) mounted disk
+REM Author: Cypher
+REM Description: Plays the classic prank but on Macs — pops every ejectable
+REM volume. No-op if nothing is mounted.
+REM Target: macOS
+DELAY 500
+GUI SPACE
+DELAY 500
+STRING Terminal
+DELAY 1000
+ENTER
+DELAY 800
+STRING osascript -e 'tell application "Finder" to eject (every disk whose ejectable is true)'
+ENTER

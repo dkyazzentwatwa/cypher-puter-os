@@ -15,7 +15,8 @@ card, and a public release bundle.
   - `BUILD_REPORT.md`
 
 `apps.json` and `BUILD_REPORT.md` are there so you can inspect the release. The
-two files you actually install are the launcher `.bin` and the SD card `.zip`.
+two files you actually install are the merged launcher `.bin` and the SD card
+`.zip`.
 
 ## Install Flow
 
@@ -33,6 +34,7 @@ The SD card should contain this shape after copying:
 /cypher-puter/apps/*.bin
 /cardputer-mpc/
 /cypher-drive/
+/drone/
 /cardputer-game-os/saves/
 ```
 
@@ -95,5 +97,7 @@ Important app-specific examples:
 - Flock You returns through its mini menu `HOME` item.
 - WireTap-32 returns through `Launcher` on the main menu or the serial command
   `launcher` / `return`.
+- Drone Mesh Mapper returns from its `Launcher` page with BtnA, `Enter`, or
+  `Space`.
 
 For the full list, see [App Catalog](APP_CATALOG.md).

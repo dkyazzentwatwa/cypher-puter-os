@@ -11,7 +11,7 @@
 | Build profile | `cardputer-adv-pn532` |
 | Extra SD paths | `/cypher-pn532/` |
 | Return path | Use Return to Cypher OS, or press Del, Tab, backtick, or Q from the main menu. |
-| Package note | Cardputer ADV PN532 NFC app using EXT I2C on G8/G9 with SD-backed dumps and return-to-launcher support. |
+| Package note | Cardputer ADV PN532 NFC app using EXT I2C on G8/G9 with SD-backed dumps, read-only SD web browser, and return-to-launcher support. |
 | Use it when | You have a PN532 module on the Cardputer ADV EXT I2C header and want NFC tools. |
 
 ## Overview
@@ -27,6 +27,7 @@ Cypher PN532 is the Cardputer ADV port of the Cypher NFC toolkit. It uses a PN53
 - Write simple NDEF URL/text records to NTAG cards.
 - Load saved MIFARE dumps and write them to compatible magic cards.
 - Browse, hex-view, and delete app files from SD.
+- Launch a read-only SD web server for browsing and downloading PN532 files.
 
 Use these features only with tags, cards, and systems you own or have explicit
 permission to test.
@@ -48,6 +49,20 @@ Use a PN532 module set to I2C mode:
 - Select: `Enter`, `Space`, or BtnA.
 - Back/cancel: `Del`, `Tab`, backtick, or `Q`.
 - From the main menu, choose `Return to Cypher OS` or press a back key to return to the launcher.
+
+## Read-Only SD Web Server
+
+Choose `SD Web Server` from the main menu to start a local access point:
+
+- SSID: `CYPHER-PN532`
+- Password: `cypher532`
+- URL: `http://192.168.4.1`
+
+The web dashboard lists files under `/cypher-pn532/`, shows PN532/SD status,
+previews text and binary dump files, and downloads saved dumps. It is read-only:
+there are no upload, edit, delete, clone, or NDEF-write actions in the browser.
+Press `Del`, `Tab`, backtick, `Q`, `Enter`, `Space`, or BtnA on the Cardputer
+server screen to stop Wi-Fi and return to the app menu.
 
 ## SD And Runtime Files
 

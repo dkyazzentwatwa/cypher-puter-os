@@ -83,6 +83,7 @@ These are the supported Cardputer app targets in the current catalog flow:
 | **[Cypher Desk][cypher-desk-repo]** | Offline utility suite with notes, calculator, checklist, converters, and scratchpad. |
 | **[Flock You][cypher-flock-repo]** | [Cardputer ADV][cardputer-affiliate] WiFi/BLE detector build with return-to-launcher support. |
 | **[WireTap-32 Cardputer][wiretap-32-repo]** | [Cardputer ADV][cardputer-affiliate] EXT bench build with return-to-launcher support. |
+| **[Drone Mesh Mapper][drone-mesh-mapper-repo]** | [Cardputer ADV][cardputer-affiliate] passive Remote ID scanner with SD field logs. |
 | **[Cardputer Game OS games][cardputer-game-os-repo]** | Individual game `.bin` files imported from the sibling `cardputer-game-os` repo when present and built successfully. |
 
 `starbeam_v2` is not part of the Cypher OS app catalog.
@@ -155,7 +156,7 @@ Each tagged release publishes exactly four public assets:
 
 | Asset | Use It For |
 | --- | --- |
-| `cypher-os-launcher.bin` | Flash this launcher firmware to the Cardputer ADV. |
+| `cypher-os-launcher.bin` | Flash this one-file merged launcher image to the Cardputer ADV. |
 | `cypher-os-sd-card.zip` | Unzip this directly to the root of a FAT32 SD card. |
 | `apps.json` | Inspect the generated public catalog without opening the SD zip. |
 | `BUILD_REPORT.md` | Check app build status, binary sizes, source commits, and packaging notes. |
@@ -207,8 +208,10 @@ dist/sd-card/cypher-puter/apps/apps.json
 dist/BUILD_REPORT.md
 ```
 
-Do not edit generated manifests by hand. Update `config/apps.json`, rebuild the
-apps, and let the tools regenerate release output.
+`dist/` is intentionally kept visible in the repo so users can inspect the
+latest prepared launcher, SD bundle, catalog, and build report. Do not edit
+generated manifests by hand. Update `config/apps.json`, rebuild the apps, and
+let the tools regenerate release output.
 
 ## Build And Flash The Launcher Locally
 
@@ -295,9 +298,11 @@ Expected SD layout:
 /cypher-puter/apps/esp32-pokedex.bin
 /cypher-puter/apps/flock-you.bin
 /cypher-puter/apps/wiretap-32-cardputer.bin
+/cypher-puter/apps/drone-mesh-mapper.bin
 /cypher-puter/apps/<cardputer-game-os-game>.bin
 /cardputer-mpc/
 /cypher-drive/payloads/
+/drone/
 /cardputer-game-os/saves/
 ```
 
@@ -323,7 +328,7 @@ Source repositories: [Cardputer MPC][cardputer-mpc-repo],
 [ESP32 BT HID][esp32-bt-hid-repo], [ESP32 Pokedex][esp32-pokedex-repo],
 [Cypher PN532][cypher-pn532-repo], [Cypher Desk][cypher-desk-repo],
 [Cypher Flock][cypher-flock-repo],
-[WireTap-32][wiretap-32-repo], and
+[WireTap-32][wiretap-32-repo], [Drone Mesh Mapper][drone-mesh-mapper-repo], and
 [Cardputer Game OS][cardputer-game-os-repo].
 
 ```text
@@ -341,6 +346,7 @@ GitHub/
   cypher-desk/
   flock-you/
   WireTap-32/
+  drone-mesh-mapper/
 ```
 
 For a different layout, set a workspace root:
@@ -358,6 +364,7 @@ CYPHER_OS_CYPHER_PN532_DIR=/path/to/cypher-pn532 ./tools/build-apps.sh
 CYPHER_OS_ESP32_BT_HID_DIR=/path/to/ESP32_BT_HID ./tools/build-apps.sh
 CYPHER_OS_ESP32_POKEDEX_DIR=/path/to/esp32-pokedex ./tools/build-apps.sh
 CYPHER_OS_CYPHER_DESK_DIR=/path/to/cypher-desk ./tools/build-apps.sh
+CYPHER_OS_DRONE_MESH_MAPPER_DIR=/path/to/drone-mesh-mapper ./tools/build-apps.sh
 ```
 
 ## Controls
@@ -388,6 +395,8 @@ CYPHER_OS_CYPHER_DESK_DIR=/path/to/cypher-desk ./tools/build-apps.sh
 - Flock You: open the mini menu, cycle to `HOME`, then press up/down to return.
 - WireTap-32: choose `Launcher` from the main menu, or type `launcher` /
   `return` over serial.
+- Drone Mesh Mapper: open the `Launcher` page, then press BtnA, `Enter`, or
+  `Space`.
 
 ## Serial Commands
 
@@ -427,6 +436,7 @@ install <slug>
 [cypher-drive-repo]: https://github.com/dkyazzentwatwa/cypher-drive
 [cypher-flock-repo]: https://github.com/dkyazzentwatwa/cypher-flock
 [cypher-pn532-repo]: https://github.com/dkyazzentwatwa/cypher-pn532
+[drone-mesh-mapper-repo]: https://github.com/dkyazzentwatwa/drone-mesh-mapper
 [esp32-bt-hid-repo]: https://github.com/dkyazzentwatwa/ESP32_BT_HID
 [esp32-pokedex-repo]: https://github.com/dkyazzentwatwa/esp32-pokedex
 [latest-release]: https://github.com/dkyazzentwatwa/cypher-puter-os/releases/latest

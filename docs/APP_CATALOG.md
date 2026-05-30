@@ -31,6 +31,7 @@ The launcher catalog lives at:
 | [Cypher Desk](apps/cypher-desk/README.md) | `cypher-desk` | `cypher-desk.bin` | `cardputer-adv` | `/cypher-puter/desk/` | Use Return to Launcher from the app menu. |
 | [Flock You](apps/flock-you/README.md) | `flock-you` | `flock-you.bin` | `cardputer-adv-detector` | None required | Open the mini menu, cycle to `HOME`, then press up/down to return. |
 | [WireTap-32 Cardputer](apps/wiretap-32-cardputer/README.md) | `wiretap-32-cardputer` | `wiretap-32-cardputer.bin` | `cardputer-adv-ext-bench` | None required | Choose Launcher from the main menu, or type `launcher` / `return` over serial. |
+| [Drone Mesh Mapper](apps/drone-mesh-mapper/README.md) | `drone-mesh-mapper` | `drone-mesh-mapper.bin` | `cardputer_adv` | `/drone/` | Open the Launcher page, then press BtnA, `Enter`, or `Space`. |
 
 ## Imported Cardputer Game OS Titles
 
@@ -73,6 +74,7 @@ Cypher OS already owns the launcher partition.
 | Cypher Desk | `/Users/cypher/Documents/GitHub/cypher-desk` |
 | Flock You / Cypher Flock | `/Users/cypher/Documents/GitHub/flock-you` |
 | WireTap-32 | `/Users/cypher/Documents/GitHub/WireTap-32` |
+| Drone Mesh Mapper | `/Users/cypher/Documents/GitHub/drone-mesh-mapper` |
 | Cardputer Game OS | `/Users/cypher/Documents/GitHub/cardputer-game-os` |
 | Poke-Trail | `/Users/cypher/Documents/GitHub/poke-trail` |
 

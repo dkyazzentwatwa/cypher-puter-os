@@ -1,0 +1,62 @@
+REM Title: Fake hacker typer
+REM Author: Cypher
+REM Description: Opens TextEdit and fills it with movie-style "hacking"
+REM   output. All fake, no actual commands run. Perfect B-roll for Reels
+REM   over a Mr. Robot soundtrack.
+REM   IG Reels demo: ~15s.
+REM Target: macOS (TextEdit ships by default)
+DELAY 500
+GUI SPACE
+DELAY 400
+STRING TextEdit
+DELAY 700
+ENTER
+DELAY 1500
+GUI n
+DELAY 600
+STRINGLN $ sudo nmap -sV -p- target.local
+DELAY 300
+STRINGLN Starting Nmap 7.94 ( https://nmap.org )
+DELAY 200
+STRINGLN Discovered open port 22/tcp on target.local
+DELAY 200
+STRINGLN Discovered open port 80/tcp on target.local
+DELAY 200
+STRINGLN Discovered open port 443/tcp on target.local
+DELAY 200
+STRINGLN Discovered open port 8080/tcp on target.local
+DELAY 400
+STRINGLN $ ./exploit.py --target target.local --port 8080
+DELAY 400
+STRINGLN [+] connecting to target.local:8080
+DELAY 300
+STRINGLN [+] handshake complete
+DELAY 300
+STRINGLN [+] sending payload (2048 bytes)
+DELAY 400
+STRINGLN [+] payload deployed
+DELAY 300
+STRINGLN [+] root shell established
+DELAY 400
+STRINGLN # whoami
+DELAY 300
+STRINGLN root
+DELAY 400
+STRINGLN # cat /etc/shadow | head -3
+DELAY 300
+STRINGLN root:*:19000:0:99999:7:::
+DELAY 200
+STRINGLN admin:!:19000:0:99999:7:::
+DELAY 200
+STRINGLN user:!:19000:0:99999:7:::
+DELAY 600
+STRINGLN # echo "access granted" | cowsay
+DELAY 300
+STRINGLN  _______________
+STRINGLN < access granted >
+STRINGLN  ---------------
+STRINGLN         \   ^__^
+STRINGLN          \  (oo)\_______
+STRINGLN             (__)\       )\/\
+STRINGLN                 ||----w |
+STRINGLN                 ||     ||

@@ -1,0 +1,64 @@
+REM Title: Safari tab storm
+REM Author: Cypher
+REM Description: Opens Safari, then rapid-fires 10 new tabs each loaded
+REM   with a different URL. Ends in fullscreen for a chaotic browser flex.
+REM   IG Reels demo: ~15s, vertical-friendly.
+REM Target: macOS (Safari default; first-run Spotlight permission)
+DELAY 500
+GUI SPACE
+DELAY 400
+STRING Safari
+DELAY 500
+ENTER
+DELAY 1500
+GUI t
+DELAY 200
+STRING https://youtu.be/dQw4w9WgXcQ
+ENTER
+DELAY 300
+GUI t
+DELAY 200
+STRING https://en.wikipedia.org/wiki/USB_Rubber_Ducky
+ENTER
+DELAY 300
+GUI t
+DELAY 200
+STRING https://hacker-news.firebaseapp.com
+ENTER
+DELAY 300
+GUI t
+DELAY 200
+STRING https://github.com/trending
+ENTER
+DELAY 300
+GUI t
+DELAY 200
+STRING https://www.shodan.io
+ENTER
+DELAY 300
+GUI t
+DELAY 200
+STRING https://radio.garden
+ENTER
+DELAY 300
+GUI t
+DELAY 200
+STRING https://wttr.in
+ENTER
+DELAY 300
+GUI t
+DELAY 200
+STRING https://pointerpointer.com
+ENTER
+DELAY 300
+GUI t
+DELAY 200
+STRING https://theuselessweb.com
+ENTER
+DELAY 300
+GUI t
+DELAY 200
+STRING https://eelslap.com
+ENTER
+DELAY 1000
+CTRL GUI f

@@ -1,0 +1,28 @@
+REM Title: Dialog haunt
+REM Author: Cypher
+REM Description: Five escalating osascript popups appear with creepy
+REM   one-liners. Each one auto-dismisses after a short delay so the
+REM   sequence flows on its own.
+REM   IG Reels demo: ~12s.
+REM Target: macOS (first run may prompt for Accessibility / Automation)
+DELAY 500
+GUI SPACE
+DELAY 400
+STRING Terminal
+DELAY 700
+ENTER
+DELAY 1000
+STRING osascript -e 'display dialog "hello." buttons {"hi?"} giving up after 2'
+ENTER
+DELAY 2200
+STRING osascript -e 'display dialog "I see you." buttons {"who?"} giving up after 2'
+ENTER
+DELAY 2200
+STRING osascript -e 'display dialog "I am inside the machine." buttons {"how"} giving up after 2'
+ENTER
+DELAY 2200
+STRING osascript -e 'display dialog "RUN." buttons {"too late"} giving up after 2'
+ENTER
+DELAY 2200
+STRING osascript -e 'display dialog "just kidding xoxo cypherbox" buttons {"phew"} giving up after 3'
+ENTER

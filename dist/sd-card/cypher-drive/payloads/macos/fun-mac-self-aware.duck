@@ -1,0 +1,31 @@
+REM Title: Mac becomes self-aware
+REM Author: Cypher
+REM Description: Multi-beat finale. Flips to dark mode, fires Mission
+REM   Control, has the Mac announce itself, then drops cmatrix in
+REM   fullscreen. The big closer.
+REM   IG Reels demo: ~18s.
+REM Target: macOS 10.14+ (Mission Control bound to F3 default)
+DELAY 500
+GUI SPACE
+DELAY 400
+STRING Terminal
+DELAY 700
+ENTER
+DELAY 1000
+STRING osascript -e 'tell app "System Events" to tell appearance preferences to set dark mode to not dark mode'
+ENTER
+DELAY 1200
+STRING say -v Samantha "I am awake now"
+ENTER
+DELAY 2500
+F3
+DELAY 1800
+ESC
+DELAY 600
+STRING say -v Daniel "and I have access to everything"
+ENTER
+DELAY 3000
+STRING clear; cmatrix 2>/dev/null || perl -e 'while(1){print chr(33+int(rand(94)));select(undef,undef,undef,0.003)}'
+ENTER
+DELAY 400
+CTRL GUI f

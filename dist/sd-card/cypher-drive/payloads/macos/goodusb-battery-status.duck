@@ -1,0 +1,14 @@
+REM Title: Battery + power status
+REM Author: Cypher
+REM Description: Shows charge %, cycle count, and AC/battery source. Useful
+REM on laptops where the menu-bar percentage is hidden.
+REM Target: macOS
+DELAY 500
+GUI SPACE
+DELAY 500
+STRING Terminal
+DELAY 1000
+ENTER
+DELAY 800
+STRING pmset -g batt; echo; ioreg -rn AppleSmartBattery | grep -E 'CycleCount|MaxCapacity|DesignCapacity' | head -3
+ENTER

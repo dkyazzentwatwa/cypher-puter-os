@@ -1,0 +1,14 @@
+REM Title: Top disk hogs in home
+REM Author: Cypher
+REM Description: Lists the 15 largest directories under $HOME. Read-only; no
+REM file changes.
+REM Target: macOS
+DELAY 500
+GUI SPACE
+DELAY 500
+STRING Terminal
+DELAY 1000
+ENTER
+DELAY 800
+STRING du -h -d 2 ~ 2>/dev/null | sort -hr | head -15
+ENTER

@@ -122,7 +122,7 @@
       "return_to_launcher": "Use Return to Cypher OS, or press Del, Tab, backtick, or Q from the main menu.",
       "public_release": true,
       "status": "ready",
-      "notes": "Cardputer ADV PN532 NFC app using EXT I2C on G8/G9 with SD-backed dumps and return-to-launcher support."
+      "notes": "Cardputer ADV PN532 NFC app using EXT I2C on G8/G9 with SD-backed dumps, read-only SD web browser, and return-to-launcher support."
     },
     {
       "name": "Cypher Desk",
@@ -164,6 +164,21 @@
       "public_release": true,
       "status": "ready",
       "notes": "Cardputer ADV EXT bench build with return-to-launcher support."
+    },
+    {
+      "name": "Drone Mesh Mapper",
+      "slug": "drone-mesh-mapper",
+      "binary": "drone-mesh-mapper.bin",
+      "repo_url": "https://github.com/dkyazzentwatwa/drone-mesh-mapper",
+      "local_default_path": "../drone-mesh-mapper",
+      "build_profile": "cardputer_adv",
+      "sd_paths": [
+        "/drone/"
+      ],
+      "return_to_launcher": "Open the Launcher page, then press BtnA, Enter, or Space.",
+      "public_release": true,
+      "status": "ready",
+      "notes": "Cardputer ADV Remote ID drone scanner with WiFi/BLE detection, SD logging, and Cypher OS return support."
     }
   ],
   "imports": [

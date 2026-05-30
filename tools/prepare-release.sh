@@ -17,9 +17,12 @@ python3 "${ROOT}/tools/validate-catalog.py" "${ROOT}/config/apps.json"
 
 "${ROOT}/tools/build-launcher.sh"
 
-launcher_bin="$(find "${LAUNCHER_DIR}" -maxdepth 1 -type f -name "*.ino.bin" | head -n 1 || true)"
+launcher_bin="$(find "${LAUNCHER_DIR}" -maxdepth 1 -type f -name "*.merged.bin" | head -n 1 || true)"
 if [[ -z "${launcher_bin}" ]]; then
-  echo "[release] launcher .ino.bin missing in ${LAUNCHER_DIR}" >&2
+  launcher_bin="$(find "${LAUNCHER_DIR}" -maxdepth 1 -type f -name "*.ino.bin" | head -n 1 || true)"
+fi
+if [[ -z "${launcher_bin}" ]]; then
+  echo "[release] launcher .merged.bin or .ino.bin missing in ${LAUNCHER_DIR}" >&2
   exit 1
 fi
 cp -f "${launcher_bin}" "${RELEASE_DIR}/cypher-os-launcher.bin"

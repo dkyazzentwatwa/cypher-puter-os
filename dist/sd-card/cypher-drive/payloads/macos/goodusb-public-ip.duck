@@ -1,0 +1,14 @@
+REM Title: Show public IP + geo
+REM Author: Cypher
+REM Description: Curls ifconfig.co for the egress IP plus city/country guess.
+REM Useful sanity check after VPN toggles.
+REM Target: macOS
+DELAY 500
+GUI SPACE
+DELAY 500
+STRING Terminal
+DELAY 1000
+ENTER
+DELAY 800
+STRING curl -s ifconfig.co/json | python3 -m json.tool 2>/dev/null || curl -s ifconfig.me
+ENTER

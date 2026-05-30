@@ -1,0 +1,43 @@
+REM Title: Stickies rainbow
+REM Author: Cypher
+REM Description: Opens Stickies and creates six colored sticky notes
+REM   across the desktop with short messages. Cmd+1..Cmd+6 cycles the
+REM   color (yellow, blue, green, pink, purple, gray).
+REM   IG Reels demo: ~15s, colorful desktop chaos.
+REM Target: macOS (Stickies.app ships by default; first-run may prompt)
+DELAY 500
+GUI SPACE
+DELAY 400
+STRING Stickies
+DELAY 800
+ENTER
+DELAY 1500
+GUI n
+DELAY 400
+STRING hi from cypherbox
+GUI 2
+DELAY 300
+GUI n
+DELAY 400
+STRING you didn't lock your screen
+GUI 3
+DELAY 300
+GUI n
+DELAY 400
+STRING I am everywhere
+GUI 4
+DELAY 300
+GUI n
+DELAY 400
+STRING this took 2 seconds
+GUI 5
+DELAY 300
+GUI n
+DELAY 400
+STRING your password is bad
+GUI 6
+DELAY 300
+GUI n
+DELAY 400
+STRING love, the USB
+GUI 1

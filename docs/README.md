@@ -49,6 +49,7 @@ Primary app docs:
 - [Cypher Desk](apps/cypher-desk/README.md)
 - [Flock You](apps/flock-you/README.md)
 - [WireTap-32 Cardputer](apps/wiretap-32-cardputer/README.md)
+- [Drone Mesh Mapper](apps/drone-mesh-mapper/README.md)
 
 Imported Game OS title docs:
 

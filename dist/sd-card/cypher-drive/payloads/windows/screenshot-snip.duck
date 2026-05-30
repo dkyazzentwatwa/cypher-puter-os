@@ -1,0 +1,6 @@
+REM Title: Snip & Sketch screenshot
+REM Author: Cypher
+REM Description: Win+Shift+S opens the modern Snipping Tool overlay.
+REM Target: Windows 10 1809+ / Windows 11
+DELAY 500
+GUI SHIFT s

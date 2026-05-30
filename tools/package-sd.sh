@@ -9,8 +9,10 @@ SD_APPS="${SD_ROOT}/cypher-puter/apps"
 SD_GAME_OS_SAVES="${SD_ROOT}/cardputer-game-os/saves"
 CARDPUTER_MPC_ROOT="${CYPHER_OS_CARDPUTER_MPC_DIR:-${WORKSPACE_ROOT}/cardputer-mpc}"
 ESP32_BT_HID_ROOT="${CYPHER_OS_ESP32_BT_HID_DIR:-${WORKSPACE_ROOT}/ESP32_BT_HID}"
+DRONE_MESH_MAPPER_ROOT="${CYPHER_OS_DRONE_MESH_MAPPER_DIR:-${WORKSPACE_ROOT}/drone-mesh-mapper}"
 MPC_SD_SRC="${CARDPUTER_MPC_ROOT}/sdcard/cardputer-mpc"
 ESP32_BT_HID_SD_SRC="${ESP32_BT_HID_ROOT}/dist/sd-card/cypher-drive"
+DRONE_MESH_MAPPER_SD_SRC="${DRONE_MESH_MAPPER_ROOT}/sd/drone"
 MANIFEST="${APP_DIST}/apps.json"
 
 if [[ ! -f "${MANIFEST}" ]]; then
@@ -60,6 +62,13 @@ if [[ -d "${ESP32_BT_HID_SD_SRC}" ]]; then
   cp -R "${ESP32_BT_HID_SD_SRC}/." "${SD_ROOT}/cypher-drive/"
 else
   echo "[sd] warning: ${ESP32_BT_HID_SD_SRC} missing; ESP32 BT HID payload bundle was not copied"
+fi
+
+if [[ -d "${DRONE_MESH_MAPPER_SD_SRC}" ]]; then
+  mkdir -p "${SD_ROOT}/drone"
+  cp -R "${DRONE_MESH_MAPPER_SD_SRC}/." "${SD_ROOT}/drone/"
+else
+  echo "[sd] warning: ${DRONE_MESH_MAPPER_SD_SRC} missing; Drone Mesh Mapper will create /drone/logs at runtime"
 fi
 
 python3 "${ROOT}/tools/validate-catalog.py" "${ROOT}/config/apps.json" --manifest "${SD_APPS}/apps.json" --dist "${SD_APPS}"

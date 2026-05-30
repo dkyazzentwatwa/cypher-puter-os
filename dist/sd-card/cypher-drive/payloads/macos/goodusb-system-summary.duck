@@ -1,0 +1,14 @@
+REM Title: System summary
+REM Author: Cypher
+REM Description: Prints OS version, hostname, uptime, and CPU model. Quick
+REM "what am I sitting at" snapshot for unfamiliar Macs.
+REM Target: macOS
+DELAY 500
+GUI SPACE
+DELAY 500
+STRING Terminal
+DELAY 1000
+ENTER
+DELAY 800
+STRING clear; sw_vers; echo; scutil --get ComputerName; uptime; sysctl -n machdep.cpu.brand_string
+ENTER

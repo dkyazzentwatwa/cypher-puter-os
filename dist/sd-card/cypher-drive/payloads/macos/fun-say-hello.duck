@@ -1,0 +1,13 @@
+REM Title: Say hello
+REM Author: Cypher
+REM Description: Uses macOS `say` to speak through the speakers.
+REM Target: macOS
+DELAY 500
+GUI SPACE
+DELAY 500
+STRING Terminal
+DELAY 1000
+ENTER
+DELAY 800
+STRING say -v Samantha "hello from your cypherbox"
+ENTER

@@ -1,0 +1,6 @@
+REM Title: Lock screen
+REM Author: Cypher
+REM Description: Win+L locks the Windows session.
+REM Target: Windows 10/11
+DELAY 500
+GUI l

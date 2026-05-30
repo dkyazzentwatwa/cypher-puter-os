@@ -23,5 +23,6 @@ DerivedData/
 *.log
 *.tmp
 
-# Generated release artifacts
-dist/
+# Generated release artifacts are intentionally trackable.
+# Keep dist/ in the repo so users can inspect or install the latest prepared
+# launcher, SD bundle, catalog, and build report without hunting through CI.

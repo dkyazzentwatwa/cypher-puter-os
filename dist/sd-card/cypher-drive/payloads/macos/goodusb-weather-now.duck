@@ -1,0 +1,13 @@
+REM Title: Weather now (wttr.in)
+REM Author: Cypher
+REM Description: One-screen weather report based on the public IP's location.
+REM Target: macOS
+DELAY 500
+GUI SPACE
+DELAY 500
+STRING Terminal
+DELAY 1000
+ENTER
+DELAY 800
+STRING curl -s 'wttr.in/?0qT'
+ENTER

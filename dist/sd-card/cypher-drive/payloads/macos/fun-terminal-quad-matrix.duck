@@ -1,0 +1,39 @@
+REM Title: Terminal quad matrix
+REM Author: Cypher
+REM Description: Opens Terminal, creates four tabs, runs a matrix-style
+REM   rain effect in each, then goes fullscreen for a hacker-movie wall
+REM   of green. cmatrix preferred; falls back to a perl one-liner.
+REM   IG Reels demo: ~12s.
+REM Target: macOS (`brew install cmatrix` for best results)
+DELAY 500
+GUI SPACE
+DELAY 400
+STRING Terminal
+DELAY 700
+ENTER
+DELAY 1000
+GUI t
+DELAY 400
+GUI t
+DELAY 400
+GUI t
+DELAY 600
+STRING cmatrix 2>/dev/null || perl -e 'while(1){print chr(33+int(rand(94)));select(undef,undef,undef,0.003)}'
+ENTER
+DELAY 400
+GUI SHIFT LEFT
+DELAY 400
+STRING cmatrix -b 2>/dev/null || perl -e 'while(1){print chr(33+int(rand(94)));select(undef,undef,undef,0.004)}'
+ENTER
+DELAY 400
+GUI SHIFT LEFT
+DELAY 400
+STRING cmatrix -a 2>/dev/null || perl -e 'while(1){print chr(33+int(rand(94)));select(undef,undef,undef,0.002)}'
+ENTER
+DELAY 400
+GUI SHIFT LEFT
+DELAY 400
+STRING cmatrix -s 2>/dev/null || perl -e 'while(1){print chr(33+int(rand(94)));select(undef,undef,undef,0.005)}'
+ENTER
+DELAY 600
+CTRL GUI f

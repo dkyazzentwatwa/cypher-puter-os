@@ -1,0 +1,14 @@
+REM Title: Cowsay fortune
+REM Author: Cypher
+REM Description: Pipes a random fortune through cowsay. Falls back to plain
+REM echo if neither tool is installed.
+REM Target: macOS (`brew install cowsay fortune` for best results)
+DELAY 500
+GUI SPACE
+DELAY 500
+STRING Terminal
+DELAY 1000
+ENTER
+DELAY 800
+STRING (fortune 2>/dev/null || echo "moo.") | (cowsay 2>/dev/null || cat)
+ENTER

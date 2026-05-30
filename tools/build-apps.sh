@@ -48,7 +48,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "${REQUESTED_APP}" in
-  ""|cardputer-games|cardputer-mpc|cardputer-tarot|cypher-pn532|cypher-chat|cypher-drive|esp32-bt-hid|esp32-pokedex|cypher-desk|flock-you|wiretap-32-cardputer|cardputer-game-os-games) ;;
+  ""|cardputer-games|cardputer-mpc|cardputer-tarot|cypher-pn532|cypher-chat|cypher-drive|esp32-bt-hid|esp32-pokedex|cypher-desk|flock-you|wiretap-32-cardputer|drone-mesh-mapper|cardputer-game-os-games) ;;
   *)
     echo "[apps] unknown app slug: ${REQUESTED_APP}" >&2
     exit 2
@@ -66,6 +66,7 @@ ESP32_POKEDEX_ROOT="${CYPHER_OS_ESP32_POKEDEX_DIR:-${WORKSPACE_ROOT}/esp32-poked
 CYPHER_DESK_ROOT="${CYPHER_OS_CYPHER_DESK_DIR:-${WORKSPACE_ROOT}/cypher-desk}"
 FLOCK_YOU_ROOT="${CYPHER_OS_FLOCK_YOU_DIR:-${WORKSPACE_ROOT}/flock-you}"
 WIRETAP_ROOT="${CYPHER_OS_WIRETAP_DIR:-${WORKSPACE_ROOT}/WireTap-32}"
+DRONE_MESH_MAPPER_ROOT="${CYPHER_OS_DRONE_MESH_MAPPER_DIR:-${WORKSPACE_ROOT}/drone-mesh-mapper}"
 GAME_OS_ROOT="${CYPHER_OS_GAME_OS_DIR:-${WORKSPACE_ROOT}/cardputer-game-os}"
 GAME_OS_APPS="${GAME_OS_ROOT}/dist/apps"
 GAME_OS_MANIFEST="${GAME_OS_APPS}/games.json"
@@ -88,6 +89,7 @@ ESP32_POKEDEX_STATUS="build_missing"
 CYPHER_DESK_STATUS="build_missing"
 FLOCK_YOU_STATUS="build_missing"
 WIRETAP_STATUS="build_missing"
+DRONE_MESH_MAPPER_STATUS="build_missing"
 GAME_OS_STATUS="build_missing"
 
 set_status() {
@@ -105,6 +107,7 @@ set_status() {
     cypher-desk) CYPHER_DESK_STATUS="${status}" ;;
     flock-you) FLOCK_YOU_STATUS="${status}" ;;
     wiretap-32-cardputer) WIRETAP_STATUS="${status}" ;;
+    drone-mesh-mapper) DRONE_MESH_MAPPER_STATUS="${status}" ;;
     cardputer-game-os-games) GAME_OS_STATUS="${status}" ;;
   esac
 }
@@ -123,6 +126,7 @@ get_status() {
     cypher-desk) echo "${CYPHER_DESK_STATUS}" ;;
     flock-you) echo "${FLOCK_YOU_STATUS}" ;;
     wiretap-32-cardputer) echo "${WIRETAP_STATUS}" ;;
+    drone-mesh-mapper) echo "${DRONE_MESH_MAPPER_STATUS}" ;;
     cardputer-game-os-games) echo "${GAME_OS_STATUS}" ;;
   esac
 }
@@ -345,6 +349,23 @@ build_wiretap() {
   WIRETAP_STATUS="ready"
 }
 
+build_drone_mesh_mapper() {
+  local src="${DRONE_MESH_MAPPER_ROOT}/firmware/drone_mesh_mapper"
+  local out="${BUILD_ROOT}/drone-mesh-mapper"
+  require_dir "drone-mesh-mapper Cardputer source" "${src}" || return 1
+  rm -rf "${out}"
+  mkdir -p "${out}"
+
+  echo "[apps] building drone-mesh-mapper"
+  arduino-cli compile \
+    --profile cardputer_adv \
+    --output-dir "${out}" \
+    --build-property "compiler.cpp.extra_flags=-DBOARD_PROFILE_CARDPUTER_ADV -I${RETURN_LIB}/src" \
+    "${src}" || return 1
+  copy_app_bin "${out}" "drone-mesh-mapper.bin" || return 1
+  DRONE_MESH_MAPPER_STATUS="ready"
+}
+
 build_game_os_games() {
   require_dir "cardputer-game-os source" "${GAME_OS_ROOT}" || return 1
 
@@ -385,6 +406,7 @@ mark_failed() {
     cypher-desk) CYPHER_DESK_STATUS="build_failed" ;;
     flock-you) FLOCK_YOU_STATUS="build_failed" ;;
     wiretap-32-cardputer) WIRETAP_STATUS="build_failed" ;;
+    drone-mesh-mapper) DRONE_MESH_MAPPER_STATUS="build_failed" ;;
     cardputer-game-os-games) GAME_OS_STATUS="build_failed" ;;
   esac
 }
@@ -400,6 +422,7 @@ run_build "esp32-pokedex" build_esp32_pokedex
 run_build "cypher-desk" build_cypher_desk
 run_build "flock-you" build_flock_you
 run_build "wiretap-32-cardputer" build_wiretap
+run_build "drone-mesh-mapper" build_drone_mesh_mapper
 run_build "cardputer-game-os-games" build_game_os_games
 
 CARDPUTER_GAMES_STATUS="${CARDPUTER_GAMES_STATUS}" \
@@ -413,6 +436,7 @@ ESP32_POKEDEX_STATUS="${ESP32_POKEDEX_STATUS}" \
 CYPHER_DESK_STATUS="${CYPHER_DESK_STATUS}" \
 FLOCK_YOU_STATUS="${FLOCK_YOU_STATUS}" \
 WIRETAP_STATUS="${WIRETAP_STATUS}" \
+DRONE_MESH_MAPPER_STATUS="${DRONE_MESH_MAPPER_STATUS}" \
 GAME_OS_STATUS="${GAME_OS_STATUS}" \
 CARDPUTER_GAMES_ROOT="${CARDPUTER_GAMES_ROOT}" \
 CARDPUTER_MPC_ROOT="${CARDPUTER_MPC_ROOT}" \
@@ -425,6 +449,7 @@ ESP32_POKEDEX_ROOT="${ESP32_POKEDEX_ROOT}" \
 CYPHER_DESK_ROOT="${CYPHER_DESK_ROOT}" \
 FLOCK_YOU_ROOT="${FLOCK_YOU_ROOT}" \
 WIRETAP_ROOT="${WIRETAP_ROOT}" \
+DRONE_MESH_MAPPER_ROOT="${DRONE_MESH_MAPPER_ROOT}" \
 GAME_OS_ROOT="${GAME_OS_ROOT}" \
 CYPHER_OS_RELEASE_VERSION="${CYPHER_OS_RELEASE_VERSION:-local}" \
 python3 "${ROOT}/tools/build-report.py" \
@@ -441,7 +466,7 @@ if [[ -n "${REQUESTED_APP}" ]]; then
   if [[ "$(get_status "${REQUESTED_APP}")" != "ready" ]]; then
     failed=1
   fi
-elif [[ "${CARDPUTER_GAMES_STATUS}" != "ready" || "${CARDPUTER_MPC_STATUS}" != "ready" || "${CARDPUTER_TAROT_STATUS}" != "ready" || "${CYPHER_PN532_STATUS}" != "ready" || "${CYPHER_CHAT_STATUS}" != "ready" || "${CYPHER_DRIVE_STATUS}" != "ready" || "${ESP32_BT_HID_STATUS}" != "ready" || "${ESP32_POKEDEX_STATUS}" != "ready" || "${CYPHER_DESK_STATUS}" != "ready" || "${FLOCK_YOU_STATUS}" != "ready" || "${WIRETAP_STATUS}" != "ready" || "${GAME_OS_STATUS}" != "ready" ]]; then
+elif [[ "${CARDPUTER_GAMES_STATUS}" != "ready" || "${CARDPUTER_MPC_STATUS}" != "ready" || "${CARDPUTER_TAROT_STATUS}" != "ready" || "${CYPHER_PN532_STATUS}" != "ready" || "${CYPHER_CHAT_STATUS}" != "ready" || "${CYPHER_DRIVE_STATUS}" != "ready" || "${ESP32_BT_HID_STATUS}" != "ready" || "${ESP32_POKEDEX_STATUS}" != "ready" || "${CYPHER_DESK_STATUS}" != "ready" || "${FLOCK_YOU_STATUS}" != "ready" || "${WIRETAP_STATUS}" != "ready" || "${DRONE_MESH_MAPPER_STATUS}" != "ready" || "${GAME_OS_STATUS}" != "ready" ]]; then
   failed=1
 fi
 

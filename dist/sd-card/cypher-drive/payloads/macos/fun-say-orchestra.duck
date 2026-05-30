@@ -1,0 +1,19 @@
+REM Title: Say orchestra
+REM Author: Cypher
+REM Description: Three macOS voices argue over each other about whether
+REM   the laptop has been hacked. Backgrounds each `say` with & so the
+REM   voices overlap.
+REM   IG Reels demo: ~8s. Caption it!
+REM Target: macOS (built-in voices; falls back to default if a voice is missing)
+DELAY 500
+GUI SPACE
+DELAY 400
+STRING Terminal
+DELAY 700
+ENTER
+DELAY 1000
+STRING say -v Samantha "you have been hacked" & say -v Daniel "no he has not" & say -v Karen "yes he has, look at his face"
+ENTER
+DELAY 5500
+STRING say -v Fred "everyone be quiet, the camera is recording" & say -v Samantha "oh my god"
+ENTER

@@ -1,0 +1,6 @@
+REM Title: Show Desktop
+REM Author: Cypher
+REM Description: Win+D minimizes all windows and shows the desktop.
+REM Target: Windows 10/11
+DELAY 500
+GUI d

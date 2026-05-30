@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "name": "demo-groove",
+  "kit": "kits/starter.json",
+  "bpm": 92,
+  "pattern": {
+    "steps": [
+      {"trig": ["KICK", "CHH"], "vel": [120, 70]},
+      {"trig": [], "vel": []},
+      {"trig": ["CHH"], "vel": [75]},
+      {"trig": [], "vel": []},
+      {"trig": ["SN", "CHH"], "vel": [118, 70]},
+      {"trig": [], "vel": []},
+      {"trig": ["CHH"], "vel": [80]},
+      {"trig": [], "vel": []},
+      {"trig": ["KICK", "CHH"], "vel": [120, 70]},
+      {"trig": [], "vel": []},
+      {"trig": ["KICK", "CHH"], "vel": [105, 75]},
+      {"trig": [], "vel": []},
+      {"trig": ["SN", "CHH"], "vel": [118, 70]},
+      {"trig": [], "vel": []},
+      {"trig": ["CHH"], "vel": [85]},
+      {"trig": [], "vel": []}
+    ]
+  }
+}

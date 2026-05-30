@@ -1,0 +1,6 @@
+REM Title: Spotlight Search
+REM Author: Cypher
+REM Description: Cmd+Space opens Spotlight on iPadOS and on iOS 16+ with external keyboard.
+REM Target: iPadOS 14+, iOS 16+
+DELAY 500
+GUI SPACE

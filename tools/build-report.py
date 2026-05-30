@@ -25,6 +25,7 @@ STATUS_ENV = {
     "cypher-desk": ("CYPHER_DESK_STATUS", "CYPHER_DESK_ROOT"),
     "flock-you": ("FLOCK_YOU_STATUS", "FLOCK_YOU_ROOT"),
     "wiretap-32-cardputer": ("WIRETAP_STATUS", "WIRETAP_ROOT"),
+    "drone-mesh-mapper": ("DRONE_MESH_MAPPER_STATUS", "DRONE_MESH_MAPPER_ROOT"),
 }
 IMPORT_ENV = {
     "cardputer-game-os-games": ("GAME_OS_STATUS", "GAME_OS_ROOT"),
@@ -179,6 +180,7 @@ def write_report(
             "- The release SD zip contains the app manifest and built app binaries under `/cypher-puter/apps/`.",
             "- Cardputer MPC runtime assets are packaged under `/cardputer-mpc/` when present.",
             "- Cypher Drive / ESP32 BT HID payload assets are packaged under `/cypher-drive/` when present.",
+            "- Drone Mesh Mapper SD seed assets are packaged under `/drone/` when present.",
             "- ESP32 Pokedex ships as an app binary here; full sprite/audio/data content still belongs at `/pokemon`, `/audio`, and `/config`.",
         ]
     )

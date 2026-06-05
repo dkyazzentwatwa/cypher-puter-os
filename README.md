@@ -84,6 +84,14 @@ These are the supported Cardputer app targets in the current catalog flow:
 | **[Flock You][cypher-flock-repo]** | [Cardputer ADV][cardputer-affiliate] WiFi/BLE detector build with return-to-launcher support. |
 | **[WireTap-32 Cardputer][wiretap-32-repo]** | [Cardputer ADV][cardputer-affiliate] EXT bench build with return-to-launcher support. |
 | **[Drone Mesh Mapper][drone-mesh-mapper-repo]** | [Cardputer ADV][cardputer-affiliate] passive Remote ID scanner with SD field logs. |
+| **[Bitcoin Card Wallet](docs/apps/bitcoin-card-wallet/README.md)** | Offline Bitcoin wallet utility from the Cardputer App Bundle. |
+| **[Cardputer Game Station Emulators](docs/apps/cardputer-game-station-emulators/README.md)** | Emulator launcher from the Cardputer App Bundle. |
+| **[ESP32 Bit Pirate](docs/apps/esp32-bit-pirate/README.md)** | [Cardputer ADV][cardputer-affiliate] hardware bus and protocol toolkit from the Cardputer App Bundle. |
+| **[ESP32 USB Stick](docs/apps/esp32-usb-stick/README.md)** | Cardputer USB mass-storage SD bridge from the Cardputer App Bundle. |
+| **[News Reader](docs/apps/news-reader/README.md)** | Guardian-backed Wi-Fi news reader from the Cardputer App Bundle. |
+| **[Open WiFi Scanner](docs/apps/open-wifi-scanner/README.md)** | Open-network scanner from the Cardputer App Bundle. |
+| **[Password Manager](docs/apps/password-manager/README.md)** | Offline Cardputer password vault from the Cardputer App Bundle. |
+| **[Ultimate Remote](docs/apps/ultimate-remote/README.md)** | [Cardputer ADV][cardputer-affiliate] remote-control utility from the Cardputer App Bundle. |
 | **[Cardputer Game OS games][cardputer-game-os-repo]** | Individual game `.bin` files imported from the sibling `cardputer-game-os` repo when present and built successfully. |
 
 `starbeam_v2` is not part of the Cypher OS app catalog.
@@ -260,6 +268,8 @@ Build just one app while developing:
 ./tools/build-apps.sh --app cypher-chat
 ./tools/build-apps.sh --app esp32-pokedex
 ./tools/build-apps.sh --app cypher-desk
+./tools/build-apps.sh --app news-reader
+./tools/build-apps.sh --app ultimate-remote
 ```
 
 Prepare the same artifact set used by official releases:
@@ -299,16 +309,31 @@ Expected SD layout:
 /cypher-puter/apps/flock-you.bin
 /cypher-puter/apps/wiretap-32-cardputer.bin
 /cypher-puter/apps/drone-mesh-mapper.bin
+/cypher-puter/apps/bitcoin-card-wallet.bin
+/cypher-puter/apps/cardputer-game-station-emulators.bin
+/cypher-puter/apps/esp32-bit-pirate.bin
+/cypher-puter/apps/esp32-usb-stick.bin
+/cypher-puter/apps/news-reader.bin
+/cypher-puter/apps/open-wifi-scanner.bin
+/cypher-puter/apps/password-manager.bin
+/cypher-puter/apps/ultimate-remote.bin
 /cypher-puter/apps/<cardputer-game-os-game>.bin
 /cardputer-mpc/
 /cypher-drive/payloads/
 /drone/
+/news-reader/config.example.txt
 /cardputer-game-os/saves/
 ```
 
 ESP32 Pokedex uses SD data already stored at `/pokemon`, `/audio`, and
 `/config`; the Cypher OS package only includes the app `.bin` and catalog
 entry.
+
+The Cardputer App Bundle apps are built from the sibling `new-cardputer-apps`
+repo. Some of those apps expect their own user-provided SD data, such as
+`/vaults/`, `/roms/`, `/gbc_saves/`, or `/card-wallets.txt`; the Cypher OS
+package includes the app `.bin` files, catalog entries, and the News Reader
+example config.
 
 The catalog imports individual game `.bin` files from the sibling
 `cardputer-game-os` repo. The nested Game OS launcher itself is not packaged
@@ -363,11 +388,16 @@ You can also override individual app paths:
 CYPHER_OS_CARDPUTER_MPC_DIR=/path/to/cardputer-mpc ./tools/package-sd.sh
 CYPHER_OS_CARDPUTER_TAROT_DIR=/path/to/cardputer-tarot ./tools/build-apps.sh
 CYPHER_OS_CYPHER_PN532_DIR=/path/to/cypher-pn532 ./tools/build-apps.sh
+CYPHER_OS_CYPHER_CHAT_DIR=/path/to/cypher-chat/cypher-chat-firmware ./tools/build-apps.sh
+CYPHER_OS_CYPHER_DRIVE_DIR=/path/to/cypher-drive ./tools/build-apps.sh
 CYPHER_OS_ESP32_BT_HID_DIR=/path/to/ESP32_BT_HID ./tools/build-apps.sh
 CYPHER_OS_ESP32_POKEDEX_DIR=/path/to/esp32-pokedex ./tools/build-apps.sh
 CYPHER_OS_CYPHER_DESK_DIR=/path/to/cypher-desk ./tools/build-apps.sh
+CYPHER_OS_FLOCK_YOU_DIR=/path/to/flock-you ./tools/build-apps.sh
+CYPHER_OS_WIRETAP_DIR=/path/to/WireTap-32 ./tools/build-apps.sh
 CYPHER_OS_DRONE_MESH_MAPPER_DIR=/path/to/drone-mesh-mapper ./tools/build-apps.sh
 CYPHER_OS_CARDPUTER_APP_BUNDLE_DIR=/path/to/new-cardputer-apps ./tools/build-apps.sh
+CYPHER_OS_GAME_OS_DIR=/path/to/cardputer-game-os ./tools/build-apps.sh
 ```
 
 ## Controls

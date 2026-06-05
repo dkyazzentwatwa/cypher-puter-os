@@ -215,12 +215,15 @@ build_bundle_app() {
   mkdir -p "${out}"
 
   echo "[apps] building ${slug}"
-  arduino-cli compile \
+  (
+    cd "${src}"
+    arduino-cli compile \
     --profile "${profile}" \
     --build-path "${out}" \
     --build-property "compiler.cpp.extra_flags=-I${CARDPUTER_APP_BUNDLE_ROOT}/shared" \
     "$@" \
-    "${src}" || return 1
+      .
+  ) || return 1
   copy_app_bin "${out}" "${dest}" || return 1
   set_status "${slug}" "ready"
 }

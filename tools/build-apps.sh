@@ -48,7 +48,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "${REQUESTED_APP}" in
-  ""|cardputer-games|cardputer-mpc|cardputer-tarot|cypher-pn532|cypher-chat|cypher-drive|esp32-bt-hid|esp32-pokedex|cypher-desk|flock-you|wiretap-32-cardputer|drone-mesh-mapper|cardputer-game-os-games) ;;
+  ""|cardputer-games|cardputer-mpc|cardputer-tarot|cypher-pn532|cypher-chat|cypher-drive|esp32-bt-hid|esp32-pokedex|cypher-desk|flock-you|wiretap-32-cardputer|drone-mesh-mapper|bitcoin-card-wallet|cardputer-game-station-emulators|esp32-bit-pirate|esp32-usb-stick|news-reader|open-wifi-scanner|password-manager|ultimate-remote|cardputer-game-os-games) ;;
   *)
     echo "[apps] unknown app slug: ${REQUESTED_APP}" >&2
     exit 2
@@ -67,6 +67,7 @@ CYPHER_DESK_ROOT="${CYPHER_OS_CYPHER_DESK_DIR:-${WORKSPACE_ROOT}/cypher-desk}"
 FLOCK_YOU_ROOT="${CYPHER_OS_FLOCK_YOU_DIR:-${WORKSPACE_ROOT}/flock-you}"
 WIRETAP_ROOT="${CYPHER_OS_WIRETAP_DIR:-${WORKSPACE_ROOT}/WireTap-32}"
 DRONE_MESH_MAPPER_ROOT="${CYPHER_OS_DRONE_MESH_MAPPER_DIR:-${WORKSPACE_ROOT}/drone-mesh-mapper}"
+CARDPUTER_APP_BUNDLE_ROOT="${CYPHER_OS_CARDPUTER_APP_BUNDLE_DIR:-${WORKSPACE_ROOT}/new-cardputer-apps}"
 GAME_OS_ROOT="${CYPHER_OS_GAME_OS_DIR:-${WORKSPACE_ROOT}/cardputer-game-os}"
 GAME_OS_APPS="${GAME_OS_ROOT}/dist/apps"
 GAME_OS_MANIFEST="${GAME_OS_APPS}/games.json"
@@ -90,6 +91,14 @@ CYPHER_DESK_STATUS="build_missing"
 FLOCK_YOU_STATUS="build_missing"
 WIRETAP_STATUS="build_missing"
 DRONE_MESH_MAPPER_STATUS="build_missing"
+BITCOIN_CARD_WALLET_STATUS="build_missing"
+CARDPUTER_GAME_STATION_EMULATORS_STATUS="build_missing"
+ESP32_BIT_PIRATE_STATUS="build_missing"
+ESP32_USB_STICK_STATUS="build_missing"
+NEWS_READER_STATUS="build_missing"
+OPEN_WIFI_SCANNER_STATUS="build_missing"
+PASSWORD_MANAGER_STATUS="build_missing"
+ULTIMATE_REMOTE_STATUS="build_missing"
 GAME_OS_STATUS="build_missing"
 
 set_status() {
@@ -108,6 +117,14 @@ set_status() {
     flock-you) FLOCK_YOU_STATUS="${status}" ;;
     wiretap-32-cardputer) WIRETAP_STATUS="${status}" ;;
     drone-mesh-mapper) DRONE_MESH_MAPPER_STATUS="${status}" ;;
+    bitcoin-card-wallet) BITCOIN_CARD_WALLET_STATUS="${status}" ;;
+    cardputer-game-station-emulators) CARDPUTER_GAME_STATION_EMULATORS_STATUS="${status}" ;;
+    esp32-bit-pirate) ESP32_BIT_PIRATE_STATUS="${status}" ;;
+    esp32-usb-stick) ESP32_USB_STICK_STATUS="${status}" ;;
+    news-reader) NEWS_READER_STATUS="${status}" ;;
+    open-wifi-scanner) OPEN_WIFI_SCANNER_STATUS="${status}" ;;
+    password-manager) PASSWORD_MANAGER_STATUS="${status}" ;;
+    ultimate-remote) ULTIMATE_REMOTE_STATUS="${status}" ;;
     cardputer-game-os-games) GAME_OS_STATUS="${status}" ;;
   esac
 }
@@ -127,6 +144,14 @@ get_status() {
     flock-you) echo "${FLOCK_YOU_STATUS}" ;;
     wiretap-32-cardputer) echo "${WIRETAP_STATUS}" ;;
     drone-mesh-mapper) echo "${DRONE_MESH_MAPPER_STATUS}" ;;
+    bitcoin-card-wallet) echo "${BITCOIN_CARD_WALLET_STATUS}" ;;
+    cardputer-game-station-emulators) echo "${CARDPUTER_GAME_STATION_EMULATORS_STATUS}" ;;
+    esp32-bit-pirate) echo "${ESP32_BIT_PIRATE_STATUS}" ;;
+    esp32-usb-stick) echo "${ESP32_USB_STICK_STATUS}" ;;
+    news-reader) echo "${NEWS_READER_STATUS}" ;;
+    open-wifi-scanner) echo "${OPEN_WIFI_SCANNER_STATUS}" ;;
+    password-manager) echo "${PASSWORD_MANAGER_STATUS}" ;;
+    ultimate-remote) echo "${ULTIMATE_REMOTE_STATUS}" ;;
     cardputer-game-os-games) echo "${GAME_OS_STATUS}" ;;
   esac
 }
@@ -174,6 +199,30 @@ require_dir() {
     echo "[apps] missing ${name}: ${path}"
     return 1
   fi
+}
+
+build_bundle_app() {
+  local slug="$1"
+  local folder="$2"
+  local profile="$3"
+  local dest="$4"
+  local src="${CARDPUTER_APP_BUNDLE_ROOT}/${folder}"
+  local out="${BUILD_ROOT}/${slug}"
+  shift 4
+
+  require_dir "${folder} source" "${src}" || return 1
+  rm -rf "${out}"
+  mkdir -p "${out}"
+
+  echo "[apps] building ${slug}"
+  arduino-cli compile \
+    --profile "${profile}" \
+    --build-path "${out}" \
+    --build-property "compiler.cpp.extra_flags=-I${CARDPUTER_APP_BUNDLE_ROOT}/shared" \
+    "$@" \
+    "${src}" || return 1
+  copy_app_bin "${out}" "${dest}" || return 1
+  set_status "${slug}" "ready"
 }
 
 build_cardputer_games() {
@@ -366,6 +415,41 @@ build_drone_mesh_mapper() {
   DRONE_MESH_MAPPER_STATUS="ready"
 }
 
+build_bitcoin_card_wallet() {
+  build_bundle_app "bitcoin-card-wallet" "Bitcoin-Card-Wallet" "cardputer" "bitcoin-card-wallet.bin" \
+    --build-property "compiler.c.elf.extra_flags=-Wl,-zmuldefs"
+}
+
+build_cardputer_game_station_emulators() {
+  build_bundle_app "cardputer-game-station-emulators" "Cardputer-Game-Station-Emulators" "cardputer" "cardputer-game-station-emulators.bin" \
+    --build-property "compiler.c.elf.extra_flags=-Wl,-zmuldefs -Wl,--wrap=bmp_create -Wl,--wrap=bmp_destroy"
+}
+
+build_esp32_bit_pirate() {
+  build_bundle_app "esp32-bit-pirate" "ESP32-Bit-Pirate" "cardputer-adv" "esp32-bit-pirate.bin" \
+    --build-property "compiler.c.elf.extra_flags=-Wl,-zmuldefs"
+}
+
+build_esp32_usb_stick() {
+  build_bundle_app "esp32-usb-stick" "Esp32-USB-Stick" "cardputer" "esp32-usb-stick.bin"
+}
+
+build_news_reader() {
+  build_bundle_app "news-reader" "News-Reader" "cardputer" "news-reader.bin"
+}
+
+build_open_wifi_scanner() {
+  build_bundle_app "open-wifi-scanner" "Open-Wifi-Scanner" "cardputer" "open-wifi-scanner.bin"
+}
+
+build_password_manager() {
+  build_bundle_app "password-manager" "Password-Manager" "cardputer" "password-manager.bin"
+}
+
+build_ultimate_remote() {
+  build_bundle_app "ultimate-remote" "Ultimate-Remote" "cardputer-adv" "ultimate-remote.bin"
+}
+
 build_game_os_games() {
   require_dir "cardputer-game-os source" "${GAME_OS_ROOT}" || return 1
 
@@ -407,6 +491,14 @@ mark_failed() {
     flock-you) FLOCK_YOU_STATUS="build_failed" ;;
     wiretap-32-cardputer) WIRETAP_STATUS="build_failed" ;;
     drone-mesh-mapper) DRONE_MESH_MAPPER_STATUS="build_failed" ;;
+    bitcoin-card-wallet) BITCOIN_CARD_WALLET_STATUS="build_failed" ;;
+    cardputer-game-station-emulators) CARDPUTER_GAME_STATION_EMULATORS_STATUS="build_failed" ;;
+    esp32-bit-pirate) ESP32_BIT_PIRATE_STATUS="build_failed" ;;
+    esp32-usb-stick) ESP32_USB_STICK_STATUS="build_failed" ;;
+    news-reader) NEWS_READER_STATUS="build_failed" ;;
+    open-wifi-scanner) OPEN_WIFI_SCANNER_STATUS="build_failed" ;;
+    password-manager) PASSWORD_MANAGER_STATUS="build_failed" ;;
+    ultimate-remote) ULTIMATE_REMOTE_STATUS="build_failed" ;;
     cardputer-game-os-games) GAME_OS_STATUS="build_failed" ;;
   esac
 }
@@ -423,6 +515,14 @@ run_build "cypher-desk" build_cypher_desk
 run_build "flock-you" build_flock_you
 run_build "wiretap-32-cardputer" build_wiretap
 run_build "drone-mesh-mapper" build_drone_mesh_mapper
+run_build "bitcoin-card-wallet" build_bitcoin_card_wallet
+run_build "cardputer-game-station-emulators" build_cardputer_game_station_emulators
+run_build "esp32-bit-pirate" build_esp32_bit_pirate
+run_build "esp32-usb-stick" build_esp32_usb_stick
+run_build "news-reader" build_news_reader
+run_build "open-wifi-scanner" build_open_wifi_scanner
+run_build "password-manager" build_password_manager
+run_build "ultimate-remote" build_ultimate_remote
 run_build "cardputer-game-os-games" build_game_os_games
 
 CARDPUTER_GAMES_STATUS="${CARDPUTER_GAMES_STATUS}" \
@@ -437,6 +537,14 @@ CYPHER_DESK_STATUS="${CYPHER_DESK_STATUS}" \
 FLOCK_YOU_STATUS="${FLOCK_YOU_STATUS}" \
 WIRETAP_STATUS="${WIRETAP_STATUS}" \
 DRONE_MESH_MAPPER_STATUS="${DRONE_MESH_MAPPER_STATUS}" \
+BITCOIN_CARD_WALLET_STATUS="${BITCOIN_CARD_WALLET_STATUS}" \
+CARDPUTER_GAME_STATION_EMULATORS_STATUS="${CARDPUTER_GAME_STATION_EMULATORS_STATUS}" \
+ESP32_BIT_PIRATE_STATUS="${ESP32_BIT_PIRATE_STATUS}" \
+ESP32_USB_STICK_STATUS="${ESP32_USB_STICK_STATUS}" \
+NEWS_READER_STATUS="${NEWS_READER_STATUS}" \
+OPEN_WIFI_SCANNER_STATUS="${OPEN_WIFI_SCANNER_STATUS}" \
+PASSWORD_MANAGER_STATUS="${PASSWORD_MANAGER_STATUS}" \
+ULTIMATE_REMOTE_STATUS="${ULTIMATE_REMOTE_STATUS}" \
 GAME_OS_STATUS="${GAME_OS_STATUS}" \
 CARDPUTER_GAMES_ROOT="${CARDPUTER_GAMES_ROOT}" \
 CARDPUTER_MPC_ROOT="${CARDPUTER_MPC_ROOT}" \
@@ -450,6 +558,7 @@ CYPHER_DESK_ROOT="${CYPHER_DESK_ROOT}" \
 FLOCK_YOU_ROOT="${FLOCK_YOU_ROOT}" \
 WIRETAP_ROOT="${WIRETAP_ROOT}" \
 DRONE_MESH_MAPPER_ROOT="${DRONE_MESH_MAPPER_ROOT}" \
+CARDPUTER_APP_BUNDLE_ROOT="${CARDPUTER_APP_BUNDLE_ROOT}" \
 GAME_OS_ROOT="${GAME_OS_ROOT}" \
 CYPHER_OS_RELEASE_VERSION="${CYPHER_OS_RELEASE_VERSION:-local}" \
 python3 "${ROOT}/tools/build-report.py" \
@@ -466,7 +575,7 @@ if [[ -n "${REQUESTED_APP}" ]]; then
   if [[ "$(get_status "${REQUESTED_APP}")" != "ready" ]]; then
     failed=1
   fi
-elif [[ "${CARDPUTER_GAMES_STATUS}" != "ready" || "${CARDPUTER_MPC_STATUS}" != "ready" || "${CARDPUTER_TAROT_STATUS}" != "ready" || "${CYPHER_PN532_STATUS}" != "ready" || "${CYPHER_CHAT_STATUS}" != "ready" || "${CYPHER_DRIVE_STATUS}" != "ready" || "${ESP32_BT_HID_STATUS}" != "ready" || "${ESP32_POKEDEX_STATUS}" != "ready" || "${CYPHER_DESK_STATUS}" != "ready" || "${FLOCK_YOU_STATUS}" != "ready" || "${WIRETAP_STATUS}" != "ready" || "${DRONE_MESH_MAPPER_STATUS}" != "ready" || "${GAME_OS_STATUS}" != "ready" ]]; then
+elif [[ "${CARDPUTER_GAMES_STATUS}" != "ready" || "${CARDPUTER_MPC_STATUS}" != "ready" || "${CARDPUTER_TAROT_STATUS}" != "ready" || "${CYPHER_PN532_STATUS}" != "ready" || "${CYPHER_CHAT_STATUS}" != "ready" || "${CYPHER_DRIVE_STATUS}" != "ready" || "${ESP32_BT_HID_STATUS}" != "ready" || "${ESP32_POKEDEX_STATUS}" != "ready" || "${CYPHER_DESK_STATUS}" != "ready" || "${FLOCK_YOU_STATUS}" != "ready" || "${WIRETAP_STATUS}" != "ready" || "${DRONE_MESH_MAPPER_STATUS}" != "ready" || "${BITCOIN_CARD_WALLET_STATUS}" != "ready" || "${CARDPUTER_GAME_STATION_EMULATORS_STATUS}" != "ready" || "${ESP32_BIT_PIRATE_STATUS}" != "ready" || "${ESP32_USB_STICK_STATUS}" != "ready" || "${NEWS_READER_STATUS}" != "ready" || "${OPEN_WIFI_SCANNER_STATUS}" != "ready" || "${PASSWORD_MANAGER_STATUS}" != "ready" || "${ULTIMATE_REMOTE_STATUS}" != "ready" || "${GAME_OS_STATUS}" != "ready" ]]; then
   failed=1
 fi
 

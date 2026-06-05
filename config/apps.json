@@ -179,6 +179,127 @@
       "public_release": true,
       "status": "ready",
       "notes": "Cardputer ADV Remote ID drone scanner with WiFi/BLE detection, SD logging, and Cypher OS return support."
+    },
+    {
+      "name": "Bitcoin Card Wallet",
+      "slug": "bitcoin-card-wallet",
+      "binary": "bitcoin-card-wallet.bin",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-app-bundle",
+      "local_default_path": "../new-cardputer-apps",
+      "source_subpath": "Bitcoin-Card-Wallet",
+      "build_profile": "cardputer",
+      "sd_paths": [
+        "/card-wallets.txt"
+      ],
+      "return_to_launcher": "Choose Return to Cypher OS from the main menu.",
+      "public_release": true,
+      "status": "ready",
+      "notes": "Offline Bitcoin wallet utility from the Cardputer App Bundle with Cypher OS launcher return support."
+    },
+    {
+      "name": "Cardputer Game Station Emulators",
+      "slug": "cardputer-game-station-emulators",
+      "binary": "cardputer-game-station-emulators.bin",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-app-bundle",
+      "local_default_path": "../new-cardputer-apps",
+      "source_subpath": "Cardputer-Game-Station-Emulators",
+      "build_profile": "cardputer",
+      "sd_paths": [
+        "/roms/",
+        "/gbc_saves/"
+      ],
+      "return_to_launcher": "Press Fn+Del from the ROM menu or pre-game screens after quitting gameplay safely.",
+      "public_release": true,
+      "status": "ready",
+      "notes": "Cardputer emulator launcher from the Cardputer App Bundle, built with the bmp wrapper linker flags."
+    },
+    {
+      "name": "ESP32 Bit Pirate",
+      "slug": "esp32-bit-pirate",
+      "binary": "esp32-bit-pirate.bin",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-app-bundle",
+      "local_default_path": "../new-cardputer-apps",
+      "source_subpath": "ESP32-Bit-Pirate",
+      "build_profile": "cardputer-adv",
+      "sd_paths": [],
+      "return_to_launcher": "Type launcher, return, cypher, or home at the prompt, or press Fn+Del in standalone mode.",
+      "public_release": true,
+      "status": "ready",
+      "notes": "Cardputer ADV hardware bus and protocol toolkit from the Cardputer App Bundle."
+    },
+    {
+      "name": "ESP32 USB Stick",
+      "slug": "esp32-usb-stick",
+      "binary": "esp32-usb-stick.bin",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-app-bundle",
+      "local_default_path": "../new-cardputer-apps",
+      "source_subpath": "Esp32-USB-Stick",
+      "build_profile": "cardputer",
+      "sd_paths": [],
+      "return_to_launcher": "Eject or unmount the USB disk from the host, then press Fn+Del.",
+      "public_release": true,
+      "status": "ready",
+      "notes": "Cardputer USB mass-storage SD bridge from the Cardputer App Bundle."
+    },
+    {
+      "name": "News Reader",
+      "slug": "news-reader",
+      "binary": "news-reader.bin",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-app-bundle",
+      "local_default_path": "../new-cardputer-apps",
+      "source_subpath": "News-Reader",
+      "build_profile": "cardputer",
+      "sd_paths": [
+        "/news-reader/config.txt"
+      ],
+      "return_to_launcher": "Press Fn+Del.",
+      "public_release": true,
+      "status": "ready",
+      "notes": "Guardian-backed Wi-Fi news reader from the Cardputer App Bundle. Requires SD config at /news-reader/config.txt."
+    },
+    {
+      "name": "Open WiFi Scanner",
+      "slug": "open-wifi-scanner",
+      "binary": "open-wifi-scanner.bin",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-app-bundle",
+      "local_default_path": "../new-cardputer-apps",
+      "source_subpath": "Open-Wifi-Scanner",
+      "build_profile": "cardputer",
+      "sd_paths": [],
+      "return_to_launcher": "Press Fn+Del.",
+      "public_release": true,
+      "status": "ready",
+      "notes": "Open-network scanner from the Cardputer App Bundle with Cypher OS return support."
+    },
+    {
+      "name": "Password Manager",
+      "slug": "password-manager",
+      "binary": "password-manager.bin",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-app-bundle",
+      "local_default_path": "../new-cardputer-apps",
+      "source_subpath": "Password-Manager",
+      "build_profile": "cardputer",
+      "sd_paths": [
+        "/vaults/"
+      ],
+      "return_to_launcher": "Choose Cypher OS from the no-vault home menu.",
+      "public_release": true,
+      "status": "ready",
+      "notes": "Offline Cardputer password vault from the Cardputer App Bundle with launcher return support."
+    },
+    {
+      "name": "Ultimate Remote",
+      "slug": "ultimate-remote",
+      "binary": "ultimate-remote.bin",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-app-bundle",
+      "local_default_path": "../new-cardputer-apps",
+      "source_subpath": "Ultimate-Remote",
+      "build_profile": "cardputer-adv",
+      "sd_paths": [],
+      "return_to_launcher": "Choose Cypher OS from the main menu.",
+      "public_release": true,
+      "status": "ready",
+      "notes": "Cardputer ADV remote-control utility from the Cardputer App Bundle."
     }
   ],
   "imports": [

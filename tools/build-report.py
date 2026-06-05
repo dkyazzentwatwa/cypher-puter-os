@@ -26,6 +26,17 @@ STATUS_ENV = {
     "flock-you": ("FLOCK_YOU_STATUS", "FLOCK_YOU_ROOT"),
     "wiretap-32-cardputer": ("WIRETAP_STATUS", "WIRETAP_ROOT"),
     "drone-mesh-mapper": ("DRONE_MESH_MAPPER_STATUS", "DRONE_MESH_MAPPER_ROOT"),
+    "bitcoin-card-wallet": ("BITCOIN_CARD_WALLET_STATUS", "CARDPUTER_APP_BUNDLE_ROOT"),
+    "cardputer-game-station-emulators": (
+        "CARDPUTER_GAME_STATION_EMULATORS_STATUS",
+        "CARDPUTER_APP_BUNDLE_ROOT",
+    ),
+    "esp32-bit-pirate": ("ESP32_BIT_PIRATE_STATUS", "CARDPUTER_APP_BUNDLE_ROOT"),
+    "esp32-usb-stick": ("ESP32_USB_STICK_STATUS", "CARDPUTER_APP_BUNDLE_ROOT"),
+    "news-reader": ("NEWS_READER_STATUS", "CARDPUTER_APP_BUNDLE_ROOT"),
+    "open-wifi-scanner": ("OPEN_WIFI_SCANNER_STATUS", "CARDPUTER_APP_BUNDLE_ROOT"),
+    "password-manager": ("PASSWORD_MANAGER_STATUS", "CARDPUTER_APP_BUNDLE_ROOT"),
+    "ultimate-remote": ("ULTIMATE_REMOTE_STATUS", "CARDPUTER_APP_BUNDLE_ROOT"),
 }
 IMPORT_ENV = {
     "cardputer-game-os-games": ("GAME_OS_STATUS", "GAME_OS_ROOT"),
@@ -181,6 +192,7 @@ def write_report(
             "- Cardputer MPC runtime assets are packaged under `/cardputer-mpc/` when present.",
             "- Cypher Drive / ESP32 BT HID payload assets are packaged under `/cypher-drive/` when present.",
             "- Drone Mesh Mapper SD seed assets are packaged under `/drone/` when present.",
+            "- News Reader ships a placeholder `/news-reader/config.example.txt`; copy it to `/news-reader/config.txt` and fill Wi-Fi plus Guardian API values on the SD card.",
             "- ESP32 Pokedex ships as an app binary here; full sprite/audio/data content still belongs at `/pokemon`, `/audio`, and `/config`.",
         ]
     )

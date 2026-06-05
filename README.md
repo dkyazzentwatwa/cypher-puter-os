@@ -328,7 +328,8 @@ Source repositories: [Cardputer MPC][cardputer-mpc-repo],
 [ESP32 BT HID][esp32-bt-hid-repo], [ESP32 Pokedex][esp32-pokedex-repo],
 [Cypher PN532][cypher-pn532-repo], [Cypher Desk][cypher-desk-repo],
 [Cypher Flock][cypher-flock-repo],
-[WireTap-32][wiretap-32-repo], [Drone Mesh Mapper][drone-mesh-mapper-repo], and
+[WireTap-32][wiretap-32-repo], [Drone Mesh Mapper][drone-mesh-mapper-repo],
+[Cardputer App Bundle][cardputer-app-bundle-repo], and
 [Cardputer Game OS][cardputer-game-os-repo].
 
 ```text
@@ -347,6 +348,7 @@ GitHub/
   flock-you/
   WireTap-32/
   drone-mesh-mapper/
+  new-cardputer-apps/
 ```
 
 For a different layout, set a workspace root:
@@ -365,6 +367,7 @@ CYPHER_OS_ESP32_BT_HID_DIR=/path/to/ESP32_BT_HID ./tools/build-apps.sh
 CYPHER_OS_ESP32_POKEDEX_DIR=/path/to/esp32-pokedex ./tools/build-apps.sh
 CYPHER_OS_CYPHER_DESK_DIR=/path/to/cypher-desk ./tools/build-apps.sh
 CYPHER_OS_DRONE_MESH_MAPPER_DIR=/path/to/drone-mesh-mapper ./tools/build-apps.sh
+CYPHER_OS_CARDPUTER_APP_BUNDLE_DIR=/path/to/new-cardputer-apps ./tools/build-apps.sh
 ```
 
 ## Controls
@@ -397,6 +400,9 @@ CYPHER_OS_DRONE_MESH_MAPPER_DIR=/path/to/drone-mesh-mapper ./tools/build-apps.sh
   `return` over serial.
 - Drone Mesh Mapper: open the `Launcher` page, then press BtnA, `Enter`, or
   `Space`.
+- Cardputer App Bundle apps: use the documented app menu item or `Fn+Del`
+  where shown in the catalog. News Reader reads Wi-Fi and Guardian API settings
+  from `/news-reader/config.txt` on SD.
 
 ## Serial Commands
 
@@ -427,6 +433,7 @@ install <slug>
   to pin 10 `G9`; leave PN532 RESET, INT, and BUSY unconnected for this build.
 
 [cardputer-affiliate]: https://amzn.to/4dqii8h
+[cardputer-app-bundle-repo]: https://github.com/dkyazzentwatwa/cardputer-app-bundle
 [cardputer-game-os-repo]: https://github.com/dkyazzentwatwa/cardputer-game-os
 [cardputer-games-repo]: https://github.com/dkyazzentwatwa/cardputer-games
 [cardputer-mpc-repo]: https://github.com/dkyazzentwatwa/cardputer-mpc

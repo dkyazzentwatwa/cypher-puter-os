@@ -1,6 +1,9 @@
 # Local OS files
 .DS_Store
 
+# Local secrets
+secrets.h
+
 # Generated dependencies and build outputs
 node_modules/
 build/

@@ -1,7 +1,7 @@
 {
   "generated_by": "tools/build-apps.sh",
-  "generated_at": "2026-05-30T19:28:38+00:00",
-  "release_version": "v0.1.2",
+  "generated_at": "2026-06-05T04:42:00+00:00",
+  "release_version": "v0.1.3",
   "catalog_version": 1,
   "target_hardware": "M5Stack Cardputer ADV",
   "apps": [
@@ -11,7 +11,7 @@
       "binary": "cypher-drive.bin",
       "source_path": "/Users/cypher/Documents/GitHub/cypher-drive",
       "repo_url": "https://github.com/dkyazzentwatwa/cypher-drive",
-      "version": "v0.1.2",
+      "version": "v0.1.3",
       "status": "ready",
       "notes": "Cardputer ADV HID payload launcher build.",
       "return_to_launcher": "Use the app's Return to Launcher item where shown.",
@@ -29,7 +29,7 @@
       "binary": "esp32-bt-hid.bin",
       "source_path": "/Users/cypher/Documents/GitHub/ESP32_BT_HID",
       "repo_url": "https://github.com/dkyazzentwatwa/ESP32_BT_HID",
-      "version": "v0.1.2",
+      "version": "v0.1.3",
       "status": "ready",
       "notes": "Cardputer ADV BLE-HID payload deck with SD-backed DuckyScript payloads and Cypher OS return support.",
       "return_to_launcher": "Press backtick, Esc, or Del from the top-level device list.",
@@ -37,8 +37,8 @@
         "/cypher-drive/payloads/",
         "/cypher-drive/payloads.json"
       ],
-      "binary_size": 1371280,
-      "sha256": "deb7d66ef95652522ff4c1417c39f3750a99787608939114088e84167864f0c3",
+      "binary_size": 1386800,
+      "sha256": "0b3cc5ff85c8c190028bf5539fc3bd03578cbb3ecc2218ae2a40bebe82336d21",
       "source_commit": "bb11aa9"
     },
     {
@@ -47,7 +47,7 @@
       "binary": "esp32-pokedex.bin",
       "source_path": "/Users/cypher/Documents/GitHub/esp32-pokedex",
       "repo_url": "https://github.com/dkyazzentwatwa/esp32-pokedex",
-      "version": "v0.1.2",
+      "version": "v0.1.3",
       "status": "ready",
       "notes": "Offline Cardputer Pokemon GO field guide using existing SD data under /pokemon, /audio, and /config.",
       "return_to_launcher": "Choose Return to Cypher OS from the home menu.",
@@ -66,13 +66,13 @@
       "binary": "cypher-chat.bin",
       "source_path": "/Users/cypher/Documents/GitHub/cypher-chat/cypher-chat-firmware",
       "repo_url": "https://github.com/dkyazzentwatwa/cypher-chat",
-      "version": "v0.1.2",
+      "version": "v0.1.3",
       "status": "ready",
       "notes": "Cardputer ADV secure-only mesh chat build. Mesh protocol 0x02 uses AES-256-GCM and does not interoperate with plaintext or HMAC-only firmware.",
       "return_to_launcher": "Use the app's Return to Launcher item where shown.",
       "sd_paths": [],
       "binary_size": 1409392,
-      "sha256": "b901e6408bf5e2dc1d6becc5c22c0cc0070d822d4e5d3f7d13924faf769cdd76",
+      "sha256": "a28b9495cd8633208e47e512c9a04c3da0ea5240f2082d8848f29c2c837f1395",
       "source_commit": "0c4bc58"
     },
     {
@@ -81,14 +81,14 @@
       "binary": "cardputer-games.bin",
       "source_path": "/Users/cypher/Documents/GitHub/cardputer-games",
       "repo_url": "https://github.com/dkyazzentwatwa/cardputer-games",
-      "version": "v0.1.2",
+      "version": "v0.1.3",
       "status": "ready",
       "notes": "Standalone Cardputer arcade catalog.",
       "return_to_launcher": "Use the app's Return to Launcher item where shown.",
       "sd_paths": [],
-      "binary_size": 557424,
-      "sha256": "f363a45ede5b1cf01671640a87798c73386d530a99831cef792ff4939fae7d31",
-      "source_commit": "ffeb78a"
+      "binary_size": 647504,
+      "sha256": "40b437ab1879cf3abfce2767dfa05fb5afcdac7145bcff848f734b9bc75fd9a0",
+      "source_commit": "bc64fd8"
     },
     {
       "name": "Cardputer MPC",
@@ -96,7 +96,7 @@
       "binary": "cardputer-mpc.bin",
       "source_path": "/Users/cypher/Documents/GitHub/cardputer-mpc",
       "repo_url": "https://github.com/dkyazzentwatwa/cardputer-mpc",
-      "version": "v0.1.2",
+      "version": "v0.1.3",
       "status": "ready",
       "notes": "MPC-style groovebox with SD-loaded samples and sequencing.",
       "return_to_launcher": "Press Shift+Q to return to Cypher OS. Lowercase q remains an MPC pad trigger.",
@@ -113,7 +113,7 @@
       "binary": "cardputer-tarot.bin",
       "source_path": "/Users/cypher/Documents/GitHub/cardputer-tarot",
       "repo_url": "https://github.com/dkyazzentwatwa/cardputer-tarot",
-      "version": "v0.1.2",
+      "version": "v0.1.3",
       "status": "ready",
       "notes": "Offline tarot pull, journal, history, and study deck app.",
       "return_to_launcher": "Back/backtick from the main menu returns to Cypher OS.",
@@ -130,7 +130,7 @@
       "binary": "cypher-pn532.bin",
       "source_path": "/Users/cypher/Documents/GitHub/cypher-pn532",
       "repo_url": "https://github.com/dkyazzentwatwa/cypher-pn532",
-      "version": "v0.1.2",
+      "version": "v0.1.3",
       "status": "ready",
       "notes": "Cardputer ADV PN532 NFC app using EXT I2C on G8/G9 with SD-backed dumps, read-only SD web browser, and return-to-launcher support.",
       "return_to_launcher": "Use Return to Cypher OS, or press Del, Tab, backtick, or Q from the main menu.",
@@ -147,7 +147,7 @@
       "binary": "cypher-desk.bin",
       "source_path": "/Users/cypher/Documents/GitHub/cypher-desk",
       "repo_url": "https://github.com/dkyazzentwatwa/cypher-desk",
-      "version": "v0.1.2",
+      "version": "v0.1.3",
       "status": "ready",
       "notes": "Offline Cardputer ADV utility suite with notes, calculator, checklist, converters, and scratchpad.",
       "return_to_launcher": "Use Return to Launcher from the app menu.",
@@ -164,14 +164,14 @@
       "binary": "flock-you.bin",
       "source_path": "/Users/cypher/Documents/GitHub/flock-you",
       "repo_url": "https://github.com/dkyazzentwatwa/cypher-flock",
-      "version": "v0.1.2",
+      "version": "v0.1.3",
       "status": "ready",
       "notes": "Cardputer ADV WiFi/BLE detector build with return-to-launcher support.",
       "return_to_launcher": "Open the mini menu, cycle to HOME, then press up/down to return.",
       "sd_paths": [],
       "binary_size": 1429264,
       "sha256": "c9ea7fbbec002e877f92ef946111e513706d62873a59ebd4dafa7622347469d7",
-      "source_commit": "f1ea971"
+      "source_commit": "f34fac7"
     },
     {
       "name": "WireTap-32 Cardputer",
@@ -179,14 +179,14 @@
       "binary": "wiretap-32-cardputer.bin",
       "source_path": "/Users/cypher/Documents/GitHub/WireTap-32",
       "repo_url": "https://github.com/dkyazzentwatwa/WireTap-32",
-      "version": "v0.1.2",
+      "version": "v0.1.3",
       "status": "ready",
       "notes": "Cardputer ADV EXT bench build with return-to-launcher support.",
       "return_to_launcher": "Choose Launcher from the main menu, or type launcher / return over serial.",
       "sd_paths": [],
       "binary_size": 624272,
       "sha256": "9755cbd188dc530ba9fa4eac71ec35498440901d422b76bc0274ca3f0ae3e09d",
-      "source_commit": "bf5ea1f"
+      "source_commit": "9c5bac8"
     },
     {
       "name": "Drone Mesh Mapper",
@@ -194,7 +194,7 @@
       "binary": "drone-mesh-mapper.bin",
       "source_path": "/Users/cypher/Documents/GitHub/drone-mesh-mapper",
       "repo_url": "https://github.com/dkyazzentwatwa/drone-mesh-mapper",
-      "version": "v0.1.2",
+      "version": "v0.1.3",
       "status": "ready",
       "notes": "Cardputer ADV Remote ID drone scanner with WiFi/BLE detection, SD logging, and Cypher OS return support.",
       "return_to_launcher": "Open the Launcher page, then press BtnA, Enter, or Space.",
@@ -204,6 +204,135 @@
       "binary_size": 1323072,
       "sha256": "dc928a23d15c8d4a2af1ff678d9ee4123a7b743e9cbd709387252dbb7d848d5a",
       "source_commit": "efe96b6"
+    },
+    {
+      "name": "Bitcoin Card Wallet",
+      "slug": "bitcoin-card-wallet",
+      "binary": "bitcoin-card-wallet.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/new-cardputer-apps",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-app-bundle",
+      "version": "v0.1.3",
+      "status": "ready",
+      "notes": "Offline Bitcoin wallet utility from the Cardputer App Bundle with Cypher OS launcher return support.",
+      "return_to_launcher": "Choose Return to Cypher OS from the main menu.",
+      "sd_paths": [
+        "/card-wallets.txt"
+      ],
+      "binary_size": 1506336,
+      "sha256": "b303d7e8caaca149e41c888ab96bcf0ac8d32eb7a489590cf3e3aec68f386156",
+      "source_commit": "4ad82ed"
+    },
+    {
+      "name": "Cardputer Game Station Emulators",
+      "slug": "cardputer-game-station-emulators",
+      "binary": "cardputer-game-station-emulators.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/new-cardputer-apps",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-app-bundle",
+      "version": "v0.1.3",
+      "status": "ready",
+      "notes": "Cardputer emulator launcher from the Cardputer App Bundle, built with the bmp wrapper linker flags.",
+      "return_to_launcher": "Press Fn+Del from the ROM menu or pre-game screens after quitting gameplay safely.",
+      "sd_paths": [
+        "/roms/",
+        "/gbc_saves/"
+      ],
+      "binary_size": 2606832,
+      "sha256": "63ca436f8bc1c3a74cda2d7778a32e1d9b461578a8eb49b4ad9b9c9ba2a4f8eb",
+      "source_commit": "4ad82ed"
+    },
+    {
+      "name": "ESP32 Bit Pirate",
+      "slug": "esp32-bit-pirate",
+      "binary": "esp32-bit-pirate.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/new-cardputer-apps",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-app-bundle",
+      "version": "v0.1.3",
+      "status": "ready",
+      "notes": "Cardputer ADV hardware bus and protocol toolkit from the Cardputer App Bundle.",
+      "return_to_launcher": "Type launcher, return, cypher, or home at the prompt, or press Fn+Del in standalone mode.",
+      "sd_paths": [],
+      "binary_size": 3592592,
+      "sha256": "f88cea0bbb5e435ec207b828e728d0f0536d44834607d91417e81e98c0b5f46f",
+      "source_commit": "4ad82ed"
+    },
+    {
+      "name": "ESP32 USB Stick",
+      "slug": "esp32-usb-stick",
+      "binary": "esp32-usb-stick.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/new-cardputer-apps",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-app-bundle",
+      "version": "v0.1.3",
+      "status": "ready",
+      "notes": "Cardputer USB mass-storage SD bridge from the Cardputer App Bundle.",
+      "return_to_launcher": "Eject or unmount the USB disk from the host, then press Fn+Del.",
+      "sd_paths": [],
+      "binary_size": 628784,
+      "sha256": "e985accd2215154c253fb0a7a46d7f5cfa41fdbc0a3efcf72790a543e2c3ca9b",
+      "source_commit": "4ad82ed"
+    },
+    {
+      "name": "News Reader",
+      "slug": "news-reader",
+      "binary": "news-reader.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/new-cardputer-apps",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-app-bundle",
+      "version": "v0.1.3",
+      "status": "ready",
+      "notes": "Guardian-backed Wi-Fi news reader from the Cardputer App Bundle. Requires SD config at /news-reader/config.txt.",
+      "return_to_launcher": "Press Fn+Del.",
+      "sd_paths": [
+        "/news-reader/config.txt"
+      ],
+      "binary_size": 1231408,
+      "sha256": "69063a6edb2b1c30f3e4fcb82674d65e36ab50ce04ca33c9b510d1fd35796f02",
+      "source_commit": "4ad82ed"
+    },
+    {
+      "name": "Open WiFi Scanner",
+      "slug": "open-wifi-scanner",
+      "binary": "open-wifi-scanner.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/new-cardputer-apps",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-app-bundle",
+      "version": "v0.1.3",
+      "status": "ready",
+      "notes": "Open-network scanner from the Cardputer App Bundle with Cypher OS return support.",
+      "return_to_launcher": "Press Fn+Del.",
+      "sd_paths": [],
+      "binary_size": 1294624,
+      "sha256": "398e64e0acc526b5bc2c3b0c7d8f145bf88d0ecf5a5161b2a26705307afa78cc",
+      "source_commit": "4ad82ed"
+    },
+    {
+      "name": "Password Manager",
+      "slug": "password-manager",
+      "binary": "password-manager.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/new-cardputer-apps",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-app-bundle",
+      "version": "v0.1.3",
+      "status": "ready",
+      "notes": "Offline Cardputer password vault from the Cardputer App Bundle with launcher return support.",
+      "return_to_launcher": "Choose Cypher OS from the no-vault home menu.",
+      "sd_paths": [
+        "/vaults/"
+      ],
+      "binary_size": 787360,
+      "sha256": "7b865b0fb543834631f932573f2694a34467894f37ee1ac565668d3753c29c7b",
+      "source_commit": "4ad82ed"
+    },
+    {
+      "name": "Ultimate Remote",
+      "slug": "ultimate-remote",
+      "binary": "ultimate-remote.bin",
+      "source_path": "/Users/cypher/Documents/GitHub/new-cardputer-apps",
+      "repo_url": "https://github.com/dkyazzentwatwa/cardputer-app-bundle",
+      "version": "v0.1.3",
+      "status": "ready",
+      "notes": "Cardputer ADV remote-control utility from the Cardputer App Bundle.",
+      "return_to_launcher": "Choose Cypher OS from the main menu.",
+      "sd_paths": [],
+      "binary_size": 3467584,
+      "sha256": "41d7dadf74b671dcea576f6a9eb3692cfe13817127eb6470e09c07d4f631896a",
+      "source_commit": "4ad82ed"
     },
     {
       "name": "Star Trader",
@@ -218,9 +347,9 @@
       "sd_paths": [
         "/cardputer-game-os/saves/"
       ],
-      "binary_size": 578640,
-      "sha256": "50f42328a9596e8eb9a84afc747856fbf0e8455e7499263044d49dd3b7746532",
-      "source_commit": "aeb476a"
+      "binary_size": 580048,
+      "sha256": "c38cea4564136c855f00eaa6692756fa94d042bc3776020d1975814e17823575",
+      "source_commit": "5d8bb51"
     },
     {
       "name": "Dungeon Courier",
@@ -235,9 +364,9 @@
       "sd_paths": [
         "/cardputer-game-os/saves/"
       ],
-      "binary_size": 583120,
-      "sha256": "a42452ae2e663e42133f884edd9b635c038185ab21aa1841a1ea72913e73348e",
-      "source_commit": "aeb476a"
+      "binary_size": 579456,
+      "sha256": "21a5adf4a2f1e672dc5dc711c1c7b3d0e748d677a400639ced8e3ce46c5441e7",
+      "source_commit": "5d8bb51"
     },
     {
       "name": "Tiny Wasteland",
@@ -252,9 +381,9 @@
       "sd_paths": [
         "/cardputer-game-os/saves/"
       ],
-      "binary_size": 579392,
-      "sha256": "e19ae8d59b8745c2c7f6c2ecc966d6608b67c9e1d1a33238182e0caf46e397f5",
-      "source_commit": "aeb476a"
+      "binary_size": 579648,
+      "sha256": "cf5751738c27b97ed135216cffa1a8ef8fa00c5badca90f70fd0ddeedc20aec9",
+      "source_commit": "5d8bb51"
     },
     {
       "name": "Pocket Kingdom",
@@ -269,9 +398,9 @@
       "sd_paths": [
         "/cardputer-game-os/saves/"
       ],
-      "binary_size": 582144,
-      "sha256": "555a7f51541bfc969e3e61a9aa6927c862024b7a35e2d12ff31751d0a780d119",
-      "source_commit": "aeb476a"
+      "binary_size": 580800,
+      "sha256": "e0c36f77e2d1e94ff7ef15c95d24402dbbebf3814d46cc4e7159322f1291d626",
+      "source_commit": "5d8bb51"
     },
     {
       "name": "Monster Ranch",
@@ -286,9 +415,9 @@
       "sd_paths": [
         "/cardputer-game-os/saves/"
       ],
-      "binary_size": 580192,
-      "sha256": "72189c6fcf66d547f05afcb8fee5a5ff63007030df3e73a598bd53286e6d57c0",
-      "source_commit": "aeb476a"
+      "binary_size": 580096,
+      "sha256": "d38474306107d69d424cc60a145d504ec2bf51dfbae0a95ad77c7a4c61072c77",
+      "source_commit": "5d8bb51"
     },
     {
       "name": "Guildmaster",
@@ -303,9 +432,9 @@
       "sd_paths": [
         "/cardputer-game-os/saves/"
       ],
-      "binary_size": 581344,
-      "sha256": "6296489b07051565d9559e3daecf328774d6be7f8b929eec98885d0436e52fa6",
-      "source_commit": "aeb476a"
+      "binary_size": 579808,
+      "sha256": "5f470db5f97335811ec6ec5d43f8dcaf8c4cb3544ce4246ed67375496003e153",
+      "source_commit": "5d8bb51"
     },
     {
       "name": "Haunted Radio",
@@ -320,9 +449,9 @@
       "sd_paths": [
         "/cardputer-game-os/saves/"
       ],
-      "binary_size": 580560,
-      "sha256": "f05c923ba595a0e4122b26e29a4e5af47f521dcb3bf2d4eb085fb98850a030fa",
-      "source_commit": "aeb476a"
+      "binary_size": 580112,
+      "sha256": "318b1637a8465386a881dda5dea525049454672f32f6027bb00997d04aa8193b",
+      "source_commit": "5d8bb51"
     },
     {
       "name": "Cyberdeck RPG",
@@ -337,9 +466,9 @@
       "sd_paths": [
         "/cardputer-game-os/saves/"
       ],
-      "binary_size": 581504,
-      "sha256": "35610733fdf8585fa63488cb96e7a1e6cb426d17119afde51c258422b2661100",
-      "source_commit": "aeb476a"
+      "binary_size": 579744,
+      "sha256": "07caa3333c9ea28dbeb0601125be36b55f748c7e0c7bf648c6c67d1cbe6f277e",
+      "source_commit": "5d8bb51"
     },
     {
       "name": "Pocket Detective",
@@ -354,9 +483,9 @@
       "sd_paths": [
         "/cardputer-game-os/saves/"
       ],
-      "binary_size": 583360,
-      "sha256": "1bc526fe01d5482613e480880ec40cee595237712fb686d53181eca14fe61e7b",
-      "source_commit": "aeb476a"
+      "binary_size": 579600,
+      "sha256": "e955fa313edd36fb06cdfbf89305f3b0a986c415b7c986dd6dfa2a96a3005eb7",
+      "source_commit": "5d8bb51"
     },
     {
       "name": "Cryptid Ranger",
@@ -371,9 +500,9 @@
       "sd_paths": [
         "/cardputer-game-os/saves/"
       ],
-      "binary_size": 581648,
-      "sha256": "79d8bc4711a250ad5411bd1b396f6b881970cb914eb6f54ce4cfa3c3c5826a93",
-      "source_commit": "aeb476a"
+      "binary_size": 579568,
+      "sha256": "44787655c832b44cc779e5cf9333f1b9fcc5c71b23ba60b2ae53f41b85e1d3cd",
+      "source_commit": "5d8bb51"
     },
     {
       "name": "Cyber Ranger",
@@ -388,9 +517,9 @@
       "sd_paths": [
         "/cardputer-game-os/saves/"
       ],
-      "binary_size": 580208,
-      "sha256": "de890fbb21f9b826281f676cc67ce86ee0371eda80c7c24ca191491bb616b1b9",
-      "source_commit": "aeb476a"
+      "binary_size": 578912,
+      "sha256": "5560c202e0f885de599530d5e6ea5179fe2dad44f529a3869e395aab7af8026e",
+      "source_commit": "5d8bb51"
     },
     {
       "name": "Star Trail Ranch",
@@ -405,9 +534,9 @@
       "sd_paths": [
         "/cardputer-game-os/saves/"
       ],
-      "binary_size": 578704,
-      "sha256": "0eb470230ac55647b7761f33b3a3d05276b7c4e893b43b46a3dd33e0b6540565",
-      "source_commit": "aeb476a"
+      "binary_size": 580288,
+      "sha256": "da087b17e758821132ccf49083830083f97a47d9471f01b824a5a8f2974e0761",
+      "source_commit": "5d8bb51"
     },
     {
       "name": "Waste Guild",
@@ -422,9 +551,9 @@
       "sd_paths": [
         "/cardputer-game-os/saves/"
       ],
-      "binary_size": 582224,
-      "sha256": "6c4d24a729f85e8b7ce800833bb9ac2af47d73b5fd3cf023588fdb6b4323d21b",
-      "source_commit": "aeb476a"
+      "binary_size": 580080,
+      "sha256": "1f778df3251396c5d5e6f453a0021b0639b7d7a5753c306dd73f9a593383f3ea",
+      "source_commit": "5d8bb51"
     },
     {
       "name": "Signal Rat",
@@ -439,9 +568,9 @@
       "sd_paths": [
         "/cardputer-game-os/saves/"
       ],
-      "binary_size": 576784,
-      "sha256": "8bb46a808070874f1e65d817eef7fefa6ff67017f7d9f0f899a4c2a1bc56341b",
-      "source_commit": "aeb476a"
+      "binary_size": 579984,
+      "sha256": "9cf27e65f7e1313c49ecd868e2ebfc5f46a03726de7d814df32d45f824e80f8e",
+      "source_commit": "5d8bb51"
     },
     {
       "name": "Poke-Trail",
@@ -458,7 +587,7 @@
       ],
       "binary_size": 609008,
       "sha256": "b1f04a948649ff66703a2082753ee8318f568c1f3d954ef55201aaf0732555ae",
-      "source_commit": "aeb476a"
+      "source_commit": "5d8bb51"
     }
   ]
 }

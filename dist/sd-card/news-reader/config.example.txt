@@ -1,0 +1,3 @@
+NEWS_WIFI_SSID=your-home-wifi
+NEWS_WIFI_PASSWORD=your-wifi-password
+GUARDIAN_API_KEY=your-guardian-api-key

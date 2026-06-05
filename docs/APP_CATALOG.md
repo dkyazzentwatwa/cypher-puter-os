@@ -32,6 +32,14 @@ The launcher catalog lives at:
 | [Flock You](apps/flock-you/README.md) | `flock-you` | `flock-you.bin` | `cardputer-adv-detector` | None required | Open the mini menu, cycle to `HOME`, then press up/down to return. |
 | [WireTap-32 Cardputer](apps/wiretap-32-cardputer/README.md) | `wiretap-32-cardputer` | `wiretap-32-cardputer.bin` | `cardputer-adv-ext-bench` | None required | Choose Launcher from the main menu, or type `launcher` / `return` over serial. |
 | [Drone Mesh Mapper](apps/drone-mesh-mapper/README.md) | `drone-mesh-mapper` | `drone-mesh-mapper.bin` | `cardputer_adv` | `/drone/` | Open the Launcher page, then press BtnA, `Enter`, or `Space`. |
+| [Bitcoin Card Wallet](apps/bitcoin-card-wallet/README.md) | `bitcoin-card-wallet` | `bitcoin-card-wallet.bin` | `cardputer` | `/card-wallets.txt` | Choose Return to Cypher OS from the main menu. |
+| [Cardputer Game Station Emulators](apps/cardputer-game-station-emulators/README.md) | `cardputer-game-station-emulators` | `cardputer-game-station-emulators.bin` | `cardputer` | `/roms/`, `/gbc_saves/` | Press `Fn+Del` from the ROM menu or pre-game screens after quitting gameplay safely. |
+| [ESP32 Bit Pirate](apps/esp32-bit-pirate/README.md) | `esp32-bit-pirate` | `esp32-bit-pirate.bin` | `cardputer-adv` | None required | Type `launcher`, `return`, `cypher`, or `home` at the prompt, or press `Fn+Del` in standalone mode. |
+| [ESP32 USB Stick](apps/esp32-usb-stick/README.md) | `esp32-usb-stick` | `esp32-usb-stick.bin` | `cardputer` | None required | Eject or unmount the USB disk from the host, then press `Fn+Del`. |
+| [News Reader](apps/news-reader/README.md) | `news-reader` | `news-reader.bin` | `cardputer` | `/news-reader/config.txt` | Press `Fn+Del`. |
+| [Open WiFi Scanner](apps/open-wifi-scanner/README.md) | `open-wifi-scanner` | `open-wifi-scanner.bin` | `cardputer` | None required | Press `Fn+Del`. |
+| [Password Manager](apps/password-manager/README.md) | `password-manager` | `password-manager.bin` | `cardputer` | `/vaults/` | Choose Cypher OS from the no-vault home menu. |
+| [Ultimate Remote](apps/ultimate-remote/README.md) | `ultimate-remote` | `ultimate-remote.bin` | `cardputer-adv` | None required | Choose Cypher OS from the main menu. |
 
 ## Imported Cardputer Game OS Titles
 
@@ -75,6 +83,7 @@ Cypher OS already owns the launcher partition.
 | Flock You / Cypher Flock | `/Users/cypher/Documents/GitHub/flock-you` |
 | WireTap-32 | `/Users/cypher/Documents/GitHub/WireTap-32` |
 | Drone Mesh Mapper | `/Users/cypher/Documents/GitHub/drone-mesh-mapper` |
+| Cardputer App Bundle | `/Users/cypher/Documents/GitHub/new-cardputer-apps` |
 | Cardputer Game OS | `/Users/cypher/Documents/GitHub/cardputer-game-os` |
 | Poke-Trail | `/Users/cypher/Documents/GitHub/poke-trail` |
 

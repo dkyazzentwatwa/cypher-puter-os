@@ -7,6 +7,7 @@ APP_DIST="${ROOT}/dist/apps"
 SD_ROOT="${ROOT}/dist/sd-card"
 SD_APPS="${SD_ROOT}/cypher-puter/apps"
 SD_GAME_OS_SAVES="${SD_ROOT}/cardputer-game-os/saves"
+NEWS_READER_CONFIG_DIR="${SD_ROOT}/news-reader"
 CARDPUTER_MPC_ROOT="${CYPHER_OS_CARDPUTER_MPC_DIR:-${WORKSPACE_ROOT}/cardputer-mpc}"
 ESP32_BT_HID_ROOT="${CYPHER_OS_ESP32_BT_HID_DIR:-${WORKSPACE_ROOT}/ESP32_BT_HID}"
 DRONE_MESH_MAPPER_ROOT="${CYPHER_OS_DRONE_MESH_MAPPER_DIR:-${WORKSPACE_ROOT}/drone-mesh-mapper}"
@@ -22,7 +23,7 @@ if [[ ! -f "${MANIFEST}" ]]; then
 fi
 
 rm -rf "${SD_ROOT}"
-mkdir -p "${SD_APPS}" "${SD_GAME_OS_SAVES}"
+mkdir -p "${SD_APPS}" "${SD_GAME_OS_SAVES}" "${NEWS_READER_CONFIG_DIR}"
 
 cp -f "${MANIFEST}" "${SD_APPS}/apps.json"
 
@@ -70,6 +71,12 @@ if [[ -d "${DRONE_MESH_MAPPER_SD_SRC}" ]]; then
 else
   echo "[sd] warning: ${DRONE_MESH_MAPPER_SD_SRC} missing; Drone Mesh Mapper will create /drone/logs at runtime"
 fi
+
+cat > "${NEWS_READER_CONFIG_DIR}/config.example.txt" <<'EOF'
+NEWS_WIFI_SSID=your-home-wifi
+NEWS_WIFI_PASSWORD=your-wifi-password
+GUARDIAN_API_KEY=your-guardian-api-key
+EOF
 
 python3 "${ROOT}/tools/validate-catalog.py" "${ROOT}/config/apps.json" --manifest "${SD_APPS}/apps.json" --dist "${SD_APPS}"
 

@@ -105,6 +105,7 @@ Expected packaged layout:
 /cardputer-mpc/
 /cypher-drive/payloads/
 /drone/
+/news-reader/config.example.txt
 /cardputer-game-os/saves/
 ```
 
@@ -128,6 +129,7 @@ GitHub/
   flock-you/
   WireTap-32/
   drone-mesh-mapper/
+  new-cardputer-apps/
 ```
 
 Set a different workspace root:
@@ -151,11 +153,14 @@ CYPHER_OS_CYPHER_DESK_DIR=/path/to/cypher-desk ./tools/build-apps.sh
 CYPHER_OS_FLOCK_YOU_DIR=/path/to/flock-you ./tools/build-apps.sh
 CYPHER_OS_WIRETAP_DIR=/path/to/WireTap-32 ./tools/build-apps.sh
 CYPHER_OS_DRONE_MESH_MAPPER_DIR=/path/to/drone-mesh-mapper ./tools/build-apps.sh
+CYPHER_OS_CARDPUTER_APP_BUNDLE_DIR=/path/to/new-cardputer-apps ./tools/build-apps.sh
 CYPHER_OS_GAME_OS_DIR=/path/to/cardputer-game-os ./tools/build-apps.sh
 ```
 
 `./tools/package-sd.sh` also uses the workspace root and relevant per-app
-overrides when copying SD asset folders.
+overrides when copying SD asset folders. News Reader ships
+`/news-reader/config.example.txt`; copy it to `/news-reader/config.txt` on the
+SD card and fill local Wi-Fi plus Guardian API values before field use.
 
 ## Release Package
 

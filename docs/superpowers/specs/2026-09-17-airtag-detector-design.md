@@ -369,7 +369,14 @@ Locate: 880 Hz / 30 ms beeps with period linearly mapped from the tag's
 been seen for 5 s the period holds at 1500 ms. All sound is skipped when the
 sound setting is off.
 
-### 5.7 `launcher_return.h`
+### 5.7 Serial console
+
+`app` reads USB serial lines without blocking. `return` or `launcher` performs
+the launcher return (same convention as WireTap-32 and Bit Pirate), `status`
+prints a one-line JSON summary (`{"ev":"status",...}`), `help` lists the
+commands. This makes headless testing possible with the device in the app slot.
+
+### 5.8 `launcher_return.h`
 
 ```cpp
 #if __has_include(<CypherPuterReturn.h>)
@@ -427,7 +434,7 @@ watchdog exposure.
   repo_url `https://github.com/dkyazzentwatwa/cypher-airtag`,
   local_default_path `../cypher-airtag`, build_profile `cardputer-adv`,
   sd_paths `["/cypher-airtag/"]`,
-  return_to_launcher `Choose Return to Cypher OS on the Settings page, or press backtick on the Radar page and confirm with Enter.`,
+  return_to_launcher `Choose Return to Cypher OS on the Settings page, press backtick on the Radar page and confirm with Enter, or type return over serial.`,
   public_release `true`, status `ready`,
   notes `Cardputer ADV passive Apple Find My / AirTag detector with following alerts, locate beeps, SD JSONL logs, and Cypher OS return support.`
 - `tools/build-apps.sh`: add `cypher-airtag` to the slug allowlist,

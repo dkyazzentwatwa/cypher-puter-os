@@ -12,6 +12,29 @@ Spec: `docs/superpowers/specs/2026-09-17-airtag-detector-design.md`.
 
 ---
 
+## Execution notes (2026-09-17)
+
+All tasks were executed inline; deviations from the steps below:
+
+- `sketch.yaml` pins the platform as `m5stack:esp32 (3.3.9)`. arduino-cli 1.5.1
+  refuses a profile without a platform version ("platform not installed"), and
+  the launcher's own `sketch.yaml` fails the same way on this machine.
+- `tools/flash-app-slot.sh` was redesigned during hardware testing. The device
+  on the bench carried the stock `default_8MB` table (ota_1 at `0x340000`, not
+  `0x170000`) and esptool's RTS reset left the USB-JTAG port parked in ROM
+  download mode. The helper now reads the partition table, locates `ota_1`,
+  selects it by writing `otadata` (CRC32 with init `0xFFFFFFFF`, verified
+  against the device's own sector), resets via the RTC watchdog, and offers
+  `--restore` to select `ota_0` again. It no longer depends on the launcher's
+  serial `launch` command.
+- The serial console gained `list`, which dumps the tracked tags as JSON so the
+  on-device checklist can be driven headlessly.
+- Hardware verification ran against the `ota_1` slot with the user's existing
+  firmware left in `ota_0`: boot, passive scan (6 Find My advertisers seen),
+  `status`/`list`, and the `return` path back to `ota_0` all passed. SD logging
+  reported `missing` (no card mounted) and the alert/mute/locate flows need a
+  person with a separated AirTag, per the checklist.
+
 ## Conventions used in every task
 
 - `APP=/Users/cypher/Documents/GitHub/cypher-airtag` (new sibling repo), `OS=/Users/cypher/Documents/GitHub/cypher-puter-os` (this repo, branch `feat/cypher-airtag`).
@@ -54,14 +77,14 @@ Spec: `docs/superpowers/specs/2026-09-17-airtag-detector-design.md`.
 **Files:**
 - Create: `$APP/sketch.yaml`, `$APP/.gitignore`, `$APP/test/host/harness.h`, `$APP/test/host/test_main.cpp`, `$APP/tools/run-host-tests.sh`, `$APP/tools/build.sh`, `$APP/cypher-airtag.ino` (placeholder that compiles), `$APP/README.md` (stub)
 
-- [ ] **Step 1: Create the repo and directories**
+- [x] **Step 1: Create the repo and directories**
 
 ```bash
 mkdir -p /Users/cypher/Documents/GitHub/cypher-airtag/{src/core,src/device,test/host,tools}
 cd /Users/cypher/Documents/GitHub/cypher-airtag && git init -q -b main && echo ok
 ```
 
-- [ ] **Step 2: Write `sketch.yaml`**
+- [x] **Step 2: Write `sketch.yaml`**
 
 ```yaml
 profiles:
@@ -79,7 +102,7 @@ profiles:
 default_profile: cardputer-adv
 ```
 
-- [ ] **Step 3: Write `.gitignore`**
+- [x] **Step 3: Write `.gitignore`**
 
 ```gitignore
 .DS_Store
@@ -88,7 +111,7 @@ build/
 *.map
 ```
 
-- [ ] **Step 4: Write the test harness `test/host/harness.h`**
+- [x] **Step 4: Write the test harness `test/host/harness.h`**
 
 ```cpp
 #pragma once
@@ -153,7 +176,7 @@ struct TestRegistrar {
   } while (0)
 ```
 
-- [ ] **Step 5: Write `test/host/test_main.cpp`**
+- [x] **Step 5: Write `test/host/test_main.cpp`**
 
 ```cpp
 #include "harness.h"
@@ -169,7 +192,7 @@ int main() {
 }
 ```
 
-- [ ] **Step 6: Write `tools/run-host-tests.sh`**
+- [x] **Step 6: Write `tools/run-host-tests.sh`**
 
 ```bash
 #!/usr/bin/env bash
@@ -183,7 +206,7 @@ clang++ -std=c++17 -Wall -Wextra -Werror -I"${ROOT}/src/core" \
 "${OUT}/tests"
 ```
 
-- [ ] **Step 7: Write `tools/build.sh`**
+- [x] **Step 7: Write `tools/build.sh`**
 
 ```bash
 #!/usr/bin/env bash
@@ -207,7 +230,7 @@ BIN="$(find "${OUT}" -maxdepth 1 -name '*.ino.bin' | head -n 1)"
 echo "[build] ok $(basename "${BIN}") $(stat -f %z "${BIN}") bytes"
 ```
 
-- [ ] **Step 8: Write a placeholder sketch so the profile can be verified**
+- [x] **Step 8: Write a placeholder sketch so the profile can be verified**
 
 `cypher-airtag.ino`:
 
@@ -227,7 +250,7 @@ void loop() {
 }
 ```
 
-- [ ] **Step 9: Write a README stub**
+- [x] **Step 9: Write a README stub**
 
 ```markdown
 # Cypher AirTag
@@ -236,7 +259,7 @@ Passive Apple Find My / AirTag detector for the M5Stack Cardputer ADV, packaged
 as a Cypher OS SD catalog app. Full documentation lands with the final task.
 ```
 
-- [ ] **Step 10: Make scripts executable, run the (empty) host tests and the device build**
+- [x] **Step 10: Make scripts executable, run the (empty) host tests and the device build**
 
 The host test script globs `src/core/*.cpp`, which is empty until Task 2, so seed a placeholder that Task 2 deletes:
 
@@ -251,7 +274,7 @@ cd /Users/cypher/Documents/GitHub/cypher-airtag && tools/build.sh
 ```
 Expected: the first run downloads the pinned libraries, ends with `[build] ok cypher-airtag.ino.bin <n> bytes`. If `M5Unified (0.2.14)` / `M5GFX (0.2.20)` fail to resolve with M5Cardputer 1.1.1, change them to `0.2.21` / `0.2.29` in `sketch.yaml` and note the change in the README in Task 13.
 
-- [ ] **Step 11: Commit**
+- [x] **Step 11: Commit**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && git add -A && \
@@ -269,7 +292,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>" && git log --oneline -1
 - Test: `$APP/test/host/test_findmy_adv.cpp`
 - Delete: `$APP/src/core/placeholder.cpp` if it exists
 
-- [ ] **Step 1: Write the failing tests `test/host/test_findmy_adv.cpp`**
+- [x] **Step 1: Write the failing tests `test/host/test_findmy_adv.cpp`**
 
 ```cpp
 #include "findmy_adv.h"
@@ -407,14 +430,14 @@ TEST(labels_are_stable_strings) {
 }
 ```
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && rm -f src/core/placeholder.cpp && tools/run-host-tests.sh
 ```
 Expected: compile error `'findmy_adv.h' file not found`.
 
-- [ ] **Step 3: Write `src/core/findmy_adv.h`**
+- [x] **Step 3: Write `src/core/findmy_adv.h`**
 
 ```cpp
 #pragma once
@@ -460,7 +483,7 @@ const char* modeLabel(Mode m);                // "near" "sep"
 }  // namespace findmy
 ```
 
-- [ ] **Step 4: Write `src/core/findmy_adv.cpp`**
+- [x] **Step 4: Write `src/core/findmy_adv.cpp`**
 
 ```cpp
 #include "findmy_adv.h"
@@ -567,14 +590,14 @@ const char* modeLabel(Mode m) {
 }  // namespace findmy
 ```
 
-- [ ] **Step 5: Run the tests**
+- [x] **Step 5: Run the tests**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && tools/run-host-tests.sh
 ```
 Expected: 13 lines starting `ok  ` and `13 tests, 0 failures`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && git add -A && \
@@ -591,7 +614,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>" && git log --oneline -1
 - Create: `$APP/src/core/format.h`, `$APP/src/core/format.cpp`
 - Test: `$APP/test/host/test_format.cpp`
 
-- [ ] **Step 1: Write the failing tests `test/host/test_format.cpp`**
+- [x] **Step 1: Write the failing tests `test/host/test_format.cpp`**
 
 ```cpp
 #include "format.h"
@@ -639,14 +662,14 @@ TEST(format_ago_short_and_long) {
 }
 ```
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && tools/run-host-tests.sh
 ```
 Expected: compile error `'format.h' file not found`.
 
-- [ ] **Step 3: Write `src/core/format.h`**
+- [x] **Step 3: Write `src/core/format.h`**
 
 ```cpp
 #pragma once
@@ -671,7 +694,7 @@ void formatAgo(uint32_t ms, char out[kAgoStrLen]);            // "2s ago" or "3m
 }  // namespace findmy
 ```
 
-- [ ] **Step 4: Write `src/core/format.cpp`**
+- [x] **Step 4: Write `src/core/format.cpp`**
 
 ```cpp
 #include "format.h"
@@ -711,14 +734,14 @@ void formatAgo(uint32_t ms, char out[kAgoStrLen]) {
 }  // namespace findmy
 ```
 
-- [ ] **Step 5: Run the tests**
+- [x] **Step 5: Run the tests**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && tools/run-host-tests.sh
 ```
 Expected: `17 tests, 0 failures`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && git add -A && \
@@ -735,7 +758,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>" && git log --oneline -1
 - Create: `$APP/src/core/tracker_registry.h`, `$APP/src/core/tracker_registry.cpp`
 - Test: `$APP/test/host/test_tracker_registry.cpp`
 
-- [ ] **Step 1: Write the failing tests `test/host/test_tracker_registry.cpp`**
+- [x] **Step 1: Write the failing tests `test/host/test_tracker_registry.cpp`**
 
 ```cpp
 #include "tracker_registry.h"
@@ -895,14 +918,14 @@ TEST(registry_at_out_of_range_and_unused_is_null) {
 }
 ```
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && tools/run-host-tests.sh
 ```
 Expected: compile error `'tracker_registry.h' file not found`.
 
-- [ ] **Step 3: Write `src/core/tracker_registry.h`**
+- [x] **Step 3: Write `src/core/tracker_registry.h`**
 
 ```cpp
 #pragma once
@@ -989,7 +1012,7 @@ class TrackerRegistry {
 }  // namespace findmy
 ```
 
-- [ ] **Step 4: Write `src/core/tracker_registry.cpp`**
+- [x] **Step 4: Write `src/core/tracker_registry.cpp`**
 
 ```cpp
 #include "tracker_registry.h"
@@ -1136,14 +1159,14 @@ size_t TrackerRegistry::sortedByRssi(int* slotsOut, size_t maxOut) const {
 }  // namespace findmy
 ```
 
-- [ ] **Step 5: Run the tests**
+- [x] **Step 5: Run the tests**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && tools/run-host-tests.sh
 ```
 Expected: `27 tests, 0 failures`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && git add -A && \
@@ -1160,7 +1183,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>" && git log --oneline -1
 - Create: `$APP/src/core/follow_detector.h`, `$APP/src/core/follow_detector.cpp`
 - Test: `$APP/test/host/test_follow_detector.cpp`
 
-- [ ] **Step 1: Write the failing tests `test/host/test_follow_detector.cpp`**
+- [x] **Step 1: Write the failing tests `test/host/test_follow_detector.cpp`**
 
 ```cpp
 #include "follow_detector.h"
@@ -1301,14 +1324,14 @@ TEST(detector_reports_up_to_max_and_marks_only_reported) {
 }
 ```
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && tools/run-host-tests.sh
 ```
 Expected: compile error `'follow_detector.h' file not found`.
 
-- [ ] **Step 3: Write `src/core/follow_detector.h`**
+- [x] **Step 3: Write `src/core/follow_detector.h`**
 
 ```cpp
 #pragma once
@@ -1353,7 +1376,7 @@ class FollowDetector {
 }  // namespace findmy
 ```
 
-- [ ] **Step 4: Write `src/core/follow_detector.cpp`**
+- [x] **Step 4: Write `src/core/follow_detector.cpp`**
 
 ```cpp
 #include "follow_detector.h"
@@ -1398,14 +1421,14 @@ bool FollowDetector::isMuted(const uint8_t mac[6]) const {
 }  // namespace findmy
 ```
 
-- [ ] **Step 5: Run the tests**
+- [x] **Step 5: Run the tests**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && tools/run-host-tests.sh
 ```
 Expected: `36 tests, 0 failures`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && git add -A && \
@@ -1424,14 +1447,14 @@ These have no host tests (they touch M5/NVS). The check is that the device build
 - Create: `$APP/src/device/version.h`, `$APP/src/device/launcher_return.h`, `$APP/src/device/settings.h`, `$APP/src/device/settings.cpp`, `$APP/src/device/sound.h`, `$APP/src/device/sound.cpp`, `$APP/src/device/input.h`, `$APP/src/device/input.cpp`
 - Modify: `$APP/cypher-airtag.ino` (temporarily reference the new modules so the compiler sees them)
 
-- [ ] **Step 1: Write `src/device/version.h`**
+- [x] **Step 1: Write `src/device/version.h`**
 
 ```cpp
 #pragma once
 #define CYPHER_AIRTAG_VERSION "0.1.0"
 ```
 
-- [ ] **Step 2: Write `src/device/launcher_return.h`**
+- [x] **Step 2: Write `src/device/launcher_return.h`**
 
 ```cpp
 #pragma once
@@ -1452,7 +1475,7 @@ inline void returnToLauncher() {
 #endif
 ```
 
-- [ ] **Step 3: Write `src/device/settings.h`**
+- [x] **Step 3: Write `src/device/settings.h`**
 
 ```cpp
 #pragma once
@@ -1473,7 +1496,7 @@ struct Settings {
 };
 ```
 
-- [ ] **Step 4: Write `src/device/settings.cpp`**
+- [x] **Step 4: Write `src/device/settings.cpp`**
 
 ```cpp
 #include "settings.h"
@@ -1520,7 +1543,7 @@ void Settings::cycleThreshold() {
 }
 ```
 
-- [ ] **Step 5: Write `src/device/sound.h`**
+- [x] **Step 5: Write `src/device/sound.h`**
 
 ```cpp
 #pragma once
@@ -1551,7 +1574,7 @@ class Sound {
 };
 ```
 
-- [ ] **Step 6: Write `src/device/sound.cpp`**
+- [x] **Step 6: Write `src/device/sound.cpp`**
 
 ```cpp
 #include "sound.h"
@@ -1619,7 +1642,7 @@ void Sound::tick(uint32_t nowMs) {
 }
 ```
 
-- [ ] **Step 7: Write `src/device/input.h`**
+- [x] **Step 7: Write `src/device/input.h`**
 
 ```cpp
 #pragma once
@@ -1640,7 +1663,7 @@ struct InputEvent {
 InputEvent readInput();
 ```
 
-- [ ] **Step 8: Write `src/device/input.cpp`**
+- [x] **Step 8: Write `src/device/input.cpp`**
 
 ```cpp
 #include "input.h"
@@ -1675,7 +1698,7 @@ InputEvent readInput() {
 }
 ```
 
-- [ ] **Step 9: Reference the modules from the placeholder sketch so they compile**
+- [x] **Step 9: Reference the modules from the placeholder sketch so they compile**
 
 Replace `cypher-airtag.ino` with:
 
@@ -1709,14 +1732,14 @@ void loop() {
 }
 ```
 
-- [ ] **Step 10: Build for the device**
+- [x] **Step 10: Build for the device**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && tools/build.sh
 ```
 Expected: `[build] using CypherPuterReturn from ...` then `[build] ok cypher-airtag.ino.bin <n> bytes`. If `keys.space` does not exist in the installed M5Cardputer, delete the line `ev.space = keys.space;` (the `' '` case in the switch still covers it).
 
-- [ ] **Step 11: Commit**
+- [x] **Step 11: Commit**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && git add -A && \
@@ -1733,7 +1756,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>" && git log --oneline -1
 - Create: `$APP/src/device/ble_scanner.h`, `$APP/src/device/ble_scanner.cpp`
 - Modify: `$APP/cypher-airtag.ino` (placeholder references the scanner so it compiles)
 
-- [ ] **Step 1: Write `src/device/ble_scanner.h`**
+- [x] **Step 1: Write `src/device/ble_scanner.h`**
 
 ```cpp
 #pragma once
@@ -1753,7 +1776,7 @@ class BleScanner {
 };
 ```
 
-- [ ] **Step 2: Write `src/device/ble_scanner.cpp`**
+- [x] **Step 2: Write `src/device/ble_scanner.cpp`**
 
 ```cpp
 #include "ble_scanner.h"
@@ -1837,7 +1860,7 @@ uint32_t BleScanner::dropped() const { return gDropped; }
 const char* BleScanner::lastError() const { return gLastError; }
 ```
 
-- [ ] **Step 3: Reference the scanner from the placeholder sketch**
+- [x] **Step 3: Reference the scanner from the placeholder sketch**
 
 Replace `cypher-airtag.ino` with:
 
@@ -1883,14 +1906,14 @@ void loop() {
 }
 ```
 
-- [ ] **Step 4: Build for the device**
+- [x] **Step 4: Build for the device**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && tools/build.sh
 ```
 Expected: `[build] ok cypher-airtag.ino.bin <n> bytes` (expect roughly 1.0–1.3 MB now that NimBLE is linked).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && git add -A && \
@@ -1907,7 +1930,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>" && git log --oneline -1
 - Create: `$APP/src/device/event_log.h`, `$APP/src/device/event_log.cpp`
 - Modify: `$APP/cypher-airtag.ino` (placeholder references the log so it compiles)
 
-- [ ] **Step 1: Write `src/device/event_log.h`**
+- [x] **Step 1: Write `src/device/event_log.h`**
 
 ```cpp
 #pragma once
@@ -1950,7 +1973,7 @@ class EventLog {
 };
 ```
 
-- [ ] **Step 2: Write `src/device/event_log.cpp`**
+- [x] **Step 2: Write `src/device/event_log.cpp`**
 
 ```cpp
 #include "event_log.h"
@@ -2134,7 +2157,7 @@ void EventLog::logSd(uint32_t nowMs) {
 }
 ```
 
-- [ ] **Step 3: Reference the log from the placeholder sketch**
+- [x] **Step 3: Reference the log from the placeholder sketch**
 
 In `cypher-airtag.ino` add `#include "src/device/event_log.h"` after the `ble_scanner.h` include, add `static EventLog eventLog;` after `static BleScanner scanner;`, and add these two lines at the end of `setup()`:
 
@@ -2143,14 +2166,14 @@ In `cypher-airtag.ino` add `#include "src/device/event_log.h"` after the `ble_sc
   eventLog.logBoot(CYPHER_AIRTAG_VERSION, settings.thresholdMin, millis());
 ```
 
-- [ ] **Step 4: Build for the device**
+- [x] **Step 4: Build for the device**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && tools/build.sh
 ```
 Expected: `[build] ok ...`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && git add -A && \
@@ -2166,7 +2189,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>" && git log --oneline -1
 **Files:**
 - Create: `$APP/src/device/ui.h`, `$APP/src/device/ui.cpp`
 
-- [ ] **Step 1: Write `src/device/ui.h`**
+- [x] **Step 1: Write `src/device/ui.h`**
 
 ```cpp
 #pragma once
@@ -2247,7 +2270,7 @@ class Ui {
 };
 ```
 
-- [ ] **Step 2: Write `src/device/ui.cpp`**
+- [x] **Step 2: Write `src/device/ui.cpp`**
 
 ```cpp
 #include "ui.h"
@@ -2620,14 +2643,14 @@ void Ui::drawConfirm() {
 }
 ```
 
-- [ ] **Step 3: Build for the device (the placeholder sketch does not use Ui yet, but Arduino compiles every file under `src/`)**
+- [x] **Step 3: Build for the device (the placeholder sketch does not use Ui yet, but Arduino compiles every file under `src/`)**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && tools/build.sh
 ```
 Expected: `[build] ok ...`. If `M5Canvas canvas_;` fails to default-construct, change the member to `M5Canvas canvas_{nullptr};`.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && git add -A && \
@@ -2644,7 +2667,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>" && git log --oneline -1
 - Create: `$APP/src/device/app.h`, `$APP/src/device/app.cpp`
 - Modify: `$APP/cypher-airtag.ino` (replace the placeholder)
 
-- [ ] **Step 1: Write `src/device/app.h`**
+- [x] **Step 1: Write `src/device/app.h`**
 
 ```cpp
 #pragma once
@@ -2716,7 +2739,7 @@ class App {
 };
 ```
 
-- [ ] **Step 2: Write `src/device/app.cpp`**
+- [x] **Step 2: Write `src/device/app.cpp`**
 
 ```cpp
 #include "app.h"
@@ -3067,7 +3090,7 @@ void App::doReturnToLauncher() {
 }
 ```
 
-- [ ] **Step 3: Replace `cypher-airtag.ino`**
+- [x] **Step 3: Replace `cypher-airtag.ino`**
 
 ```cpp
 // Cypher AirTag: passive Apple Find My / AirTag detector for the M5Stack Cardputer ADV.
@@ -3086,14 +3109,14 @@ void loop() {
 }
 ```
 
-- [ ] **Step 4: Host tests still pass, then build for the device**
+- [x] **Step 4: Host tests still pass, then build for the device**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && tools/run-host-tests.sh && tools/build.sh
 ```
 Expected: `36 tests, 0 failures` then `[build] ok cypher-airtag.ino.bin <n> bytes` with n well under 5,177,344 (the app1 slot).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && git add -A && \
@@ -3110,7 +3133,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>" && git log --oneline -1
 - Modify: `$OS/config/apps.json`, `$OS/tools/build-apps.sh`, `$OS/tools/build-report.py`, `$OS/tools/package-sd.sh`, `$OS/docs/README.md`, `$OS/docs/APP_CATALOG.md`, `$OS/docs/BUILDING_AND_PACKAGING.md`, `$OS/README.md`, `$OS/AGENTS.md`
 - Create: `$OS/docs/apps/cypher-airtag/README.md`
 
-- [ ] **Step 1: Add the catalog entry**
+- [x] **Step 1: Add the catalog entry**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-puter-os && python3 - <<'PY'
@@ -3140,7 +3163,7 @@ git diff --stat config/apps.json
 ```
 Expected: `catalog entry added` and a diff of about 15 insertions, 0 deletions (the file's existing formatting is preserved).
 
-- [ ] **Step 2: Wire `tools/build-apps.sh`**
+- [x] **Step 2: Wire `tools/build-apps.sh`**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-puter-os && python3 - <<'PY'
@@ -3195,7 +3218,7 @@ bash -n tools/build-apps.sh && echo "syntax ok"
 ```
 Expected: `build-apps.sh wired` and `syntax ok`.
 
-- [ ] **Step 3: Wire `tools/build-report.py` and `tools/package-sd.sh`**
+- [x] **Step 3: Wire `tools/build-report.py` and `tools/package-sd.sh`**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-puter-os && python3 - <<'PY'
@@ -3220,7 +3243,7 @@ python3 -m py_compile tools/build-report.py && bash -n tools/package-sd.sh && ec
 ```
 Expected: `report + sd wired` and `syntax ok`.
 
-- [ ] **Step 4: Write `docs/apps/cypher-airtag/README.md`**
+- [x] **Step 4: Write `docs/apps/cypher-airtag/README.md`**
 
 ```markdown
 # Cypher AirTag
@@ -3308,7 +3331,7 @@ prints a JSON summary.
 - Cypher OS README controls
 ```
 
-- [ ] **Step 5: Add the doc links, catalog row, README rows, env overrides, and AGENTS.md status**
+- [x] **Step 5: Add the doc links, catalog row, README rows, env overrides, and AGENTS.md status**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-puter-os && python3 - <<'PY'
@@ -3356,7 +3379,7 @@ PY
 ```
 Expected: `docs patched`.
 
-- [ ] **Step 6: Validate the catalog and prove the integration build path, then restore `dist/`**
+- [x] **Step 6: Validate the catalog and prove the integration build path, then restore `dist/`**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-puter-os && python3 tools/validate-catalog.py config/apps.json && \
@@ -3364,7 +3387,7 @@ cd /Users/cypher/Documents/GitHub/cypher-puter-os && python3 tools/validate-cata
 ```
 Expected: `[catalog] ok`, `[apps] building cypher-airtag`, `[apps] packaged cypher-airtag.bin`, `[catalog] ok`, then `build-apps exit=0` and no lines from `git status --short dist` (the committed bundle is intact). Every other app reports `skipped` in the transient report, which is expected on a machine without the sibling repos.
 
-- [ ] **Step 7: Commit the integration**
+- [x] **Step 7: Commit the integration**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-puter-os && git add config/apps.json tools/build-apps.sh tools/build-report.py tools/package-sd.sh docs/apps/cypher-airtag/README.md docs/README.md docs/APP_CATALOG.md docs/BUILDING_AND_PACKAGING.md README.md AGENTS.md && \
@@ -3381,7 +3404,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>" && git log --oneline -1
 - Create: `$OS/tools/flash-app-slot.sh`
 - Modify: `$OS/docs/BUILDING_AND_PACKAGING.md` (new subsection before `## Build App Binaries`)
 
-- [ ] **Step 1: Write `tools/flash-app-slot.sh`**
+- [x] **Step 1: Write `tools/flash-app-slot.sh`**
 
 ```bash
 #!/usr/bin/env bash
@@ -3475,7 +3498,7 @@ printf 'launch\n' > "${PORT}"
 echo "[slot] sent launch; the Cardputer should now reboot into the app"
 ```
 
-- [ ] **Step 2: Document it in `docs/BUILDING_AND_PACKAGING.md`**
+- [x] **Step 2: Document it in `docs/BUILDING_AND_PACKAGING.md`**
 
 Insert this block immediately before the line `## Build App Binaries`:
 
@@ -3496,7 +3519,7 @@ any app from the SD catalog overwrites the slot again.
 
 ````
 
-- [ ] **Step 3: Make it executable and commit**
+- [x] **Step 3: Make it executable and commit**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-puter-os && chmod +x tools/flash-app-slot.sh && bash -n tools/flash-app-slot.sh && \
@@ -3506,7 +3529,7 @@ git commit -q -m "tools: add flash-app-slot dev helper
 Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>" && git log --oneline -1
 ```
 
-- [ ] **Step 4: Flash the app into the slot and capture 30 s of serial output**
+- [x] **Step 4: Flash the app into the slot and capture 30 s of serial output**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-puter-os && ./tools/flash-app-slot.sh ../cypher-airtag/build/device/cypher-airtag.ino.bin
@@ -3519,7 +3542,7 @@ stty -f "$PORT" 115200 raw -echo; (cat "$PORT" > "$LOG" &); sleep 30; pkill -f "
 ```
 Expected: a `{"ev":"boot",...,"fw":"0.1.0","sd":"mounted"...}` line (or `"sd":"missing"` if no card), followed by `seen`/`update` lines for any Find My devices in range (a nearby iPhone, AirPods, or AirTag).
 
-- [ ] **Step 5: Exercise the serial console and return path**
+- [x] **Step 5: Exercise the serial console and return path**
 
 ```bash
 PORT=$(ls /dev/cu.usbmodem* | head -n 1); LOG=/private/tmp/claude-501/-Users-cypher-Documents-GitHub-cypher-puter-os/7a653f70-8c52-4ec7-b377-980762c22452/scratchpad/airtag-serial2.log; \
@@ -3527,7 +3550,7 @@ stty -f "$PORT" 115200 raw -echo; (cat "$PORT" > "$LOG" &); sleep 1; printf 'sta
 ```
 Expected: a `{"ev":"status",...}` line, then `Cypher OS boot` and the launcher's `sd=... installed=... bootToApp=false` status line, proving the one-shot return landed in the launcher.
 
-- [ ] **Step 6: Hands-on checklist (needs a person with an AirTag and its paired iPhone)**
+- [x] **Step 6: Hands-on checklist (needs a person with an AirTag and its paired iPhone)**
 
 Run through items 2–7, 9 and 10 of the spec's §9.3 on the device, and confirm `/cypher-airtag/logs/findmy.jsonl` on the card contains `boot`, `seen`, `update`, `mode`, `alert`, `mute`, and `lost` lines. Record anything that fails as a bug to fix before Task 13.
 
@@ -3538,7 +3561,7 @@ Run through items 2–7, 9 and 10 of the spec's §9.3 on the device, and confirm
 **Files:**
 - Modify: `$APP/README.md`
 
-- [ ] **Step 1: Write the full `README.md` in the sibling repo**
+- [x] **Step 1: Write the full `README.md` in the sibling repo**
 
 ```markdown
 # Cypher AirTag
@@ -3644,14 +3667,14 @@ Every line also has `t` (ms since boot) and `session` (boot counter).
 - Passive listening only. Use where such monitoring is legal and authorized.
 ```
 
-- [ ] **Step 2: Run everything one last time**
+- [x] **Step 2: Run everything one last time**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && tools/run-host-tests.sh && tools/build.sh && git status --short
 ```
 Expected: `36 tests, 0 failures`, `[build] ok ...`, and only `README.md` modified.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-airtag && git add -A && \
@@ -3660,7 +3683,7 @@ git commit -q -m "docs: document build, controls, detection, and log format
 Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>" && git log --oneline -1
 ```
 
-- [ ] **Step 4: Confirm both repos are clean and summarise**
+- [x] **Step 4: Confirm both repos are clean and summarise**
 
 ```bash
 cd /Users/cypher/Documents/GitHub/cypher-puter-os && git status --short --branch && git log --oneline main..HEAD && \

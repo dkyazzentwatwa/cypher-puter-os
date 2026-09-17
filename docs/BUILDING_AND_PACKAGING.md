@@ -40,6 +40,30 @@ If the port is omitted, the script tries the first `/dev/cu.usbmodem*` port it
 finds. It touches the port at 1200 baud, waits briefly for re-enumeration, then
 uploads with the `adv` profile.
 
+## Flash An App Into The App Slot
+
+For quick iteration on a single app, skip the SD card and write the app `.bin`
+straight into the `ota_1` app slot. The launcher in `ota_0` is untouched. The
+script reads the partition table from the device to find the slot, writes the
+binary, selects it in `otadata` the same way the launcher does, and reboots:
+
+```bash
+./tools/flash-app-slot.sh ../cypher-airtag/build/device/cypher-airtag.ino.bin
+```
+
+The launcher lists a slot filled this way as "Unknown app" because no catalog
+install recorded a name. Returning to Cypher OS from the app works as usual,
+and installing any app from the SD catalog overwrites the slot again. To hand
+boot back to `ota_0` without touching the keyboard:
+
+```bash
+./tools/flash-app-slot.sh --restore
+```
+
+The helper uses the newest `esptool` bundled with an installed ESP32 core and
+resets through the RTC watchdog, which is the reset that reliably leaves the
+USB-JTAG port of the Cardputer ADV running the selected app.
+
 ## Build App Binaries
 
 Build all public app targets:

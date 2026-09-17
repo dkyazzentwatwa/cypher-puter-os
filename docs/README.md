@@ -50,6 +50,7 @@ Primary app docs:
 - [Flock You](apps/flock-you/README.md)
 - [WireTap-32 Cardputer](apps/wiretap-32-cardputer/README.md)
 - [Drone Mesh Mapper](apps/drone-mesh-mapper/README.md)
+- [Cypher AirTag](apps/cypher-airtag/README.md)
 
 Imported Game OS title docs:
 

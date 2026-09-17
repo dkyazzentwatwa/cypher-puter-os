@@ -24,6 +24,7 @@ fi
 
 rm -rf "${SD_ROOT}"
 mkdir -p "${SD_APPS}" "${SD_GAME_OS_SAVES}" "${NEWS_READER_CONFIG_DIR}"
+mkdir -p "${SD_ROOT}/cypher-airtag/logs"
 
 cp -f "${MANIFEST}" "${SD_APPS}/apps.json"
 

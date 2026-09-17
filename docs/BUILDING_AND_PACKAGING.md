@@ -153,6 +153,7 @@ CYPHER_OS_CYPHER_DESK_DIR=/path/to/cypher-desk ./tools/build-apps.sh
 CYPHER_OS_FLOCK_YOU_DIR=/path/to/flock-you ./tools/build-apps.sh
 CYPHER_OS_WIRETAP_DIR=/path/to/WireTap-32 ./tools/build-apps.sh
 CYPHER_OS_DRONE_MESH_MAPPER_DIR=/path/to/drone-mesh-mapper ./tools/build-apps.sh
+CYPHER_OS_CYPHER_AIRTAG_DIR=/path/to/cypher-airtag ./tools/build-apps.sh
 CYPHER_OS_CARDPUTER_APP_BUNDLE_DIR=/path/to/new-cardputer-apps ./tools/build-apps.sh
 CYPHER_OS_GAME_OS_DIR=/path/to/cardputer-game-os ./tools/build-apps.sh
 ```

@@ -48,7 +48,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "${REQUESTED_APP}" in
-  ""|cardputer-games|cardputer-mpc|cardputer-tarot|cypher-pn532|cypher-chat|cypher-drive|esp32-bt-hid|esp32-pokedex|cypher-desk|flock-you|wiretap-32-cardputer|drone-mesh-mapper|bitcoin-card-wallet|cardputer-game-station-emulators|esp32-bit-pirate|esp32-usb-stick|news-reader|open-wifi-scanner|password-manager|ultimate-remote|cardputer-game-os-games) ;;
+  ""|cardputer-games|cardputer-mpc|cardputer-tarot|cypher-pn532|cypher-chat|cypher-drive|esp32-bt-hid|esp32-pokedex|cypher-desk|flock-you|wiretap-32-cardputer|drone-mesh-mapper|cypher-airtag|bitcoin-card-wallet|cardputer-game-station-emulators|esp32-bit-pirate|esp32-usb-stick|news-reader|open-wifi-scanner|password-manager|ultimate-remote|cardputer-game-os-games) ;;
   *)
     echo "[apps] unknown app slug: ${REQUESTED_APP}" >&2
     exit 2
@@ -67,6 +67,7 @@ CYPHER_DESK_ROOT="${CYPHER_OS_CYPHER_DESK_DIR:-${WORKSPACE_ROOT}/cypher-desk}"
 FLOCK_YOU_ROOT="${CYPHER_OS_FLOCK_YOU_DIR:-${WORKSPACE_ROOT}/flock-you}"
 WIRETAP_ROOT="${CYPHER_OS_WIRETAP_DIR:-${WORKSPACE_ROOT}/WireTap-32}"
 DRONE_MESH_MAPPER_ROOT="${CYPHER_OS_DRONE_MESH_MAPPER_DIR:-${WORKSPACE_ROOT}/drone-mesh-mapper}"
+CYPHER_AIRTAG_ROOT="${CYPHER_OS_CYPHER_AIRTAG_DIR:-${WORKSPACE_ROOT}/cypher-airtag}"
 CARDPUTER_APP_BUNDLE_ROOT="${CYPHER_OS_CARDPUTER_APP_BUNDLE_DIR:-${WORKSPACE_ROOT}/new-cardputer-apps}"
 GAME_OS_ROOT="${CYPHER_OS_GAME_OS_DIR:-${WORKSPACE_ROOT}/cardputer-game-os}"
 GAME_OS_APPS="${GAME_OS_ROOT}/dist/apps"
@@ -91,6 +92,7 @@ CYPHER_DESK_STATUS="build_missing"
 FLOCK_YOU_STATUS="build_missing"
 WIRETAP_STATUS="build_missing"
 DRONE_MESH_MAPPER_STATUS="build_missing"
+CYPHER_AIRTAG_STATUS="build_missing"
 BITCOIN_CARD_WALLET_STATUS="build_missing"
 CARDPUTER_GAME_STATION_EMULATORS_STATUS="build_missing"
 ESP32_BIT_PIRATE_STATUS="build_missing"
@@ -117,6 +119,7 @@ set_status() {
     flock-you) FLOCK_YOU_STATUS="${status}" ;;
     wiretap-32-cardputer) WIRETAP_STATUS="${status}" ;;
     drone-mesh-mapper) DRONE_MESH_MAPPER_STATUS="${status}" ;;
+    cypher-airtag) CYPHER_AIRTAG_STATUS="${status}" ;;
     bitcoin-card-wallet) BITCOIN_CARD_WALLET_STATUS="${status}" ;;
     cardputer-game-station-emulators) CARDPUTER_GAME_STATION_EMULATORS_STATUS="${status}" ;;
     esp32-bit-pirate) ESP32_BIT_PIRATE_STATUS="${status}" ;;
@@ -144,6 +147,7 @@ get_status() {
     flock-you) echo "${FLOCK_YOU_STATUS}" ;;
     wiretap-32-cardputer) echo "${WIRETAP_STATUS}" ;;
     drone-mesh-mapper) echo "${DRONE_MESH_MAPPER_STATUS}" ;;
+    cypher-airtag) echo "${CYPHER_AIRTAG_STATUS}" ;;
     bitcoin-card-wallet) echo "${BITCOIN_CARD_WALLET_STATUS}" ;;
     cardputer-game-station-emulators) echo "${CARDPUTER_GAME_STATION_EMULATORS_STATUS}" ;;
     esp32-bit-pirate) echo "${ESP32_BIT_PIRATE_STATUS}" ;;
@@ -418,6 +422,23 @@ build_drone_mesh_mapper() {
   DRONE_MESH_MAPPER_STATUS="ready"
 }
 
+build_cypher_airtag() {
+  local src="${CYPHER_AIRTAG_ROOT}"
+  local out="${BUILD_ROOT}/cypher-airtag"
+  require_dir "cypher-airtag source" "${src}" || return 1
+  rm -rf "${out}"
+  mkdir -p "${out}"
+
+  echo "[apps] building cypher-airtag"
+  arduino-cli compile \
+    --profile cardputer-adv \
+    --output-dir "${out}" \
+    --build-property "compiler.cpp.extra_flags=-I${RETURN_LIB}/src" \
+    "${src}" || return 1
+  copy_app_bin "${out}" "cypher-airtag.bin" || return 1
+  CYPHER_AIRTAG_STATUS="ready"
+}
+
 build_bitcoin_card_wallet() {
   build_bundle_app "bitcoin-card-wallet" "Bitcoin-Card-Wallet" "cardputer" "bitcoin-card-wallet.bin" \
     --build-property "compiler.c.elf.extra_flags=-Wl,-zmuldefs"
@@ -494,6 +515,7 @@ mark_failed() {
     flock-you) FLOCK_YOU_STATUS="build_failed" ;;
     wiretap-32-cardputer) WIRETAP_STATUS="build_failed" ;;
     drone-mesh-mapper) DRONE_MESH_MAPPER_STATUS="build_failed" ;;
+    cypher-airtag) CYPHER_AIRTAG_STATUS="build_failed" ;;
     bitcoin-card-wallet) BITCOIN_CARD_WALLET_STATUS="build_failed" ;;
     cardputer-game-station-emulators) CARDPUTER_GAME_STATION_EMULATORS_STATUS="build_failed" ;;
     esp32-bit-pirate) ESP32_BIT_PIRATE_STATUS="build_failed" ;;
@@ -518,6 +540,7 @@ run_build "cypher-desk" build_cypher_desk
 run_build "flock-you" build_flock_you
 run_build "wiretap-32-cardputer" build_wiretap
 run_build "drone-mesh-mapper" build_drone_mesh_mapper
+run_build "cypher-airtag" build_cypher_airtag
 run_build "bitcoin-card-wallet" build_bitcoin_card_wallet
 run_build "cardputer-game-station-emulators" build_cardputer_game_station_emulators
 run_build "esp32-bit-pirate" build_esp32_bit_pirate
@@ -540,6 +563,7 @@ CYPHER_DESK_STATUS="${CYPHER_DESK_STATUS}" \
 FLOCK_YOU_STATUS="${FLOCK_YOU_STATUS}" \
 WIRETAP_STATUS="${WIRETAP_STATUS}" \
 DRONE_MESH_MAPPER_STATUS="${DRONE_MESH_MAPPER_STATUS}" \
+CYPHER_AIRTAG_STATUS="${CYPHER_AIRTAG_STATUS}" \
 BITCOIN_CARD_WALLET_STATUS="${BITCOIN_CARD_WALLET_STATUS}" \
 CARDPUTER_GAME_STATION_EMULATORS_STATUS="${CARDPUTER_GAME_STATION_EMULATORS_STATUS}" \
 ESP32_BIT_PIRATE_STATUS="${ESP32_BIT_PIRATE_STATUS}" \
@@ -561,6 +585,7 @@ CYPHER_DESK_ROOT="${CYPHER_DESK_ROOT}" \
 FLOCK_YOU_ROOT="${FLOCK_YOU_ROOT}" \
 WIRETAP_ROOT="${WIRETAP_ROOT}" \
 DRONE_MESH_MAPPER_ROOT="${DRONE_MESH_MAPPER_ROOT}" \
+CYPHER_AIRTAG_ROOT="${CYPHER_AIRTAG_ROOT}" \
 CARDPUTER_APP_BUNDLE_ROOT="${CARDPUTER_APP_BUNDLE_ROOT}" \
 GAME_OS_ROOT="${GAME_OS_ROOT}" \
 CYPHER_OS_RELEASE_VERSION="${CYPHER_OS_RELEASE_VERSION:-local}" \
@@ -578,7 +603,7 @@ if [[ -n "${REQUESTED_APP}" ]]; then
   if [[ "$(get_status "${REQUESTED_APP}")" != "ready" ]]; then
     failed=1
   fi
-elif [[ "${CARDPUTER_GAMES_STATUS}" != "ready" || "${CARDPUTER_MPC_STATUS}" != "ready" || "${CARDPUTER_TAROT_STATUS}" != "ready" || "${CYPHER_PN532_STATUS}" != "ready" || "${CYPHER_CHAT_STATUS}" != "ready" || "${CYPHER_DRIVE_STATUS}" != "ready" || "${ESP32_BT_HID_STATUS}" != "ready" || "${ESP32_POKEDEX_STATUS}" != "ready" || "${CYPHER_DESK_STATUS}" != "ready" || "${FLOCK_YOU_STATUS}" != "ready" || "${WIRETAP_STATUS}" != "ready" || "${DRONE_MESH_MAPPER_STATUS}" != "ready" || "${BITCOIN_CARD_WALLET_STATUS}" != "ready" || "${CARDPUTER_GAME_STATION_EMULATORS_STATUS}" != "ready" || "${ESP32_BIT_PIRATE_STATUS}" != "ready" || "${ESP32_USB_STICK_STATUS}" != "ready" || "${NEWS_READER_STATUS}" != "ready" || "${OPEN_WIFI_SCANNER_STATUS}" != "ready" || "${PASSWORD_MANAGER_STATUS}" != "ready" || "${ULTIMATE_REMOTE_STATUS}" != "ready" || "${GAME_OS_STATUS}" != "ready" ]]; then
+elif [[ "${CARDPUTER_GAMES_STATUS}" != "ready" || "${CARDPUTER_MPC_STATUS}" != "ready" || "${CARDPUTER_TAROT_STATUS}" != "ready" || "${CYPHER_PN532_STATUS}" != "ready" || "${CYPHER_CHAT_STATUS}" != "ready" || "${CYPHER_DRIVE_STATUS}" != "ready" || "${ESP32_BT_HID_STATUS}" != "ready" || "${ESP32_POKEDEX_STATUS}" != "ready" || "${CYPHER_DESK_STATUS}" != "ready" || "${FLOCK_YOU_STATUS}" != "ready" || "${WIRETAP_STATUS}" != "ready" || "${DRONE_MESH_MAPPER_STATUS}" != "ready" || "${CYPHER_AIRTAG_STATUS}" != "ready" || "${BITCOIN_CARD_WALLET_STATUS}" != "ready" || "${CARDPUTER_GAME_STATION_EMULATORS_STATUS}" != "ready" || "${ESP32_BIT_PIRATE_STATUS}" != "ready" || "${ESP32_USB_STICK_STATUS}" != "ready" || "${NEWS_READER_STATUS}" != "ready" || "${OPEN_WIFI_SCANNER_STATUS}" != "ready" || "${PASSWORD_MANAGER_STATUS}" != "ready" || "${ULTIMATE_REMOTE_STATUS}" != "ready" || "${GAME_OS_STATUS}" != "ready" ]]; then
   failed=1
 fi
 

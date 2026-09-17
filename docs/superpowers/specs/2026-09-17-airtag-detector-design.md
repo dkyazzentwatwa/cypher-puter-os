@@ -52,13 +52,15 @@ release bundle is refreshed on the next full release build.
 
 ```
 cypher-airtag/
-  cypher-airtag.ino        # setup/loop only: wires modules, drains sightings, ticks UI
+  cypher-airtag.ino        # setup/loop only: constructs App and delegates to it
   sketch.yaml              # profile "cardputer-adv"
   src/core/                # pure C++17, no Arduino headers, compiles on the host
     findmy_adv.h/.cpp      #   raw Apple manufacturer bytes -> Advert
     tracker_registry.h/.cpp#   fixed table keyed by MAC
     follow_detector.h/.cpp #   alert rule + mute list
+    format.h/.cpp          #   MAC / key hex / presence / ago string formatters
   src/device/              # Arduino / M5 glue
+    app.h/.cpp             #   owns every module; drains sightings, runs periodic work, routes input
     ble_scanner.h/.cpp     #   NimBLE passive scan -> FreeRTOS queue of Sighting
     ui.h/.cpp              #   RADAR / DETAIL / ALERTS / SETTINGS pages, overlay
     input.h/.cpp           #   keyboard + BtnA -> InputEvent
@@ -71,6 +73,7 @@ cypher-airtag/
     test_findmy_adv.cpp
     test_tracker_registry.cpp
     test_follow_detector.cpp
+    test_format.cpp
   tools/
     run-host-tests.sh      #   clang++ -std=c++17 -Wall -Wextra -Werror src/core + test/host
     build.sh               #   arduino-cli compile --profile cardputer-adv, prints bin size
@@ -117,7 +120,8 @@ struct Advert {
 };
 
 Advert parse(const uint8_t* data, size_t len);
-bool reconstructKey(const uint8_t mac[6], const Advert& adv, uint8_t out[28]);
+void assembleKey(const uint8_t mac[6], uint8_t keyBits, const uint8_t keyTail[22], uint8_t out[28]);
+bool reconstructKey(const uint8_t mac[6], const Advert& adv, uint8_t out[28]);  // Separated only; calls assembleKey
 DeviceClass deviceClassFromStatus(uint8_t status);  // (status >> 4) & 0x03
 Battery batteryFromStatus(uint8_t status);          // (status >> 6) & 0x03
 const char* deviceClassLabel(DeviceClass);          // "airtag" "findmy" "airpods" "apple"
@@ -161,7 +165,7 @@ struct Entry {
   bool alerted;
 };
 
-struct ObserveResult { int index; bool isNew; bool modeChanged; bool presenceReset; };
+struct ObserveResult { int index; bool isNew; bool modeChanged; bool presenceReset; Mode previousMode; };
 
 class TrackerRegistry {
  public:
@@ -265,13 +269,16 @@ Display 240x135, rotation 1, M5GFX, palette copied from the launcher's default
 accent `0x07FF`, warn `0xFD20`, bad `0xF800`, good `0x07E0`, header `0x0186`,
 footer `0x1082`, selected `0x034F`, selected text `0x0000`.
 
-Header on every page: `AIRTAG · <PAGE>   <n> tags · <s> sep   ●scan   <batt>%`
-plus `SD!` in warn colour when SD logging is enabled but unavailable.
+Header on every page: `AIRTAG <PAGE>` on the left and `<n> tags <s> sep` on the
+right. Footer on every page: the page's key hints on the left; on the right
+`SD!` in warn colour when SD logging is enabled but unavailable, a scan
+spinner (`X` in bad colour if BLE failed), and the battery percentage.
 
 Pages (left/right cycle RADAR -> ALERTS -> SETTINGS; DETAIL is entered from
-RADAR or ALERTS with select and left with back):
+RADAR or ALERTS with select and left with back; ABOUT is entered from
+SETTINGS and left with back). Rows are 16 px tall, six visible per page:
 
-**RADAR** — used entries sorted by `rssiEma` descending, 5 rows visible,
+**RADAR** — used entries sorted by `rssiEma` descending, 6 rows visible,
 scrolling with the selection. Row format:
 `<!> <AT|FM|AP|AD> <last 2 MAC bytes hex> <near|sep> <5-cell RSSI bar> <dBm> <presence m/s>`.
 The RSSI bar lights `clamp(round((rssiEma + 95) / 10), 0, 5)` cells. Presence
@@ -295,7 +302,8 @@ its alert flag). If the entry expires while shown, the page reads
 
 **SETTINGS** — rows: `Alert threshold` (5/10/15/30/60 min), `Sound`,
 `SD log`, `Serial JSON`, `Return to Cypher OS`, `About`. Up/down select;
-left/right or select cycles a value and saves immediately. `Return to Cypher OS`
+select cycles the value (threshold wraps 5→10→15→30→60→5) and saves
+immediately. Left/right always switch pages, on every page. `Return to Cypher OS`
 opens the same confirm dialog as RADAR back. `About` shows version, session
 number, queue drops, evictions, SD state, free heap.
 
@@ -325,14 +333,14 @@ Every line is one JSON object with `ev`, `t` (ms since boot) and `session`
 
 | `ev` | Extra fields |
 | --- | --- |
-| `boot` | `fw`, `sd` (`"ok"`/`"none"`), `thresh_min` |
+| `boot` | `fw`, `sd` (state label: `off`, `mounted`, `missing`, `write_error`), `thresh_min` |
 | `seen` | `mac`, `cls`, `mode`, `rssi`, `batt`, `status` (`"0x10"`), `key` (56 hex, separated only) |
 | `update` | `mac`, `mode`, `rssi_ema`, `advs`, `presence_s` — once per 60 s per present tag |
 | `mode` | `mac`, `from`, `to` |
 | `alert` | `mac`, `cls`, `presence_s`, `rssi` |
 | `mute` | `mac` |
 | `lost` | `mac`, `presence_s`, `advs` |
-| `sd` | `state` (`"mounted"`, `"missing"`, `"write_error"`) |
+| `sd` | `state` (`off`, `mounted`, `missing`, `write_error`) |
 
 Lines are formatted with `snprintf` into a 320-byte stack buffer; no heap
 allocation per line. SD write failures set the SD state to `write_error`, stop

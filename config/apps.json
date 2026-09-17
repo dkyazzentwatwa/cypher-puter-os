@@ -181,6 +181,21 @@
       "notes": "Cardputer ADV Remote ID drone scanner with WiFi/BLE detection, SD logging, and Cypher OS return support."
     },
     {
+      "name": "Cypher AirTag",
+      "slug": "cypher-airtag",
+      "binary": "cypher-airtag.bin",
+      "repo_url": "https://github.com/dkyazzentwatwa/cypher-airtag",
+      "local_default_path": "../cypher-airtag",
+      "build_profile": "cardputer-adv",
+      "sd_paths": [
+        "/cypher-airtag/"
+      ],
+      "return_to_launcher": "Choose Return to Cypher OS on the Settings page, press backtick on the Radar page and confirm with Enter, or type return over serial.",
+      "public_release": true,
+      "status": "ready",
+      "notes": "Cardputer ADV passive Apple Find My / AirTag detector with following alerts, locate beeps, SD JSONL logs, and Cypher OS return support."
+    },
+    {
       "name": "Bitcoin Card Wallet",
       "slug": "bitcoin-card-wallet",
       "binary": "bitcoin-card-wallet.bin",

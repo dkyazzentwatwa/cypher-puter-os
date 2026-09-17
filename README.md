@@ -84,6 +84,7 @@ These are the supported Cardputer app targets in the current catalog flow:
 | **[Flock You][cypher-flock-repo]** | [Cardputer ADV][cardputer-affiliate] WiFi/BLE detector build with return-to-launcher support. |
 | **[WireTap-32 Cardputer][wiretap-32-repo]** | [Cardputer ADV][cardputer-affiliate] EXT bench build with return-to-launcher support. |
 | **[Drone Mesh Mapper][drone-mesh-mapper-repo]** | [Cardputer ADV][cardputer-affiliate] passive Remote ID scanner with SD field logs. |
+| **[Cypher AirTag][cypher-airtag-repo]** | [Cardputer ADV][cardputer-affiliate] passive Apple Find My / AirTag detector with following alerts and locate beeps. |
 | **[Bitcoin Card Wallet](docs/apps/bitcoin-card-wallet/README.md)** | Offline Bitcoin wallet utility from the Cardputer App Bundle. |
 | **[Cardputer Game Station Emulators](docs/apps/cardputer-game-station-emulators/README.md)** | Emulator launcher from the Cardputer App Bundle. |
 | **[ESP32 Bit Pirate](docs/apps/esp32-bit-pirate/README.md)** | [Cardputer ADV][cardputer-affiliate] hardware bus and protocol toolkit from the Cardputer App Bundle. |
@@ -354,6 +355,7 @@ Source repositories: [Cardputer MPC][cardputer-mpc-repo],
 [Cypher PN532][cypher-pn532-repo], [Cypher Desk][cypher-desk-repo],
 [Cypher Flock][cypher-flock-repo],
 [WireTap-32][wiretap-32-repo], [Drone Mesh Mapper][drone-mesh-mapper-repo],
+[Cypher AirTag][cypher-airtag-repo],
 [Cardputer App Bundle][cardputer-app-bundle-repo], and
 [Cardputer Game OS][cardputer-game-os-repo].
 
@@ -396,6 +398,7 @@ CYPHER_OS_CYPHER_DESK_DIR=/path/to/cypher-desk ./tools/build-apps.sh
 CYPHER_OS_FLOCK_YOU_DIR=/path/to/flock-you ./tools/build-apps.sh
 CYPHER_OS_WIRETAP_DIR=/path/to/WireTap-32 ./tools/build-apps.sh
 CYPHER_OS_DRONE_MESH_MAPPER_DIR=/path/to/drone-mesh-mapper ./tools/build-apps.sh
+CYPHER_OS_CYPHER_AIRTAG_DIR=/path/to/cypher-airtag ./tools/build-apps.sh
 CYPHER_OS_CARDPUTER_APP_BUNDLE_DIR=/path/to/new-cardputer-apps ./tools/build-apps.sh
 CYPHER_OS_GAME_OS_DIR=/path/to/cardputer-game-os ./tools/build-apps.sh
 ```
@@ -430,6 +433,8 @@ CYPHER_OS_GAME_OS_DIR=/path/to/cardputer-game-os ./tools/build-apps.sh
   `return` over serial.
 - Drone Mesh Mapper: open the `Launcher` page, then press BtnA, `Enter`, or
   `Space`.
+- Cypher AirTag: choose `Return to Cypher OS` on the Settings page, press
+  backtick on the Radar page and confirm, or type `return` over serial.
 - Cardputer App Bundle apps: use the documented app menu item or `Fn+Del`
   where shown in the catalog. News Reader reads Wi-Fi and Guardian API settings
   from `/news-reader/config.txt` on SD.
@@ -474,6 +479,7 @@ install <slug>
 [cypher-flock-repo]: https://github.com/dkyazzentwatwa/cypher-flock
 [cypher-pn532-repo]: https://github.com/dkyazzentwatwa/cypher-pn532
 [drone-mesh-mapper-repo]: https://github.com/dkyazzentwatwa/drone-mesh-mapper
+[cypher-airtag-repo]: https://github.com/dkyazzentwatwa/cypher-airtag
 [esp32-bt-hid-repo]: https://github.com/dkyazzentwatwa/ESP32_BT_HID
 [esp32-pokedex-repo]: https://github.com/dkyazzentwatwa/esp32-pokedex
 [latest-release]: https://github.com/dkyazzentwatwa/cypher-puter-os/releases/latest

@@ -10,8 +10,8 @@
 | Local source path | `/Users/cypher/Documents/GitHub/cypher-airtag` |
 | Build profile | `cardputer-adv` |
 | Extra SD paths | `/cypher-airtag/` (logs are created at runtime) |
-| Return path | Choose Return to Cypher OS on the Settings page, press backtick on the Radar page and confirm with Enter, or type `return` over serial. |
-| Package note | Cardputer ADV passive Apple Find My / AirTag detector with following alerts, locate beeps, SD JSONL logs, and Cypher OS return support. |
+| Return path | Press Back (`Del`) from the Home screen and confirm with `Enter`, or type `return` over serial. |
+| Package note | Cardputer ADV passive Apple Find My / AirTag detector with a home menu, beginner help pages, following alerts, locate beeps, RGB status LED, SD JSONL logs, and Cypher OS return support. |
 | Use it when | You want to see which Find My tags are around you, find one hidden nearby, or get told when a separated tag keeps travelling with you. |
 
 ## Overview
@@ -20,6 +20,22 @@ Cypher AirTag listens passively for Apple Offline Finding (Find My) BLE
 advertisements: AirTags, third-party Find My accessories, AirPods, and Apple
 devices in lost or powered-off state. It never connects to or transmits at any
 device.
+
+## Screens
+
+Boots to a branded splash, then a **Home** menu:
+
+```
+Home ──Enter──> Radar  <->  Alerts  <->  Stats     (left/right cycles these)
+  │              └─Enter─> Detail (signal bar, locate beeps, mute)
+  ├──> Help      four pages explaining what the screen is showing
+  ├──> Settings  threshold, sound, LED, SD log, serial JSON
+  └──> About     version, session, adverts, SD state, heap
+```
+
+Back always goes up one level; Back on Home offers the return to Cypher OS.
+After three idle minutes a branded attract animation takes over and any key
+dismisses it. Scanning and logging never stop.
 
 ## What It Does
 
@@ -44,11 +60,22 @@ The key map matches the Cypher OS launcher.
 | Action | Keys |
 | --- | --- |
 | Move selection | `;` `,` `w` `k` up, `.` `/` `s` `j` down |
-| Switch page (Radar, Alerts, Settings) | `a` `h` left, `d` `l` right |
-| Open detail / change a setting | `Enter` or BtnA |
-| Back / dismiss | `Del`, `Tab`, backtick, `q` |
+| Cycle Radar / Alerts / Stats, or turn a help page | `a` `h` left, `d` `l` right |
+| Open / change a setting | `Enter` or BtnA |
+| Back one level | `Del`, `Tab`, backtick, `q` |
 | Locate beeps (detail page) | `Space` |
 | Mute a tag's alerts | `m` |
+
+### Status LED
+
+| LED | Meaning |
+| --- | --- |
+| Cyan, slow breathe | Scanning, nothing separated nearby |
+| Amber, faster pulse | At least one separated tag is in range |
+| Red strobe | A follow alert is on screen |
+| Green flash | A tag was just seen for the first time |
+
+Turn the LED off in Settings if it is distracting.
 
 When an alert overlay is showing: `Enter` opens the tag, `m` mutes it, `Del`
 dismisses it.
@@ -64,9 +91,10 @@ dismisses it.
 
 ## Return To Cypher OS
 
-Settings → Return to Cypher OS, or press backtick on the Radar page and confirm
-with Enter. Over USB serial, `return` or `launcher` does the same; `status`
-prints a JSON summary and `list` dumps the tracked tags.
+Press Back (`Del`) from the Home screen and confirm with `Enter`. Over USB
+serial, `return` or `launcher` does the same; `status` prints a JSON summary
+including the current page, `list` dumps the tracked tags, and
+`key <up|down|left|right|enter|back|m|space>` drives the UI headlessly.
 
 ## Notes
 

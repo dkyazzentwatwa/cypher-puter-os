@@ -190,10 +190,10 @@
       "sd_paths": [
         "/cypher-airtag/"
       ],
-      "return_to_launcher": "Choose Return to Cypher OS on the Settings page, press backtick on the Radar page and confirm with Enter, or type return over serial.",
+      "return_to_launcher": "Press Back (Del) from the Home screen and confirm with Enter, or type return over serial.",
       "public_release": true,
       "status": "ready",
-      "notes": "Cardputer ADV passive Apple Find My / AirTag detector with following alerts, locate beeps, SD JSONL logs, and Cypher OS return support."
+      "notes": "Cardputer ADV passive Apple Find My / AirTag detector with a home menu, beginner help pages, following alerts, locate beeps, RGB status LED, SD JSONL logs, and Cypher OS return support."
     },
     {
       "name": "Bitcoin Card Wallet",

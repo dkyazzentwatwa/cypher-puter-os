@@ -433,8 +433,8 @@ CYPHER_OS_GAME_OS_DIR=/path/to/cardputer-game-os ./tools/build-apps.sh
   `return` over serial.
 - Drone Mesh Mapper: open the `Launcher` page, then press BtnA, `Enter`, or
   `Space`.
-- Cypher AirTag: choose `Return to Cypher OS` on the Settings page, press
-  backtick on the Radar page and confirm, or type `return` over serial.
+- Cypher AirTag: press Back (`Del`) from the Home screen and confirm with
+  `Enter`, or type `return` over serial.
 - Cardputer App Bundle apps: use the documented app menu item or `Fn+Del`
   where shown in the catalog. News Reader reads Wi-Fi and Guardian API settings
   from `/news-reader/config.txt` on SD.
